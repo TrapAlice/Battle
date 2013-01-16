@@ -28,7 +28,7 @@ void Msg_init(){
 
 
 void Msg_addMessage(const char* msg, ...){
-	char* buff=malloc(sizeof(char)*20);
+	char* buff=malloc(sizeof(char)*32);
 	va_list ap;
 	va_start(ap, msg);
 	vsprintf(buff, msg, ap);

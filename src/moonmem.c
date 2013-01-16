@@ -77,7 +77,7 @@ void MOONMEM_memout(){
         x++;
         if(x%4==0)printf(" ");
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 void MOONMEM_memdump(){

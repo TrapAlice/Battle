@@ -5,6 +5,7 @@
 #include "monster.h"
 #include "combat.h"
 #include "rng.h"
+#include "msg.h"
 
 #define ever ;;
 
@@ -15,49 +16,73 @@ int y;
 
 Monster* player;
 Monster* monster;
+TCOD_console_t msgConsole;
 
 int handleInput();
+void mainLoop();
 
 int main() {    
     //RunTests(1,MEMORY_TEST);
     
-    MOONMEM_init(128);
+    MOONMEM_init(1024);
+    Msg_init();
     RNG_init(0);
-    
+    msgConsole = TCOD_console_new(80,20);
+    TCOD_console_set_default_background(msgConsole,TCOD_red);
+
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
+    mainLoop();
+    
+    MOONMEM_memout();
+    TCOD_console_delete(msgConsole);
+    Msg_uninit();
+    MOONMEM_uninit();
+
+    return 0;
+}
+
+void mainLoop(){
     int steps=25;
     for(ever){
         if( TCOD_console_is_window_closed() ){
             break;
         }
         TCOD_console_clear(NULL);
+        TCOD_console_clear(msgConsole);
         Object_draw(player->object);
+        int x=0;
+        while(x<Msg_size()){
+            //printf("%s\n", Msg_getMessage());
+            TCOD_console_print(msgConsole,0,x,Msg_getMessage(x));
+            //printf("%s\n",Msg_getMessage(x));
+            x++;
+        }
+        TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,128,0);
         TCOD_console_flush();
         if( handleInput() != 0 ){
             steps--;
         }
-        if(RNG_roll(1,steps)==1){
+        if(RNG_roll(1,steps)>0){
             steps = 50;
             monster = Monster_create("Slime");
 
-            printf("A %s attacks!\n", monster->name);
+            //printf("A %s attacks!\n", monster->name);
+            Msg_addMessage("A %s attacks!","Slime");
             for(ever){
                 Combat_attack(player->combat, player->name, monster->combat, monster->name);
                 if(Monster_checkDead(monster)) break;
                 Combat_attack(monster->combat, monster->name, player->combat, player->name);
                 if(Monster_checkDead(player)){
-                    printf("You died!\n");
-                    exit(0);
+                    Msg_addMessage("You lose");
+                    return;
                 }
             }
-            printf("You win!\n");
+            Msg_addMessage("You win!");
+            //printf("You win!\n");
             Monster_delete(monster);
         }
     }
-
-    MOONMEM_uninit();
-    return 0;
 }
 
 int handleInput(){

@@ -1,18 +1,16 @@
 #include "combat.h"
 #include "moonmem.h"
 
-void Combat_attack(Combat* attacker, Combat* defender){
+void Combat_attack(const Combat* attacker, const char* attacker_name, Combat* defender, const char* defender_name){
 	int damage = attacker->power - defender->defense;
-	printf("Attacker: power: %d defense: %d hp: %d maxhp: %d\n",attacker->power, attacker->defense, attacker->hp, attacker->maxhp);
-	printf("Defender: power: %d defense: %d hp: %d maxhp: %d\n",defender->power, defender->defense, defender->hp, defender->maxhp);
-	Combat_takeDamage(defender, damage);
+	printf("%s attacks %s for %d\n", attacker_name, defender_name, damage);
+	Combat_takeDamage(defender, defender_name, damage);
 }
 
-void Combat_takeDamage(Combat* defender, int damage){
+void Combat_takeDamage(Combat* defender, const char* defender_name, int damage){
 	damage = (damage < 0) ? 0 : damage;
-	printf("%d/%d damage:%d\n",defender->maxhp, defender->hp, damage);
 	defender->hp -= damage;
-	printf("%d/%d damage:%d\n",defender->maxhp, defender->hp, damage);
+	printf("%s takes %d damage\n",defender_name, damage);
 }
 
 Combat* Combat_create(int maxhp, int power, int defense){

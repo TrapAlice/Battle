@@ -7,8 +7,8 @@ typedef struct{
 	int power;
 }Combat;
 
-void Combat_attack(Combat*, Combat*);
-void Combat_takeDamage(Combat*, int);
+void Combat_attack(const Combat*, const char*, Combat*, const char*);
+void Combat_takeDamage(Combat*, const char*, int);
 Combat* Combat_create(int, int, int);
 
 #endif//_COMBAT_H

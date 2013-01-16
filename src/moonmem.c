@@ -34,7 +34,7 @@ int findEmptySlot(size_t pSize){
     for( x = 0; x<(MOONMEM->size/4 - pSize); x++){
         int n = memcmp(MOONMEM->memoryslots+x, slots, pSize);
         if( n==0 ){
-            memset(MOONMEM->memoryslots+x, 255, pSize);
+            memset(MOONMEM->memoryslots+x, x+1, pSize);
             return x;
         }
     }
@@ -75,15 +75,6 @@ void MOONMEM_memout(){
         printf("%02X",*((byte*)(MOONMEM)+x));
         x++;
         if(x%4==0)printf(" ");
-    }
-    printf("\n");
-}
-
-void MOONMEM_nodeout(){
-    int x = 0;
-    while( x < MOONMEM->size/2 ){
-        printf("%08X ",(MOONMEM->head+x)->memory);
-        x++;
     }
     printf("\n");
 }

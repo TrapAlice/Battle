@@ -5,7 +5,7 @@
 #include "test_ids.h"
 
 
-void memory_test(){
+int memory_test(){
 	plan(NO_PLAN);
 	MOONMEM_init(256);
 

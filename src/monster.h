@@ -13,5 +13,6 @@ typedef struct{
 Monster* Monster_playerCreate(int,int);
 Monster* Monster_create(char*);
 int Monster_checkDead(Monster*);
+void Monster_delete(Monster*);
 
 #endif//_MONSTER_H

@@ -39,6 +39,7 @@ int findEmptySlot(size_t pSize){
         }
     }
     printf("Out of memory\n");
+    MOONMEM_memdump();
     exit(0);
 }
 

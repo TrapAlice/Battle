@@ -1,16 +1,17 @@
 #include "combat.h"
 #include "moonmem.h"
+#include "rng.h"
 
 void Combat_attack(const Combat* attacker, const char* attacker_name, Combat* defender, const char* defender_name){
-	int damage = attacker->power - defender->defense;
-	printf("%s attacks %s for %d\n", attacker_name, defender_name, damage);
+	int damage = RNG_roll(attacker->hits,attacker->power) - defender->defense;
+	//printf("%s attacks %s for %d\n", attacker_name, defender_name, damage);
 	Combat_takeDamage(defender, defender_name, damage);
 }
 
 void Combat_takeDamage(Combat* defender, const char* defender_name, int damage){
 	damage = (damage < 0) ? 0 : damage;
 	defender->hp -= damage;
-	printf("%s takes %d damage\n",defender_name, damage);
+	//printf("%s takes %d damage\n",defender_name, damage);
 }
 
 Combat* Combat_create(int maxhp, int power, int defense){
@@ -19,5 +20,10 @@ Combat* Combat_create(int maxhp, int power, int defense){
 	combat->maxhp = maxhp;
 	combat->power = power;
 	combat->defense = defense;
+	combat->hits = 1;
 	return combat;
+}
+
+void Combat_delete(Combat* combat){
+	free(combat);
 }

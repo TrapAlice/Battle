@@ -19,3 +19,7 @@ void Object_move(Object* obj, int dx, int dy){
 	obj->x+=dx;
 	obj->y+=dy;
 }
+
+void Object_delete(Object* object){
+	free(object);
+}

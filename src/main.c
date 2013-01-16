@@ -1,11 +1,10 @@
 #include "libtcod.h"
-#include "tap.h"
-#include <assert.h>
 #include "moonmem.h"
 #include "test_ids.h"
 #include "object.h"
 #include "monster.h"
 #include "combat.h"
+#include "rng.h"
 
 #define ever ;;
 
@@ -21,10 +20,13 @@ int handleInput();
 
 int main() {    
     //RunTests(1,MEMORY_TEST);
-    int steps=25;
+    
     MOONMEM_init(128);
+    RNG_init(0);
+    
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
+    int steps=25;
     for(ever){
         if( TCOD_console_is_window_closed() ){
             break;
@@ -35,21 +37,22 @@ int main() {
         if( handleInput() != 0 ){
             steps--;
         }
-        if(steps < 26){
-            steps = 25;
+        if(RNG_roll(1,steps)==1){
+            steps = 50;
             monster = Monster_create("Slime");
 
             printf("A %s attacks!\n", monster->name);
-            int x=0;
-            while(!Monster_checkDead(monster)){
-                x++;
-                //MOONMEM_memout();
-                //MOONMEM_nodeout();
+            for(ever){
                 Combat_attack(player->combat, player->name, monster->combat, monster->name);
+                if(Monster_checkDead(monster)) break;
                 Combat_attack(monster->combat, monster->name, player->combat, player->name);
+                if(Monster_checkDead(player)){
+                    printf("You died!\n");
+                    exit(0);
+                }
             }
             printf("You win!\n");
-            break;
+            Monster_delete(monster);
         }
     }
 

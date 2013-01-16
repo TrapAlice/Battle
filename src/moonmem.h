@@ -29,6 +29,8 @@ void MOONMEM_init(unsigned int pSize);
 void* MOONMEM_alloc(size_t pSize);
 void MOONMEM_dealloc(void* ptr);
 void MOONMEM_memout();
+void MOONMEM_nodeout();
+void MOONMEM_memdump();
 void MOONMEM_uninit();
 
 #endif//_MOONMEM_H

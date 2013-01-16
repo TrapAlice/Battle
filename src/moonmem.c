@@ -79,6 +79,20 @@ void MOONMEM_memout(){
     printf("\n");
 }
 
+void MOONMEM_nodeout(){
+    int x = 0;
+    while( x < MOONMEM->size/2 ){
+        printf("%08X ",(MOONMEM->head+x)->memory);
+        x++;
+    }
+    printf("\n");
+}
+
+void MOONMEM_memdump(){
+    MOONMEM_memout();
+    exit(0);
+}
+
 void MOONMEM_uninit(){
     free(MOONMEM);
 }

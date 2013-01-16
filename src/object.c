@@ -1,12 +1,14 @@
 #include "object.h"
 #include "libtcod.h"
 #include "moonmem.h"
+#include "combat.h"
 
 Object* Object_create(char self){
 	Object* obj = malloc(sizeof(Object));
 	obj->self = self;
 	obj->x=20;
 	obj->y=20;
+	obj->combat = Combat_create(32,3,1);
 	return obj;
 }
 

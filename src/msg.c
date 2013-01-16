@@ -15,6 +15,7 @@ Message* createMessage(char* msg){
 }
 
 void deleteMessage(Message* message){
+	free(message->msg);
 	free(message);
 }
 
@@ -22,10 +23,6 @@ void Msg_init(){
 	head = NULL;
 	tail = NULL;
 	messageAmount=0;
-	int x;
-	for( x=0; x<15; x++){
-		Msg_addMessage("--");
-	}
 }
 
 
@@ -51,36 +48,23 @@ void Msg_addMessage(const char* msg, ...){
 		deleteMessage(temp);
 		messageAmount--;
 	}
-
-	/*deleteMessage(MessageList[head]);
-	head++;
-	if(head==15)head=0;
-
-	
-	MessageList[tail]=message;
-	tail++;
-	if(tail==15)tail=0;
-	printf("%s\n",buff);
-	printf("%s\n",message->msg);*/
-	//MOONMEM_memout();
 }
 
 char* Msg_getMessage(int pos){
-	//if(head == NULL) return "";
 	Message* temp = head;
 	while(pos>0){
 		if(temp == NULL) break;
 		temp = temp->next;
 		pos--;
 	}
-	return (temp == NULL) ? "-" : temp->msg;
-}
-
-int Msg_size(){
-	//return TCOD_list_size(MessageList);
-	return 14;
+	return (temp == NULL) ? "" : temp->msg;
 }
 
 void Msg_uninit(){
-	//TCOD_list_clear(MessageList);
+	Message* temp = head;
+	while(temp != NULL){
+		head = head->next;
+		deleteMessage(temp);
+		temp = head;
+	}
 }

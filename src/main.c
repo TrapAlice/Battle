@@ -34,7 +34,7 @@ int main() {
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
     mainLoop();
     
-    MOONMEM_memout();
+    Monster_delete(player);
     TCOD_console_delete(msgConsole);
     Msg_uninit();
     MOONMEM_uninit();
@@ -52,13 +52,11 @@ void mainLoop(){
         TCOD_console_clear(msgConsole);
         Object_draw(player->object);
         int x=0;
-        while(x<Msg_size()){
-            //printf("%s\n", Msg_getMessage());
+        while(x<=15){
             TCOD_console_print(msgConsole,0,x,Msg_getMessage(x));
-            //printf("%s\n",Msg_getMessage(x));
             x++;
         }
-        TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,128,0);
+        TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
         TCOD_console_flush();
         if( handleInput() != 0 ){
             steps--;
@@ -67,7 +65,6 @@ void mainLoop(){
             steps = 50;
             monster = Monster_create("Slime");
 
-            //printf("A %s attacks!\n", monster->name);
             Msg_addMessage("A %s attacks!","Slime");
             for(ever){
                 Combat_attack(player->combat, player->name, monster->combat, monster->name);
@@ -75,11 +72,11 @@ void mainLoop(){
                 Combat_attack(monster->combat, monster->name, player->combat, player->name);
                 if(Monster_checkDead(player)){
                     Msg_addMessage("You lose");
+                    Monster_delete(monster);
                     return;
                 }
             }
             Msg_addMessage("You win!");
-            //printf("You win!\n");
             Monster_delete(monster);
         }
     }

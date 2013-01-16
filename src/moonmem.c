@@ -40,6 +40,7 @@ int findEmptySlot(size_t pSize){
     }
     printf("Out of memory\n");
     MOONMEM_memdump();
+    MOONMEM_uninit();
     exit(0);
 }
 
@@ -49,6 +50,7 @@ memnode* findEmptyNode(){
         x++;
         if (x > MOONMEM->size/2){
             printf("Out of empty nodes\n");
+            MOONMEM_uninit();
             exit(0);
         }
     }
@@ -86,5 +88,6 @@ void MOONMEM_memdump(){
 }
 
 void MOONMEM_uninit(){
+    MOONMEM_memout();
     free(MOONMEM);
 }

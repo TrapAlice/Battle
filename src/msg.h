@@ -10,6 +10,5 @@ void Msg_init();
 void Msg_uninit();
 void Msg_addMessage(const char*, ...);
 char* Msg_getMessage(int);
-int Msg_size();
 
 #endif//_MSG_H

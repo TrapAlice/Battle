@@ -7,6 +7,7 @@ void RNG_init(int seed){
 }
 
 int RNG_roll(int x, int d){
+	d=(d<1) ? 1 : d;
 	int result=0;
 	for(; x>0 ; x--){
 		result += rand() % d;

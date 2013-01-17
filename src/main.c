@@ -9,11 +9,6 @@
 
 #define ever ;;
 
-typedef struct{
-int x;
-int y;
-}point;
-
 Monster* player;
 Monster* monster;
 TCOD_console_t msgConsole;

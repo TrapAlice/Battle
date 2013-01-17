@@ -7,10 +7,10 @@ void RNG_init(int seed){
 }
 
 int RNG_roll(int x, int d){
-	d=(d<1) ? 1 : d;
+	if( d == 0 ) return 0;
 	int result=0;
 	for(; x>0 ; x--){
-		result += rand() % d;
+		result += (rand() % d)+1;
 	}
-	return result+1;
+	return result;
 }

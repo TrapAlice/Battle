@@ -17,9 +17,11 @@ int y;
 Monster* player;
 Monster* monster;
 TCOD_console_t msgConsole;
+int GameState;
 
 int handleInput();
 void mainLoop();
+void printUI();
 
 int main() {    
     //RunTests(1,MEMORY_TEST);
@@ -28,6 +30,7 @@ int main() {
     Msg_init();
     RNG_init(0);
     msgConsole = TCOD_console_new(80,20);
+    GameState = 0;
     TCOD_console_set_default_background(msgConsole,TCOD_red);
 
     player = Monster_playerCreate(20,20);
@@ -48,16 +51,7 @@ void mainLoop(){
         if( TCOD_console_is_window_closed() ){
             break;
         }
-        TCOD_console_clear(NULL);
-        TCOD_console_clear(msgConsole);
-        Object_draw(player->object);
-        int x=0;
-        while(x<=15){
-            TCOD_console_print(msgConsole,0,x,Msg_getMessage(x));
-            x++;
-        }
-        TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
-        TCOD_console_flush();
+        printUI();
         if( handleInput() != 0 ){
             steps--;
         }
@@ -80,6 +74,25 @@ void mainLoop(){
             Monster_delete(monster);
         }
     }
+}
+
+void printUI(){
+    TCOD_console_clear(NULL);
+    TCOD_console_clear(msgConsole);
+    switch(GameState){
+        case 0:
+            Object_draw(player->object);
+            int x=0;
+            while(x<=15){
+                TCOD_console_print(msgConsole,0,x,Msg_getMessage(x));
+                x++;
+            }
+            TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
+            break;
+        case 1:
+            break;
+    }
+    TCOD_console_flush();
 }
 
 int handleInput(){

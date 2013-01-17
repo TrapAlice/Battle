@@ -72,7 +72,7 @@ void mainLoop(){
                 battleCooldown=10;
                 monster = Monster_create("Slime");
 
-                Msg_addMessage(consoleLog,"A %s attacks!",monster->name);
+                Msg_addMessage(consoleLog,"A %s appears!",monster->name);
                 printUI();
                 TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
                 GameState=1;
@@ -127,15 +127,16 @@ int battleLoop(){
             break;
         }
         printUI();
+        Msg_clear(combatLog);
         
         TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
         TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
         if(key.c == 'a' || key.c == 'A'){
-            Combat_attack(player->combat, player->name, monster->combat, monster->name);
             Msg_addMessage(combatLog, "You attack!");
+            Combat_attack(combatLog, player->combat, player->name, monster->combat, monster->name);
             actiontaken=1;
         } else if(key.c == 'h' || key.c == 'H'){
-            Combat_takeDamage(player->combat, player->name, -(RNG_roll(2,6)));
+            Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(2,6)));
             actiontaken=1;
         } else if(key.c == 'r' || key.c == 'R'){
             Msg_addMessage(consoleLog,"You ran away!");
@@ -144,15 +145,14 @@ int battleLoop(){
         }
         if(actiontaken){
             if(Monster_checkDead(monster)){
-                Msg_addMessage(consoleLog
-,"You win!");
+                Msg_addMessage(consoleLog,"You win!");
                 return 1;
                 break;
             }
-            Combat_attack(monster->combat, monster->name, player->combat, player->name);
+            Msg_addMessage(combatLog, "The %s attacks!",monster->name);
+            Combat_attack(combatLog, monster->combat, monster->name, player->combat, player->name);
             if(Monster_checkDead(player)){
-                Msg_addMessage(consoleLog
-,"You lose");
+                Msg_addMessage(consoleLog,"You lose");
                 return 0;
             }
         }

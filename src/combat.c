@@ -3,12 +3,20 @@
 #include "rng.h"
 #include "msg.h"
 
-void Combat_attack(const Combat* attacker, const char* attacker_name, Combat* defender, const char* defender_name){
+void Combat_attack(MessageList* messageLog, const Combat* attacker, const char* attacker_name, Combat* defender, const char* defender_name){
 	int damage = RNG_roll(attacker->hits,attacker->power) - defender->defense;
-	Combat_takeDamage(defender, defender_name, damage);
+	Msg_addMessage(messageLog, "%s attacks %s",attacker_name, defender_name);
+	Combat_takeDamage(messageLog, defender, defender_name, damage);
 }
 
-void Combat_takeDamage(Combat* defender, const char* defender_name, int damage){
+void Combat_takeDamage(MessageList* messageLog, Combat* defender, const char* defender_name, int damage){
+	if(damage>0){
+		Msg_addMessage(messageLog, "%s takes %d damage", defender_name, damage);
+	} else if (damage < 0){
+		Msg_addMessage(messageLog, "%s is healed for %d", defender_name, -damage);
+	} else {
+		Msg_addMessage(messageLog, "%s avoids the attack", defender_name, damage);
+	}
 	defender->hp -= damage;
 	if(defender->hp > defender->maxhp){
 		defender->hp = defender->maxhp;

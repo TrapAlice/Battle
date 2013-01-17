@@ -17,9 +17,12 @@ int y;
 Monster* player;
 Monster* monster;
 TCOD_console_t msgConsole;
+TCOD_console_t combatConsole;
 
-int handleInput();
+int movementInput();
+void getKeyboardInput(TCOD_key_t* key);
 void mainLoop();
+int battleLoop();
 
 int main() {    
     //RunTests(1,MEMORY_TEST);
@@ -29,13 +32,15 @@ int main() {
     RNG_init(0);
     msgConsole = TCOD_console_new(80,20);
     TCOD_console_set_default_background(msgConsole,TCOD_red);
+    combatConsole = TCOD_console_new(80,20);
 
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
     mainLoop();
-    
+    //battleLoop();
     Monster_delete(player);
     TCOD_console_delete(msgConsole);
+    TCOD_console_delete(combatConsole);
     Msg_uninit();
     MOONMEM_uninit();
 
@@ -58,7 +63,7 @@ void mainLoop(){
         }
         TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
         TCOD_console_flush();
-        if( handleInput() != 0 ){
+        if( movementInput() != 0 ){
             steps--;
         }
         if(RNG_roll(1,steps)>0){
@@ -66,7 +71,8 @@ void mainLoop(){
             monster = Monster_create("Slime");
 
             Msg_addMessage("A %s attacks!","Slime");
-            for(ever){
+
+            /*for(ever){
                 Combat_attack(player->combat, player->name, monster->combat, monster->name);
                 if(Monster_checkDead(monster)) break;
                 Combat_attack(monster->combat, monster->name, player->combat, player->name);
@@ -75,14 +81,64 @@ void mainLoop(){
                     Monster_delete(monster);
                     return;
                 }
-            }
-            Msg_addMessage("You win!");
+            }*/
+            int result = battleLoop();
             Monster_delete(monster);
+            if(result == 0) break;
         }
     }
 }
 
-int handleInput(){
+int battleLoop(){
+    TCOD_key_t key;
+    int actiontaken = 0;
+    //int battleActive=1;
+    for(ever){
+        actiontaken=0;
+        if( TCOD_console_is_window_closed() ){
+            break;
+        }
+        TCOD_console_clear(NULL);
+        TCOD_console_clear(combatConsole);
+        TCOD_console_print(combatConsole,0,0,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
+        TCOD_console_print(combatConsole,0,2,"[A] Attack");
+        TCOD_console_print(combatConsole,0,3,"[H] Heal");
+        TCOD_console_print(combatConsole,0,4,"[R] Run");
+        TCOD_console_blit(combatConsole,0,0,80,20,NULL,0,35,128,255);
+        TCOD_console_flush();
+        getKeyboardInput(&key);
+        if(key.c == 'a' || key.c == 'A'){
+            Combat_attack(player->combat, player->name, monster->combat, monster->name);
+            actiontaken=1;
+        } else if(key.c == 'h' || key.c == 'H'){
+            Combat_takeDamage(player->combat, player->name, -(RNG_roll(2,6)));
+            actiontaken=1;
+        } else if(key.c == 'r' || key.c == 'R'){
+            Msg_addMessage("You ran away!");
+            return 1;
+            break;
+        }
+        if(actiontaken){
+            if(Monster_checkDead(monster)){
+                Msg_addMessage("You win!");
+                return 1;
+                break;
+            }
+            Combat_attack(monster->combat, monster->name, player->combat, player->name);
+            if(Monster_checkDead(player)){
+                Msg_addMessage("You lose");
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
+
+void getKeyboardInput(TCOD_key_t* key){
+    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, key, NULL, false);
+}
+
+int movementInput(){
     int action = 0;
     TCOD_key_t key;
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);

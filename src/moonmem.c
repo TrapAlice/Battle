@@ -73,7 +73,7 @@ void MOONMEM_dealloc(void* ptr){
 }
 
 void MOONMEM_memout(){
-    int x = 0;
+    int x = 16;
     while( x < (sizeof(moonmem)+MOONMEM->size+MOONMEM->size/4) ){
         printf("%02X",*((byte*)(MOONMEM)+x));
         x++;

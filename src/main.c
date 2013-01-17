@@ -92,7 +92,6 @@ void mainLoop(){
 int battleLoop(){
     TCOD_key_t key;
     int actiontaken = 0;
-    //int battleActive=1;
     for(ever){
         actiontaken=0;
         if( TCOD_console_is_window_closed() ){

@@ -6,9 +6,17 @@ typedef struct Message{
 	struct Message* next;
 }Message;
 
-void Msg_init();
-void Msg_uninit();
-void Msg_addMessage(const char*, ...);
-char* Msg_getMessage(int);
+typedef struct{
+	Message* head;
+	Message* tail;
+	int size;
+	int limit;
+}MessageList;
+
+MessageList* Msg_create(int);
+void Msg_clear(MessageList*);
+void Msg_delete(MessageList*);
+void Msg_addMessage(MessageList*, const char*, ...);
+char* Msg_getMessage(MessageList*, int);
 
 #endif//_MSG_H

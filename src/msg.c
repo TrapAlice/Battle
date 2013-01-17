@@ -4,10 +4,6 @@
 #include <stdio.h>
 #include "moonmem.h"
 
-Message* head;
-Message* tail;
-int messageAmount;
-
 Message* createMessage(char* msg){
 	Message* message = malloc(sizeof(Message));
 	message->msg = msg;
@@ -19,22 +15,29 @@ void deleteMessage(Message* message){
 	free(message);
 }
 
-void Msg_init(){
-	head = NULL;
-	tail = NULL;
-	messageAmount=0;
+MessageList* Msg_create(int limit){
+	MessageList* messageList = malloc(sizeof(MessageList));
+	messageList->limit = limit;
+	return messageList;
 }
 
 
 
-void Msg_addMessage(const char* msg, ...){
+void Msg_addMessage(MessageList* messageList, const char* msg, ...){
 	char* buff=malloc(sizeof(char)*32);
 	va_list ap;
 	va_start(ap, msg);
 	vsprintf(buff, msg, ap);
 	va_end(ap);
-	messageAmount++;
+	int size = messageList->size;
+	Message* head = messageList->head;
+	Message* tail = messageList->tail;
+
+	size++;
+
 	Message* message = createMessage(buff);
+	
+
 	if( head==NULL ){
 		head = message;
 		tail = head;
@@ -42,16 +45,19 @@ void Msg_addMessage(const char* msg, ...){
 		tail->next = message;
 		tail = message;
 	}
-	if(messageAmount>14){
+	if(size>=messageList->limit){
 		Message* temp = head;
 		head = head->next;
 		deleteMessage(temp);
-		messageAmount--;
+		size--;
 	}
+	messageList->head = head;
+	messageList->tail = tail;
+	messageList->size = size;
 }
 
-char* Msg_getMessage(int pos){
-	Message* temp = head;
+char* Msg_getMessage(MessageList* messageList, int pos){
+	Message* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;
 		temp = temp->next;
@@ -60,11 +66,20 @@ char* Msg_getMessage(int pos){
 	return (temp == NULL) ? "" : temp->msg;
 }
 
-void Msg_uninit(){
-	Message* temp = head;
+void Msg_clear(MessageList* messageList){
+	Message* temp = messageList->head;
+	Message* head = messageList->head;
 	while(temp != NULL){
 		head = head->next;
 		deleteMessage(temp);
 		temp = head;
+		messageList->size--;
 	}
+	messageList->head = NULL;
+
+}
+
+void Msg_delete(MessageList* messageList){
+	Msg_clear(messageList);
+	free(messageList);
 }

@@ -61,6 +61,7 @@ void mainLoop(){
     int steps=25;
     int battleCooldown=0;
     int done=0;
+    int result;
     while(!done){
         if( TCOD_console_is_window_closed() ){
             return;
@@ -85,7 +86,7 @@ void mainLoop(){
                 TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
                 GameState=1;
 
-                int result = battleLoop();
+                result = battleLoop();
                 GameState=0;
                 Monster_delete(monster);
                 if(result == 1) done=1;
@@ -97,11 +98,12 @@ void mainLoop(){
 }
 
 void printUI(){
+    int x;
+
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
     TCOD_console_clear(combatConsole);
     TCOD_console_clear(statusPanel);
-    int x;
     switch(GameState){
         case 0:
             Object_draw(player->object);
@@ -143,6 +145,7 @@ int battleLoop(){
     TCOD_key_t key;
     int actiontaken = 0;
     int done = 0;
+
     while(!done){
         actiontaken=0;
         if( TCOD_console_is_window_closed() ){
@@ -208,6 +211,7 @@ int battleLoop(){
 int movementInput(){
     int action = 0;
     TCOD_key_t key;
+    
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
     switch(key.vk) {
         case TCODK_KP7 : Object_move(player->object, -1, -1); action=1; break;

@@ -6,12 +6,13 @@
 
 
 int memory_test(){
+	int* x;
 	plan(NO_PLAN);
 	MOONMEM_init(256);
 
 	note("Testing Memory Manager's Memory Allocation and Deallocation");
 	
-	int* x = (int*)MOONMEM_alloc(sizeof(int*));
+	x = (int*)MOONMEM_alloc(sizeof(int*));
 	*x = 0xBEEF;
 	ok(0xBEEF == *x);
 	MOONMEM_dealloc(x);

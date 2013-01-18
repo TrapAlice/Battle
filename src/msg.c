@@ -25,17 +25,20 @@ MessageList* Msg_create(int limit){
 
 void Msg_addMessage(MessageList* messageList, const char* msg, ...){
 	char* buff=malloc(sizeof(char)*32);
-	va_list ap;
-	va_start(ap, msg);
-	vsprintf(buff, msg, ap);
-	va_end(ap);
 	int size = messageList->size;
 	Message* head = messageList->head;
 	Message* tail = messageList->tail;
+	va_list ap;
+	Message* message;
+	Message* temp;
+	va_start(ap, msg);
+	vsprintf(buff, msg, ap);
+	va_end(ap);
+	
 
 	size++;
 
-	Message* message = createMessage(buff);
+	message = createMessage(buff);
 	
 
 	if( head==NULL ){
@@ -46,7 +49,7 @@ void Msg_addMessage(MessageList* messageList, const char* msg, ...){
 		tail = message;
 	}
 	if(size>=messageList->limit){
-		Message* temp = head;
+		temp = head;
 		head = head->next;
 		deleteMessage(temp);
 		size--;

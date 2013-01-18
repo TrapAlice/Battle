@@ -80,7 +80,7 @@ void mainLoop(){
                     monster = Monster_clone(MonsterList[mob_slime]);
                 }
 
-                Msg_addMessage(consoleLog,"A %s appears!",monster->name);
+                Msg_addMessage(consoleLog,"A wild %s appears!",monster->name);
                 printUI();
                 TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
                 GameState=1;

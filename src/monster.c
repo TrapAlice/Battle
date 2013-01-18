@@ -12,10 +12,10 @@ Monster* Monster_playerCreate(int x, int y){
 	return monster;
 }
 
-Monster* Monster_create(char* name, int xp){
+Monster* Monster_create(char* name, int hp, int power, int defense, int xp){
 	Monster* monster = malloc(sizeof(Monster));
 	monster->name = name;
-	monster->combat = Combat_create(16,4,1);
+	monster->combat = Combat_create(hp,power,defense);
 	monster->xp = xp;
 	return monster;
 }

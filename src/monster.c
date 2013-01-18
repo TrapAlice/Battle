@@ -1,6 +1,8 @@
 #include "monster.h"
 #include "moonmem.h"
 
+Monster* player;
+
 Monster* Monster_playerCreate(int x, int y){
 	Object* obj = Object_create('@',x,y);
 	Monster* monster = malloc(sizeof(Monster));

@@ -10,6 +10,8 @@ typedef struct{
 	Object* object;
 }Monster;
 
+//extern Monster* player;
+
 Monster* Monster_playerCreate(int,int);
 Monster* Monster_create(char*);
 int Monster_checkDead(Monster*);

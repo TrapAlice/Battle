@@ -9,7 +9,7 @@
 
 #define ever ;;
 
-Monster* player;
+extern Monster* player;
 Monster* monster;
 TCOD_console_t msgConsole;
 int GameState;

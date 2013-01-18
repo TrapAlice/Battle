@@ -1,4 +1,4 @@
-Battle
+Battle 
 ======
 
 A roguelike written in C using the Libtcod library

@@ -53,7 +53,8 @@ int main() {
 void mainLoop(){
     int steps=25;
     int battleCooldown=0;
-    for(ever){
+    int done=0;
+    while(!done){
         if( TCOD_console_is_window_closed() ){
             break;
         }
@@ -76,10 +77,12 @@ void mainLoop(){
                 int result = battleLoop();
                 GameState=0;
                 Monster_delete(monster);
-                if(result == 1) break;
+                if(result == 1) done=1;
             }
         } 
     }
+    printUI();
+    waitForPress();
 }
 
 void printUI(){
@@ -172,7 +175,7 @@ int battleLoop(){
             Msg_addMessage(combatLog, "You've died >:");
             break;
         case 2:
-            Msg_addMessage(combatLog, "You w1n!");
+            Msg_addMessage(combatLog, "You win!");
             Msg_addMessage(combatLog, "You gained %d EXP", monster->xp);
             player->xp += monster->xp;
             break;

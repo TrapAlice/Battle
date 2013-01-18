@@ -36,7 +36,7 @@ int main() {
     TCOD_console_set_default_background(msgConsole,TCOD_red);
     combatLog = Msg_create(15);
     combatConsole = TCOD_console_new(80,40);
-    statusPanel = TCOD_console_new(20,30);
+    statusPanel = TCOD_console_new(15,30);
     TCOD_console_set_default_background(statusPanel,TCOD_blue);
 
     player = Monster_playerCreate(20,20);
@@ -60,7 +60,7 @@ void mainLoop(){
     int done=0;
     while(!done){
         if( TCOD_console_is_window_closed() ){
-            break;
+            return;
         }
         printUI();
         if( movementInput() != 0 ){
@@ -104,9 +104,9 @@ void printUI(){
                 x++;
             }
             TCOD_console_print(statusPanel,0,0,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
-            TCOD_console_print(statusPanel,0,1,"EXP: %d",0);
+            TCOD_console_print(statusPanel,0,1,"EXP: %d",player->xp);
             TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
-            TCOD_console_blit(statusPanel,0,0,20,30,NULL,60,10,128,0);
+            TCOD_console_blit(statusPanel,0,0,20,30,NULL,65,10,128,0);
             break;
         case 1:
             x=0;

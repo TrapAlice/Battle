@@ -11,7 +11,7 @@ typedef struct{
 	Object* object;
 }Monster;
 
-//extern Monster* player;
+extern Monster* player;
 
 Monster* Monster_playerCreate(int,int);
 Monster* Monster_create(char*, int, int, int, int);
@@ -19,4 +19,4 @@ Monster* Monster_clone(Monster*);
 int Monster_checkDead(Monster*);
 void Monster_delete(Monster*);
 
-#endif//_MONSTER_H
+#endif

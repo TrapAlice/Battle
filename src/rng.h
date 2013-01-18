@@ -4,4 +4,4 @@
 void RNG_init(int);
 int RNG_roll(int,int);
 
-#endif//_RNG_H
+#endif

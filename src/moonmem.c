@@ -7,8 +7,8 @@
 
 static moonmem* MOONMEM;
 
-inline int findEmptySlot(size_t pSize);
-inline memnode* findEmptyNode();
+int findEmptySlot(size_t pSize);
+memnode* findEmptyNode();
 
 void MOONMEM_init(unsigned int pSize){
     MOONMEM = calloc(1,sizeof(moonmem)+pSize/4+pSize);
@@ -29,7 +29,7 @@ void* MOONMEM_alloc(size_t pSize){
     return data->memory;
 }
 
-inline int findEmptySlot(size_t pSize){
+int findEmptySlot(size_t pSize){
     int x;
     int n;
     byte* slots = calloc(pSize,sizeof(byte*));
@@ -46,7 +46,7 @@ inline int findEmptySlot(size_t pSize){
     exit(0);
 }
 
-inline memnode* findEmptyNode(){
+memnode* findEmptyNode(){
     int x = 0;
     while((MOONMEM->head+x)->memory != NULL){
         x++;

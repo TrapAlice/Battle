@@ -27,7 +27,6 @@ int battleLoop();
 void waitForPress();
 
 int main() {    
-    //RunTests(1,MEMORY_TEST);
     
     MOONMEM_init(1024);
     RNG_init(0);
@@ -44,7 +43,6 @@ int main() {
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
     mainLoop();
-    //battleLoop();
     Monster_delete(player);
     TCOD_console_delete(statusPanel);
     TCOD_console_delete(msgConsole);

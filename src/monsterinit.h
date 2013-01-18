@@ -18,4 +18,4 @@ void MonstersInit();
 void MonstersGet(enum MON_ID);
 void MonstersUninit();
 
-#endif//_MONSTERINIT_H
+#endif

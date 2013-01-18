@@ -19,4 +19,4 @@ void Msg_delete(MessageList*);
 void Msg_addMessage(MessageList*, const char*, ...);
 char* Msg_getMessage(MessageList*, int);
 
-#endif//_MSG_H
+#endif

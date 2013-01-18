@@ -25,7 +25,7 @@
 void runTest(int id){
 	switch(id){
 		case MEMORY_TEST:
-			//memory_test();
+			
 			break;
 	}
 }

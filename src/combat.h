@@ -15,4 +15,4 @@ void Combat_takeDamage(MessageList*, Combat*, const char*, int);
 Combat* Combat_create(int, int, int);
 void Combat_delete(Combat*);
 
-#endif//_COMBAT_H
+#endif

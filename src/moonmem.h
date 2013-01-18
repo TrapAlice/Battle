@@ -32,4 +32,4 @@ void MOONMEM_memout();
 void MOONMEM_memdump();
 void MOONMEM_uninit();
 
-#endif//_MOONMEM_H
+#endif

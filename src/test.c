@@ -5,7 +5,7 @@
 #include "test_ids.h"
 
 
-int memory_test(){
+/*int memory_test(){
 	int* x;
 	plan(NO_PLAN);
 	MOONMEM_init(256);
@@ -20,12 +20,12 @@ int memory_test(){
 
     MOONMEM_uninit();
 	done_testing();
-}
+}*/
 
 void runTest(int id){
 	switch(id){
 		case MEMORY_TEST:
-			memory_test();
+			//memory_test();
 			break;
 	}
 }

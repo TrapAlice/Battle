@@ -20,6 +20,14 @@ Monster* Monster_create(char* name, int xp){
 	return monster;
 }
 
+Monster* Monster_clone(Monster* monster){
+	Monster* clone = malloc(sizeof(Monster));
+	clone->name = monster->name;
+	clone->xp = monster->xp;
+	clone->combat = Combat_create(monster->combat->maxhp, monster->combat->power, monster->combat->defense);
+	return clone;
+}
+
 int Monster_checkDead(Monster* monster){
 	return ( monster->combat->hp < 0 ) ? 1 : 0;
 }

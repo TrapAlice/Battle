@@ -6,6 +6,7 @@
 #include "combat.h"
 #include "rng.h"
 #include "msg.h"
+#include "monsterinit.h"
 
 #define ever ;;
 
@@ -30,6 +31,7 @@ int main() {
     
     MOONMEM_init(1024);
     RNG_init(0);
+    MonstersInit();
     consoleLog = Msg_create(15);
     msgConsole = TCOD_console_new(80,20);
     GameState = 0;
@@ -49,6 +51,7 @@ int main() {
     Msg_delete(consoleLog);
     TCOD_console_delete(combatConsole);
     Msg_delete(combatLog);
+    MonstersUninit();
     MOONMEM_uninit();
 
     return 0;
@@ -71,7 +74,11 @@ void mainLoop(){
             if(RNG_roll(1,steps) == 1){
                 steps = 50;
                 battleCooldown=10;
-                monster = Monster_create("Slime",15);
+                if(RNG_roll(1,6)>4){
+                    monster = Monster_clone(MonsterList[mob_pig]);
+                } else {
+                    monster = Monster_clone(MonsterList[mob_slime]);
+                }
 
                 Msg_addMessage(consoleLog,"A %s appears!",monster->name);
                 printUI();

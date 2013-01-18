@@ -7,13 +7,14 @@
 typedef struct{
 	char* name;
 	Combat* combat;
+	int xp;
 	Object* object;
 }Monster;
 
 //extern Monster* player;
 
 Monster* Monster_playerCreate(int,int);
-Monster* Monster_create(char*);
+Monster* Monster_create(char*, int);
 int Monster_checkDead(Monster*);
 void Monster_delete(Monster*);
 

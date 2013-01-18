@@ -23,6 +23,7 @@ void getKeyboardInput(TCOD_key_t* key);
 void mainLoop();
 void printUI();
 int battleLoop();
+void waitForPress();
 
 int main() {    
     //RunTests(1,MEMORY_TEST);
@@ -56,7 +57,8 @@ int main() {
 void mainLoop(){
     int steps=25;
     int battleCooldown=0;
-    for(ever){
+    int done=0;
+    while(!done){
         if( TCOD_console_is_window_closed() ){
             break;
         }
@@ -69,7 +71,7 @@ void mainLoop(){
             if(RNG_roll(1,steps) == 1){
                 steps = 50;
                 battleCooldown=10;
-                monster = Monster_create("Slime");
+                monster = Monster_create("Slime",15);
 
                 Msg_addMessage(consoleLog,"A %s appears!",monster->name);
                 printUI();
@@ -79,11 +81,12 @@ void mainLoop(){
                 int result = battleLoop();
                 GameState=0;
                 Monster_delete(monster);
-                Msg_clear(combatLog);
-                if(result == 0) break;
+                if(result == 1) done=1;
             }
         } 
     }
+    printUI();
+    waitForPress();
 }
 
 void printUI(){
@@ -117,6 +120,14 @@ void printUI(){
             TCOD_console_print(combatConsole,0,24,"[R] Run");
             TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,5,128,255);
             break;
+        case 2:
+            x=0;
+            while(x<=15){
+                TCOD_console_print(combatConsole,30,x,Msg_getMessage(combatLog, x));
+                x++;
+            }
+            TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,20,128,255);
+            break;
     }
     TCOD_console_flush();
 }
@@ -124,7 +135,8 @@ void printUI(){
 int battleLoop(){
     TCOD_key_t key;
     int actiontaken = 0;
-    for(ever){
+    int done = 0;
+    while(!done){
         actiontaken=0;
         if( TCOD_console_is_window_closed() ){
             break;
@@ -143,24 +155,47 @@ int battleLoop(){
             actiontaken=1;
         } else if(key.c == 'r' || key.c == 'R'){
             Msg_addMessage(consoleLog,"You ran away!");
-            return 1;
+            Msg_addMessage(combatLog,"You ran away!");
+            done=3;
             break;
         }
         if(actiontaken){
             if(Monster_checkDead(monster)){
                 Msg_addMessage(consoleLog,"You win!");
-                return 1;
+                Msg_addMessage(combatLog,"You win!");
+                done= 2;
                 break;
             }
             Msg_addMessage(combatLog, "The %s attacks!",monster->name);
             Combat_attack(combatLog, monster->combat, monster->name, player->combat, player->name);
             if(Monster_checkDead(player)){
                 Msg_addMessage(consoleLog,"You lose");
-                return 0;
+                Msg_addMessage(combatLog,"You lose");
+                done = 1;
             }
         }
     }
-    return 0;
+    printUI();
+    waitForPress();
+    Msg_clear(combatLog);
+    switch(done){
+        case 1:
+            Msg_addMessage(combatLog, "You've died >:");
+            break;
+        case 2:
+            Msg_addMessage(combatLog, "You win!");
+            Msg_addMessage(combatLog, "You gained %d EXP", monster->xp);
+            player->xp += monster->xp;
+            break;
+        case 3:
+            Msg_addMessage(combatLog, "You ran away safely");
+            break;
+    }
+    GameState = 2;
+    printUI();
+    Msg_clear(combatLog);
+    waitForPress();
+    return done;
 }
 
 int movementInput(){
@@ -179,4 +214,9 @@ int movementInput(){
         default:break;
     }
     return action;
+}
+
+void waitForPress(){
+    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, NULL, NULL, false);
+    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
 }

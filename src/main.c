@@ -16,6 +16,7 @@ int GameState;
 TCOD_console_t combatConsole;
 MessageList* consoleLog;
 MessageList* combatLog;
+TCOD_console_t statusPanel;
 
 int movementInput();
 void getKeyboardInput(TCOD_key_t* key);
@@ -34,12 +35,15 @@ int main() {
     TCOD_console_set_default_background(msgConsole,TCOD_red);
     combatLog = Msg_create(15);
     combatConsole = TCOD_console_new(80,40);
+    statusPanel = TCOD_console_new(20,30);
+    TCOD_console_set_default_background(statusPanel,TCOD_blue);
 
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
     mainLoop();
     //battleLoop();
     Monster_delete(player);
+    TCOD_console_delete(statusPanel);
     TCOD_console_delete(msgConsole);
     Msg_delete(consoleLog);
     TCOD_console_delete(combatConsole);
@@ -86,6 +90,7 @@ void printUI(){
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
     TCOD_console_clear(combatConsole);
+    TCOD_console_clear(statusPanel);
     int x;
     switch(GameState){
         case 0:
@@ -95,7 +100,10 @@ void printUI(){
                 TCOD_console_print(msgConsole,0,x,Msg_getMessage(consoleLog, x));
                 x++;
             }
+            TCOD_console_print(statusPanel,0,0,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
+            TCOD_console_print(statusPanel,0,1,"EXP: %d",0);
             TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
+            TCOD_console_blit(statusPanel,0,0,20,30,NULL,60,10,128,0);
             break;
         case 1:
             x=0;

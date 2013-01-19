@@ -62,6 +62,7 @@ memnode* findEmptyNode(){
 void MOONMEM_dealloc(void* ptr){
     int x = 0;
     memnode* obj;
+    if(ptr==NULL)return;
     while( (MOONMEM->head+x)->memory != ptr ){
         x++;
         if( x > MOONMEM->size/2){

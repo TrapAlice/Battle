@@ -3,11 +3,14 @@
 
 #include "combat.h"
 #include "object.h"
+#include "inventory.h"
+
 
 typedef struct{
 	char* name;
 	Combat* combat;
 	int xp;
+	Inventory* inventory;
 	Object* object;
 }Monster;
 

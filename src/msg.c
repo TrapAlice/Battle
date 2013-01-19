@@ -39,7 +39,6 @@ void Msg_addMessage(MessageList* messageList, const char* msg, ...){
 	size++;
 
 	message = createMessage(buff);
-	
 
 	if( head==NULL ){
 		head = message;

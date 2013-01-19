@@ -2,11 +2,13 @@
 
 Monster** MonsterList;
 
+#define mon(id, name, hp, power, defense, exp) MonsterList[id]=Monster_create(name,hp,power,defense,exp)
+
 void MonstersInit(){
 	MonsterList=malloc(sizeof(Monster)*num_monsters);
-	MonsterList[null] = Monster_create("",0,0,0,0);
-	MonsterList[mob_slime] = Monster_create("Slime",10, 2, 1,15);
-	MonsterList[mob_pig] = Monster_create("Pig",12, 4, 1, 20);
+	mon(mob_null, "", 0, 0, 0, 0);
+	mon(mob_slime, "Slime", 10, 2, 1, 15);
+	mon(mob_pig, "Pig", 12, 4, 1, 20);
 }
 
 void MonstersGet(enum MON_ID id){

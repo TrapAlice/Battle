@@ -7,6 +7,11 @@
 #include "rng.h"
 #include "msg.h"
 #include "monsterinit.h"
+#include "item.h"
+#include "inventory.h"
+#include "iteminit.h"
+
+#include <stdio.h>
 
 #define ever ;;
 
@@ -19,6 +24,9 @@ MessageList* consoleLog;
 MessageList* combatLog;
 TCOD_console_t statusPanel;
 
+void init();
+void uninit();
+void test();
 int movementInput();
 void getKeyboardInput(TCOD_key_t* key);
 void mainLoop();
@@ -27,10 +35,31 @@ int battleLoop();
 void waitForPress();
 
 int main() {    
+    init();
+
+    test();
     
-    MOONMEM_init(1024);
+    
+    mainLoop();
+
+    
+    uninit();
+
+    return 0;
+}
+
+void test(){
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_sword]));
+}
+
+void init(){
+    MOONMEM_init(2048);
     RNG_init(0);
     MonstersInit();
+    ItemsInit();
     consoleLog = Msg_create(15);
     msgConsole = TCOD_console_new(80,20);
     GameState = 0;
@@ -42,17 +71,18 @@ int main() {
 
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
-    mainLoop();
+}
+
+void uninit(){
     Monster_delete(player);
     TCOD_console_delete(statusPanel);
     TCOD_console_delete(msgConsole);
     Msg_delete(consoleLog);
     TCOD_console_delete(combatConsole);
     Msg_delete(combatLog);
+    ItemsUninit();
     MonstersUninit();
     MOONMEM_uninit();
-
-    return 0;
 }
 
 void mainLoop(){
@@ -123,7 +153,7 @@ void printUI(){
             }
             TCOD_console_print(combatConsole,0,20,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
             TCOD_console_print(combatConsole,0,22,"[A] Attack");
-            TCOD_console_print(combatConsole,0,23,"[H] Heal");
+            TCOD_console_print(combatConsole,0,23,"[H] Use Item");
             TCOD_console_print(combatConsole,0,24,"[R] Run");
             TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,5,128,255);
             break;
@@ -143,6 +173,8 @@ int battleLoop(){
     TCOD_key_t key;
     int actiontaken = 0;
     int done = 0;
+    int itemchar;
+    int keyPressed;
 
     while(!done){
         actiontaken=0;
@@ -159,8 +191,31 @@ int battleLoop(){
             Combat_attack(combatLog, player->combat, player->name, monster->combat, monster->name);
             actiontaken=1;
         } else if(key.c == 'h' || key.c == 'H'){
-            Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(2,6)));
-            actiontaken=1;
+            itemchar=0;
+            Inventory* head = player->inventory->next;
+            Item* items[26];
+            Msg_addMessage(combatLog,"Use which item?");
+            while(head!=NULL){
+                Msg_addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
+                items[itemchar] = head->item;
+                itemchar++;
+                head=head->next;
+            }
+            Msg_addMessage(combatLog,"[1] Back");
+            printUI();
+            Msg_clear(combatLog);
+            TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
+            keyPressed = 'a'-key.c;
+            if(items[keyPressed]!=NULL){
+                if(items[keyPressed]->type==1){
+                    Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(1,items[keyPressed]->power)));
+                    Inventory_removeItem(player->inventory, ItemList[item_potion]);
+                    actiontaken=1;
+                }
+            }
+           
+            
+            
         } else if(key.c == 'r' || key.c == 'R'){
             Msg_addMessage(consoleLog,"You ran away!");
             Msg_addMessage(combatLog,"You ran away!");
@@ -180,6 +235,7 @@ int battleLoop(){
                 Msg_addMessage(consoleLog,"You lose");
                 Msg_addMessage(combatLog,"You lose");
                 done = 1;
+                break;
             }
         }
     }

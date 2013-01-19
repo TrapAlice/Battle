@@ -6,7 +6,7 @@
 
 
 enum MON_ID{
-	null,
+	mob_null,
 	mob_slime,
 	mob_pig,
 	num_monsters,

@@ -10,6 +10,7 @@ enum ITEM_ID{
 	item_null,
 	item_potion,
 	item_sword,
+	item_pomfhammer,
 	num_items,
 };
 

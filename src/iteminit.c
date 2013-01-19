@@ -2,13 +2,14 @@
 
 Item** ItemList;
 
-#define item(id, name, type, power, stackable) ItemList[id]=Item_create(name, type, power, stackable)
+#define item(id, name, desc, type, power, stackable) ItemList[id]=Item_create(name, desc, type, power, stackable)
 
 void ItemsInit(){
 	ItemList=malloc(sizeof(Item)*num_items);
-	item(item_null, "", 0, 0, 0);
-	item(item_potion, "Potion", 1, 6, 1);
-	item(item_sword, "Sword", 2, 6, 0);
+	item(item_null, "", "", 0, 0, 0);
+	item(item_potion, "Potion", "A simple healing potion", I_HEALING, 6, 1);
+	item(item_sword, "Sword", "A standard sword", I_WEAPON, 6, 0);
+	item(item_pomfhammer, "Pomf Hammer", "In the name of Rorans, be pomf'd", I_WEAPON, 20, 0);
 }
 
 void ItemsGet(enum ITEM_ID id){

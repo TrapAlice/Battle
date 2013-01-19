@@ -23,12 +23,23 @@ TCOD_console_t combatConsole;
 MessageList* consoleLog;
 MessageList* combatLog;
 TCOD_console_t statusPanel;
+TCOD_console_t inventoryPanel;
+TCOD_key_t key;
+Item* items[26];
+int keyPressed;
+
+enum{
+    STATE_MAP,
+    STATE_BATTLE,
+    STATE_BATTLEAFTERMATH,
+    STATE_INVENTORY,
+    STATE_INVENTORYDETAIL,
+}state;
 
 void init();
 void uninit();
 void test();
-int movementInput();
-void getKeyboardInput(TCOD_key_t* key);
+int handleInput();
 void mainLoop();
 void printUI();
 int battleLoop();
@@ -52,7 +63,7 @@ void test(){
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
-    Inventory_addItem(player->inventory, Item_clone(ItemList[item_sword]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_pomfhammer]));
 }
 
 void init(){
@@ -63,11 +74,10 @@ void init(){
     consoleLog = Msg_create(15);
     msgConsole = TCOD_console_new(80,20);
     GameState = 0;
-    TCOD_console_set_default_background(msgConsole,TCOD_red);
     combatLog = Msg_create(15);
     combatConsole = TCOD_console_new(80,40);
-    statusPanel = TCOD_console_new(15,30);
-    TCOD_console_set_default_background(statusPanel,TCOD_blue);
+    statusPanel = TCOD_console_new(80,2);
+    inventoryPanel = TCOD_console_new(80,50);
 
     player = Monster_playerCreate(20,20);
     TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
@@ -80,6 +90,7 @@ void uninit(){
     Msg_delete(consoleLog);
     TCOD_console_delete(combatConsole);
     Msg_delete(combatLog);
+    TCOD_console_delete(inventoryPanel);
     ItemsUninit();
     MonstersUninit();
     MOONMEM_uninit();
@@ -90,36 +101,55 @@ void mainLoop(){
     int battleCooldown=0;
     int done=0;
     int result;
+    
     while(!done){
         if( TCOD_console_is_window_closed() ){
             return;
         }
         printUI();
-        if( movementInput() != 0 ){
+        if( handleInput(&key) != 0 ){
             steps--;
             battleCooldown--;
         }
-        if(battleCooldown<=0){
-            if(RNG_roll(1,steps) == 1){
-                steps = 50;
-                battleCooldown=10;
-                if(RNG_roll(1,6)>4){
-                    monster = Monster_clone(MonsterList[mob_pig]);
-                } else {
-                    monster = Monster_clone(MonsterList[mob_slime]);
+        switch(GameState){
+            case STATE_MAP:
+                if(key.c=='i'){
+                    GameState = STATE_INVENTORY;
                 }
+                if(battleCooldown<=0){
+                    if(RNG_roll(1,steps) == 1){
+                        steps = 50;
+                        battleCooldown=10;
+                        if(RNG_roll(1,6)>4){
+                            monster = Monster_clone(MonsterList[mob_pig]);
+                        } else {
+                            monster = Monster_clone(MonsterList[mob_slime]);
+                        }
 
-                Msg_addMessage(consoleLog,"A wild %s appears!",monster->name);
-                printUI();
-                TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
-                GameState=1;
+                        Msg_addMessage(consoleLog,"A wild %s appears!",monster->name);
+                        printUI();
+                        TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
+                        GameState=STATE_BATTLE;
 
-                result = battleLoop();
-                GameState=0;
-                Monster_delete(monster);
-                if(result == 1) done=1;
-            }
-        } 
+                        result = battleLoop();
+                        GameState=STATE_MAP;
+                        Monster_delete(monster);
+                        if(result == 1) done=1;
+                    }
+                } 
+                break;
+            case STATE_INVENTORY:
+                keyPressed = key.c-'a';
+                if(items[keyPressed]!=NULL){
+                    GameState = STATE_INVENTORYDETAIL;
+                }
+                break;
+            case STATE_INVENTORYDETAIL:
+                /*waitForPress();*/
+                GameState=STATE_MAP;
+                break;
+        }
+        
     }
     printUI();
     waitForPress();
@@ -127,25 +157,27 @@ void mainLoop(){
 
 void printUI(){
     int x;
+    Inventory* head;
+    Item* item;
 
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
     TCOD_console_clear(combatConsole);
     TCOD_console_clear(statusPanel);
+    TCOD_console_clear(inventoryPanel);
     switch(GameState){
-        case 0:
+        case STATE_MAP:
             Object_draw(player->object);
             x=0;
             while(x<=15){
                 TCOD_console_print(msgConsole,0,x,Msg_getMessage(consoleLog, x));
                 x++;
             }
-            TCOD_console_print(statusPanel,0,0,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
-            TCOD_console_print(statusPanel,0,1,"EXP: %d",player->xp);
-            TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,35,255,128);
-            TCOD_console_blit(statusPanel,0,0,20,30,NULL,65,10,128,0);
+            TCOD_console_print(statusPanel,0,0,"HP: %d/%d  XP: %d",player->combat->hp, player->combat->maxhp, player->xp);
+            TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,33,128,128);
+            TCOD_console_blit(statusPanel,0,0,80,1,NULL,0,48,128,0);
             break;
-        case 1:
+        case STATE_BATTLE:
             x=0;
             while(x<=15){
                 TCOD_console_print(combatConsole,0,x,Msg_getMessage(combatLog, x));
@@ -157,13 +189,35 @@ void printUI(){
             TCOD_console_print(combatConsole,0,24,"[R] Run");
             TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,5,128,255);
             break;
-        case 2:
+        case STATE_BATTLEAFTERMATH:
             x=0;
             while(x<=15){
                 TCOD_console_print(combatConsole,30,x,Msg_getMessage(combatLog, x));
                 x++;
             }
             TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,20,128,255);
+            break;
+        case STATE_INVENTORY:
+            head = player->inventory->next;
+            
+            int itemchar = 0;
+            while( head != NULL ){
+                if(head->item->stackable){
+                    TCOD_console_print(inventoryPanel,0,itemchar,"[%c] %s x%d",'A'+itemchar, head->item->name, head->quantity);
+                } else {
+                    TCOD_console_print(inventoryPanel,0,itemchar,"[%c] %s",'A'+itemchar, head->item->name);
+                }
+                items[itemchar]=head->item;
+                head=head->next;
+                
+                itemchar++;
+            }
+            TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
+            break;
+        case STATE_INVENTORYDETAIL:
+            item = items[keyPressed];
+            Item_description(item, inventoryPanel);
+            TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
             break;
     }
     TCOD_console_flush();
@@ -193,7 +247,7 @@ int battleLoop(){
         } else if(key.c == 'h' || key.c == 'H'){
             itemchar=0;
             Inventory* head = player->inventory->next;
-            Item* items[26];
+            /*Item* items[26];*/
             Msg_addMessage(combatLog,"Use which item?");
             while(head!=NULL){
                 Msg_addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
@@ -205,11 +259,11 @@ int battleLoop(){
             printUI();
             Msg_clear(combatLog);
             TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
-            keyPressed = 'a'-key.c;
+            keyPressed = key.c-'a';
             if(items[keyPressed]!=NULL){
-                if(items[keyPressed]->type==1){
+                if(items[keyPressed]->type==I_HEALING){
                     Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(1,items[keyPressed]->power)));
-                    Inventory_removeItem(player->inventory, ItemList[item_potion]);
+                    Inventory_removeItem(player->inventory, items[keyPressed]);
                     actiontaken=1;
                 }
             }
@@ -255,19 +309,19 @@ int battleLoop(){
             Msg_addMessage(combatLog, "You ran away safely");
             break;
     }
-    GameState = 2;
+    GameState = STATE_BATTLEAFTERMATH;
     printUI();
     Msg_clear(combatLog);
     waitForPress();
     return done;
 }
 
-int movementInput(){
+int handleInput(TCOD_key_t* key){
     int action = 0;
-    TCOD_key_t key;
     
-    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
-    switch(key.vk) {
+    
+    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, key, NULL, false);
+    switch(key->vk) {
         case TCODK_KP7 : Object_move(player->object, -1, -1); action=1; break;
         case TCODK_KP9 : Object_move(player->object, 1, -1); action=1; break;
         case TCODK_KP8 : Object_move(player->object, 0, -1); action=1; break;

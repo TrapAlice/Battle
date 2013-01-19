@@ -29,7 +29,7 @@ void Inventory_delete(Inventory* inventory){
 void Inventory_addItem(Inventory* inventory, Item* item){
 	Inventory* temp = inventory; 
 	Inventory* temp2 = inventory; 
-	Inventory* tail; 
+	Inventory* tail;
 	while(temp != NULL){ 
 		if(temp->item!=NULL){
 			if(temp->item->stackable && temp->item->name == item->name){

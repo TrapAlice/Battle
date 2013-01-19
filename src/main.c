@@ -10,6 +10,7 @@
 #include "item.h"
 #include "inventory.h"
 #include "iteminit.h"
+#include "equipped.h"
 
 #include <stdio.h>
 
@@ -60,10 +61,13 @@ int main() {
 }
 
 void test(){
+    Item* hammer = Item_clone(ItemList[item_pomfhammer]);
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
-    Inventory_addItem(player->inventory, Item_clone(ItemList[item_pomfhammer]));
+    
+    Inventory_addItem(player->inventory, hammer);
+    player->equipment->equipped[E_Hand] = hammer;
 }
 
 void init(){
@@ -145,7 +149,6 @@ void mainLoop(){
                 }
                 break;
             case STATE_INVENTORYDETAIL:
-                /*waitForPress();*/
                 GameState=STATE_MAP;
                 break;
         }
@@ -242,7 +245,7 @@ int battleLoop(){
         TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
         if(key.c == 'a' || key.c == 'A'){
             Msg_addMessage(combatLog, "You attack!");
-            Combat_attack(combatLog, player->combat, player->name, monster->combat, monster->name);
+            Monster_attack(combatLog, player, monster);
             actiontaken=1;
         } else if(key.c == 'h' || key.c == 'H'){
             itemchar=0;
@@ -284,7 +287,7 @@ int battleLoop(){
                 break;
             }
             Msg_addMessage(combatLog, "The %s attacks!",monster->name);
-            Combat_attack(combatLog, monster->combat, monster->name, player->combat, player->name);
+            Monster_attack(combatLog, monster, player);
             if(Monster_checkDead(player)){
                 Msg_addMessage(consoleLog,"You lose");
                 Msg_addMessage(combatLog,"You lose");

@@ -1,5 +1,6 @@
 #include "monster.h"
 #include "moonmem.h"
+#include "rng.h"
 
 Monster* player;
 
@@ -10,6 +11,7 @@ Monster* Monster_playerCreate(int x, int y){
 	monster->combat = Combat_create(32,6,1);
 	monster->object = obj;
 	monster->inventory = Inventory_create();
+	monster->equipment = Equipment_slotsCreate();
 	return monster;
 }
 
@@ -38,5 +40,21 @@ void Monster_delete(Monster* monster){
 	if( monster->object != NULL) Object_delete(monster->object);
 	if( monster->inventory != NULL) Inventory_delete(monster->inventory);
 	if( monster->combat != NULL) Combat_delete(monster->combat);
+	if( monster->equipment != NULL) free(monster->equipment);
 	free(monster);
+}
+
+void Monster_attack(MessageList* messageLog, Monster* attacker, Monster* defender){
+	int damage;
+	Msg_addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
+	if(attacker->equipment==NULL){
+		damage = RNG_roll(attacker->combat->hits, attacker->combat->power);
+	} else {
+		if(attacker->equipment->equipped[E_Hand]!=NULL){
+			damage = RNG_roll(attacker->combat->hits, attacker->equipment->equipped[E_Hand]->power);
+		} else {
+			damage = RNG_roll(attacker->combat->hits, attacker->combat->power);
+		}
+	}
+	Combat_takeDamage(messageLog, defender->combat, defender->name, damage);
 }

@@ -11,6 +11,9 @@
 #include "inventory.h"
 #include "iteminit.h"
 #include "equipped.h"
+#include "ui.h"
+#include "gamestate.h"
+#include "controls.h"
 
 #include <stdio.h>
 
@@ -18,31 +21,25 @@
 
 extern Monster* player;
 Monster* monster;
-TCOD_console_t msgConsole;
-int GameState;
-TCOD_console_t combatConsole;
+
+enum State_e GameState;
+
 MessageList* consoleLog;
 MessageList* combatLog;
-TCOD_console_t statusPanel;
-TCOD_console_t inventoryPanel;
-TCOD_key_t key;
+extern TCOD_console_t msgConsole;
+extern TCOD_console_t combatConsole;
+extern TCOD_console_t statusPanel;
+extern TCOD_console_t inventoryPanel;
+extern TCOD_key_t key;
 Item* items[26];
 int keyPressed;
-
-enum{
-    STATE_MAP,
-    STATE_BATTLE,
-    STATE_BATTLEAFTERMATH,
-    STATE_INVENTORY,
-    STATE_INVENTORYDETAIL,
-}state;
 
 void init();
 void uninit();
 void test();
 int handleInput();
 void mainLoop();
-void printUI();
+/*void printUI();*/
 int battleLoop();
 void waitForPress();
 
@@ -77,14 +74,14 @@ void init(){
     ItemsInit();
     consoleLog = Msg_create(15);
     msgConsole = TCOD_console_new(80,20);
-    GameState = 0;
+    GameState = STATE_MAP;
     combatLog = Msg_create(15);
     combatConsole = TCOD_console_new(80,40);
     statusPanel = TCOD_console_new(80,2);
     inventoryPanel = TCOD_console_new(80,50);
 
     player = Monster_playerCreate(20,20);
-    TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
+    TCOD_console_init_root(80,50,"Battle",false,false);
 }
 
 void uninit(){
@@ -105,52 +102,73 @@ void mainLoop(){
     int battleCooldown=0;
     int done=0;
     int result;
+    int action;
+    Inventory* head;
+    int x;
     
     while(!done){
         if( TCOD_console_is_window_closed() ){
             return;
         }
         printUI();
-        if( handleInput(&key) != 0 ){
-            steps--;
-            battleCooldown--;
+        handleInput(&key);
+        switch(key.vk) {
+            case TCODK_KP7 : Object_move(player->object, -1, -1); action=1; break;
+            case TCODK_KP9 : Object_move(player->object, 1, -1); action=1; break;
+            case TCODK_KP8 : Object_move(player->object, 0, -1); action=1; break;
+            case TCODK_KP1 : Object_move(player->object, -1, 1); action=1; break;
+            case TCODK_KP2 : Object_move(player->object, 0, 1); action=1; break;
+            case TCODK_KP3 : Object_move(player->object, 1, 1); action=1; break;
+            case TCODK_KP4 : Object_move(player->object, -1, 0); action=1; break;
+            case TCODK_KP6 : Object_move(player->object, 1, 0); action=1; break;
+            default:break;
         }
-        switch(GameState){
-            case STATE_MAP:
-                if(key.c=='i'){
-                    GameState = STATE_INVENTORY;
-                }
-                if(battleCooldown<=0){
-                    if(RNG_roll(1,steps) == 1){
-                        steps = 50;
-                        battleCooldown=10;
-                        if(RNG_roll(1,6)>4){
-                            monster = Monster_clone(MonsterList[mob_pig]);
-                        } else {
-                            monster = Monster_clone(MonsterList[mob_slime]);
-                        }
-
-                        Msg_addMessage(consoleLog,"A wild %s appears!",monster->name);
-                        printUI();
-                        TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
-                        GameState=STATE_BATTLE;
-
-                        result = battleLoop();
-                        GameState=STATE_MAP;
-                        Monster_delete(monster);
-                        if(result == 1) done=1;
+        if(action){
+            switch(GameState){
+                case STATE_MAP:
+                    if(key.c=='i'){
+                        GameState = STATE_INVENTORY;
                     }
-                } 
-                break;
-            case STATE_INVENTORY:
-                keyPressed = key.c-'a';
-                if(items[keyPressed]!=NULL){
-                    GameState = STATE_INVENTORYDETAIL;
-                }
-                break;
-            case STATE_INVENTORYDETAIL:
-                GameState=STATE_MAP;
-                break;
+                    if(battleCooldown<=0){
+                        if(RNG_roll(1,steps) == 1){
+                            steps = 50;
+                            battleCooldown=10;
+                            if(RNG_roll(1,6)>4){
+                                monster = Monster_clone(MonsterList[mob_pig]);
+                            } else {
+                                monster = Monster_clone(MonsterList[mob_slime]);
+                            }
+
+                            Msg_addMessage(consoleLog,"A wild %s appears!",monster->name);
+                            printUI();
+                            TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
+                            GameState=STATE_BATTLE;
+
+                            result = battleLoop();
+                            GameState=STATE_MAP;
+                            Monster_delete(monster);
+                            if(result == 1) done=1;
+                        }
+                    } 
+                    break;
+                case STATE_INVENTORY:
+                    x=0;
+                    head = player->inventory->next;
+                    while( head != NULL ){
+                        items[x]=head->item;
+                        head=head->next;
+                        x++;
+                    }
+                
+                    keyPressed = key.c-'a';
+                    if(items[keyPressed]!=NULL){
+                        GameState = STATE_INVENTORYDETAIL;
+                    }
+                    break;
+                case STATE_INVENTORYDETAIL:
+                    GameState=STATE_MAP;
+                    break;
+            }
         }
         
     }
@@ -158,7 +176,7 @@ void mainLoop(){
     waitForPress();
 }
 
-void printUI(){
+/*void printUI(){
     int x;
     Inventory* head;
     Item* item;
@@ -224,7 +242,7 @@ void printUI(){
             break;
     }
     TCOD_console_flush();
-}
+}*/
 
 int battleLoop(){
     TCOD_key_t key;
@@ -317,28 +335,4 @@ int battleLoop(){
     Msg_clear(combatLog);
     waitForPress();
     return done;
-}
-
-int handleInput(TCOD_key_t* key){
-    int action = 0;
-    
-    
-    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, key, NULL, false);
-    switch(key->vk) {
-        case TCODK_KP7 : Object_move(player->object, -1, -1); action=1; break;
-        case TCODK_KP9 : Object_move(player->object, 1, -1); action=1; break;
-        case TCODK_KP8 : Object_move(player->object, 0, -1); action=1; break;
-        case TCODK_KP1 : Object_move(player->object, -1, 1); action=1; break;
-        case TCODK_KP2 : Object_move(player->object, 0, 1); action=1; break;
-        case TCODK_KP3 : Object_move(player->object, 1, 1); action=1; break;
-        case TCODK_KP4 : Object_move(player->object, -1, 0); action=1; break;
-        case TCODK_KP6 : Object_move(player->object, 1, 0); action=1; break;
-        default:break;
-    }
-    return action;
-}
-
-void waitForPress(){
-    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, NULL, NULL, false);
-    TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
 }

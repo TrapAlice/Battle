@@ -3,12 +3,6 @@
 #include "rng.h"
 #include "msg.h"
 
-void Combat_attack(MessageList* messageLog, const Combat* attacker, const char* attacker_name, Combat* defender, const char* defender_name){
-	int damage = RNG_roll(attacker->hits,attacker->power) - defender->defense;
-	Msg_addMessage(messageLog, "%s attacks %s",attacker_name, defender_name);
-	Combat_takeDamage(messageLog, defender, defender_name, damage);
-}
-
 void Combat_takeDamage(MessageList* messageLog, Combat* defender, const char* defender_name, int damage){
 	if(damage>0){
 		Msg_addMessage(messageLog, "%s takes %d damage", defender_name, damage);

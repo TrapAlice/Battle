@@ -14,5 +14,6 @@ typedef struct
 }Equipment;
 
 Equipment* Equipment_slotsCreate();
+void Equipment_delete(Equipment*);
 
 #endif

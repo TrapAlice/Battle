@@ -40,7 +40,7 @@ void Monster_delete(Monster* monster){
 	if( monster->object != NULL) Object_delete(monster->object);
 	if( monster->inventory != NULL) Inventory_delete(monster->inventory);
 	if( monster->combat != NULL) Combat_delete(monster->combat);
-	if( monster->equipment != NULL) free(monster->equipment);
+	if( monster->equipment != NULL) Equipment_delete(monster->equipment);
 	free(monster);
 }
 

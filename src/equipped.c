@@ -6,3 +6,8 @@ Equipment* Equipment_slotsCreate(){
 	equipment->equipped = malloc(sizeof(num_slots));
 	return equipment;
 }
+
+void Equipment_delete(Equipment* equipment){
+	free(equipment->equipped);
+	free(equipment);
+}

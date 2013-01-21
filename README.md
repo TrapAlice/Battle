@@ -11,3 +11,5 @@ Todo:
 - Player having more stats
   - Able to level up
 - Generate a map to navigate around
+
+Diagram: http://yuml.me/edit/e4ff41a4

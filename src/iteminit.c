@@ -10,6 +10,7 @@ void ItemsInit(){
 	item(item_potion, "Potion", "A simple healing potion", I_HEALING, 6, 1);
 	item(item_sword, "Sword", "A standard sword", I_WEAPON, 6, 0);
 	item(item_pomfhammer, "Pomf Hammer", "In the name of Rorans, be pomf'd", I_WEAPON, 20, 0);
+	item(item_leatherarmor, "Leather Armor", "A piece of leather armor", I_ARMOR, 3, 0);
 }
 
 void ItemsGet(enum ITEM_ID id){

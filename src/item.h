@@ -5,6 +5,7 @@
 typedef enum {
 	I_HEALING,
 	I_WEAPON,
+	I_ARMOR,
 } ItemType;
 
 typedef struct{

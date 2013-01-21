@@ -37,5 +37,8 @@ void Item_description(Item* item, TCOD_console_t panel){
         case I_WEAPON:
             TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
             break;
+        case I_ARMOR:
+        	TCOD_console_print(panel,0,3,"It blocks about 1d%d damage.",item->power);
+            break;
     }
 }

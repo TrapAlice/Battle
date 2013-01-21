@@ -61,13 +61,19 @@ int main() {
 }
 
 void test(){
+    Item* armor = Item_clone(ItemList[item_leatherarmor]);
     Item* hammer = Item_clone(ItemList[item_pomfhammer]);
+    
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     
     Inventory_addItem(player->inventory, hammer);
-    player->equipment->equipped[E_Hand] = hammer;
+    player->equipment->equipped[1] = hammer;
+    Inventory_addItem(player->inventory, armor);
+    player->equipment->equipped[0] = armor;
+    
+    
 }
 
 void init(){
@@ -84,7 +90,7 @@ void init(){
     inventoryPanel = TCOD_console_new(80,50);
 
     player = Monster_playerCreate(20,20);
-    TCOD_console_init_root(80,50,"libtcod C tutorial",false,false);
+    TCOD_console_init_root(80,50,"Battle",false,false);
 }
 
 void uninit(){

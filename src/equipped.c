@@ -3,7 +3,7 @@
 
 Equipment* Equipment_slotsCreate(){
 	Equipment* equipment = malloc(sizeof(Equipment));
-	equipment->equipped = malloc(sizeof(num_slots));
+	equipment->equipped = malloc(sizeof(Item)*num_slots);
 	return equipment;
 }
 

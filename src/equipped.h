@@ -5,6 +5,8 @@
 
 enum Slot{
 	E_Hand,
+	E_Head,
+	E_Chest,
 	num_slots,
 };
 

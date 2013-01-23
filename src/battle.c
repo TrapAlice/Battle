@@ -1,3 +1,4 @@
+#include "battle.h"
 #include "libtcod.h"
 #include "moonmem.h"
 #include "test_ids.h"
@@ -14,7 +15,6 @@
 
 #include <stdio.h>
 
-#define ever ;;
 
 extern Monster* player;
 Monster* monster;
@@ -29,92 +29,18 @@ TCOD_key_t key;
 Item* items[26];
 int keyPressed;
 
-enum{
-    STATE_MAP,
-    STATE_BATTLE,
-    STATE_BATTLEAFTERMATH,
-    STATE_INVENTORY,
-    STATE_INVENTORYDETAIL,
-}state;
-
-void init();
-void uninit();
-void test();
-int handleInput();
-void mainLoop();
-void printUI();
-int battleLoop();
-void waitForPress();
-
-int main() {    
-    init();
-
-    test();
-    
-    
-    mainLoop();
-
-    
-    uninit();
-
-    return 0;
-}
-
-void test(){
-    Item* armor = Item_clone(ItemList[item_leatherarmor]);
-    Item* hammer = Item_clone(ItemList[item_pomfhammer]);
-    
-    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
-    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
-    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
-    
-    Inventory_addItem(player->inventory, hammer);
-    player->equipment->equipped[1] = hammer;
-    Inventory_addItem(player->inventory, armor);
-    player->equipment->equipped[0] = armor;
-    
-    
-}
-
-void init(){
-    MOONMEM_init(2048);
-    RNG_init(0);
-    MonstersInit();
-    ItemsInit();
-    consoleLog = Msg_create(15);
-    msgConsole = TCOD_console_new(80,20);
-    GameState = 0;
-    combatLog = Msg_create(15);
-    combatConsole = TCOD_console_new(80,40);
-    statusPanel = TCOD_console_new(80,2);
-    inventoryPanel = TCOD_console_new(80,50);
-
-    player = Monster_playerCreate(20,20);
-    TCOD_console_init_root(80,50,"Battle",false,false);
-}
-
-void uninit(){
-    Monster_delete(player);
-    TCOD_console_delete(statusPanel);
-    TCOD_console_delete(msgConsole);
-    Msg_delete(consoleLog);
-    TCOD_console_delete(combatConsole);
-    Msg_delete(combatLog);
-    TCOD_console_delete(inventoryPanel);
-    ItemsUninit();
-    MonstersUninit();
-    MOONMEM_uninit();
-}
-
-void mainLoop(){
+int main(int argc, char *argv[]) {    
+    char done=0;
     int steps=25;
-    int battleCooldown=0;
-    int done=0;
-    int result;
-    
+    int battleCooldown=10;
+    int battleResult;
+
+    init();
+    test(); 
+
     while(!done){
         if( TCOD_console_is_window_closed() ){
-            return;
+            break;
         }
         printUI();
         if( handleInput(&key) != 0 ){
@@ -141,10 +67,10 @@ void mainLoop(){
                         TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
                         GameState=STATE_BATTLE;
 
-                        result = battleLoop();
+                        battleResult = battleLoop();
                         GameState=STATE_MAP;
                         Monster_delete(monster);
-                        if(result == 1) done=1;
+                        if(battleResult == 1) done=1;
                     }
                 } 
                 break;
@@ -160,8 +86,24 @@ void mainLoop(){
         }
         
     }
-    printUI();
-    waitForPress();
+    
+
+    uninit();
+    return 0;
+}
+
+void test(){
+    Item* armor = Item_clone(ItemList[item_leatherarmor]);
+    Item* hammer = Item_clone(ItemList[item_pomfhammer]);
+    
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    
+    Inventory_addItem(player->inventory, hammer);
+    player->equipment->equipped[1] = hammer;
+    Inventory_addItem(player->inventory, armor);
+    player->equipment->equipped[0] = armor;
 }
 
 void printUI(){
@@ -347,4 +289,34 @@ int handleInput(TCOD_key_t* key){
 void waitForPress(){
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, NULL, NULL, false);
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
+}
+
+void init(){
+    MOONMEM_init(2048);
+    RNG_init(0);
+    MonstersInit();
+    ItemsInit();
+    consoleLog = Msg_create(15);
+    msgConsole = TCOD_console_new(80,20);
+    GameState = 0;
+    combatLog = Msg_create(15);
+    combatConsole = TCOD_console_new(80,40);
+    statusPanel = TCOD_console_new(80,2);
+    inventoryPanel = TCOD_console_new(80,50);
+
+    player = Monster_playerCreate(20,20);
+    TCOD_console_init_root(80,50,TITLE,false,false);
+}
+
+void uninit(){
+    Monster_delete(player);
+    TCOD_console_delete(statusPanel);
+    TCOD_console_delete(msgConsole);
+    Msg_delete(consoleLog);
+    TCOD_console_delete(combatConsole);
+    Msg_delete(combatLog);
+    TCOD_console_delete(inventoryPanel);
+    ItemsUninit();
+    MonstersUninit();
+    MOONMEM_uninit();
 }

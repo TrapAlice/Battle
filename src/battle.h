@@ -8,15 +8,14 @@ void uninit();
 int handleInput();
 void test();
 void printUI();
-int battleLoop();
 void waitForPress();
 
-enum{
+enum State_e{
     STATE_MAP,
     STATE_BATTLE,
     STATE_BATTLEAFTERMATH,
     STATE_INVENTORY,
     STATE_INVENTORYDETAIL,
-}State_e;
+};
 
 #endif

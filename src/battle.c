@@ -1,7 +1,6 @@
 #include "battle.h"
 #include "libtcod.h"
 #include "moonmem.h"
-#include "test_ids.h"
 #include "object.h"
 #include "monster.h"
 #include "combat.h"
@@ -19,7 +18,7 @@
 extern Monster* player;
 Monster* monster;
 TCOD_console_t msgConsole;
-int GameState;
+enum State_e GameState;
 TCOD_console_t combatConsole;
 MessageList* consoleLog;
 MessageList* combatLog;
@@ -34,6 +33,8 @@ int main(int argc, char *argv[]) {
     int steps=25;
     int battleCooldown=10;
     int battleResult;
+    int battleActionTaken;
+    int itemchar;
 
     init();
     test(); 
@@ -43,12 +44,13 @@ int main(int argc, char *argv[]) {
             break;
         }
         printUI();
-        if( handleInput(&key) != 0 ){
-            steps--;
-            battleCooldown--;
-        }
+        
         switch(GameState){
             case STATE_MAP:
+            	if( handleInput(&key) != 0 ){
+		            steps--;
+		            battleCooldown--;
+		        }
                 if(key.c=='i'){
                     GameState = STATE_INVENTORY;
                 }
@@ -67,21 +69,117 @@ int main(int argc, char *argv[]) {
                         TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
                         GameState=STATE_BATTLE;
 
-                        battleResult = battleLoop();
-                        GameState=STATE_MAP;
-                        Monster_delete(monster);
-                        if(battleResult == 1) done=1;
+                        
                     }
                 } 
                 break;
+
+            case STATE_BATTLE:
+            	handleInput(&key);
+            	battleActionTaken=0;
+		        Msg_clear(combatLog);
+
+		        if(key.c == 'a' || key.c == 'A'){
+		            Msg_addMessage(combatLog, "You attack!");
+		            Monster_attack(combatLog, player, monster);
+		            battleActionTaken=1;
+		        } else if(key.c == 'h' || key.c == 'H'){
+		            itemchar=0;
+		            Inventory* head = player->inventory->next;
+		            Msg_addMessage(combatLog,"Use which item?");
+		            while(head!=NULL){
+		                Msg_addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
+		                items[itemchar] = head->item;
+		                itemchar++;
+		                head=head->next;
+		            }
+		            Msg_addMessage(combatLog,"[1] Back");
+		            printUI();
+		            Msg_clear(combatLog);
+		            handleInput(&key);
+		            keyPressed = key.c-'a';
+		            if(items[keyPressed]!=NULL){
+		                if(items[keyPressed]->type==I_HEALING){
+		                    Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(1,items[keyPressed]->power)));
+		                    Inventory_removeItem(player->inventory, items[keyPressed]);
+		                    battleActionTaken=1;
+		                }
+		            }
+		           
+		            
+		            
+		        } else if(key.c == 'r' || key.c == 'R'){
+		            Msg_addMessage(consoleLog,"You ran away!");
+		            Msg_addMessage(combatLog,"You ran away!");
+		            GameState=STATE_BATTLEAFTERMATH;
+		            printUI();
+		            battleResult=3;
+		            
+		            waitForPress();
+			    	Msg_clear(combatLog);
+		            break;
+		        }
+		        if(battleActionTaken){
+		            if(Monster_checkDead(monster)){
+		                Msg_addMessage(consoleLog,"You win!");
+		                Msg_addMessage(combatLog,"You win!");
+		                battleResult=2;
+		                printUI();
+		                GameState=STATE_BATTLEAFTERMATH;
+		            	
+		                waitForPress();
+			    		Msg_clear(combatLog);
+		            } else {
+			            Msg_addMessage(combatLog, "The %s attacks!",monster->name);
+			            Monster_attack(combatLog, monster, player);
+			            if(Monster_checkDead(player)){
+			                Msg_addMessage(consoleLog,"You lose");
+			                Msg_addMessage(combatLog,"You lose");
+			                printUI();
+			                battleResult=1;
+			                GameState=STATE_BATTLEAFTERMATH;
+		          			
+			                waitForPress();
+			    			Msg_clear(combatLog);
+			            }
+			        }
+		        }
+            	break;
+
+            case STATE_BATTLEAFTERMATH:
+			    switch(battleResult){
+			        case 1:
+			            Msg_addMessage(combatLog, "You've died >:");
+			            break;
+			        case 2:
+			            Msg_addMessage(combatLog, "You win!");
+			            Msg_addMessage(combatLog, "You gained %d EXP", monster->xp);
+			            player->xp += monster->xp;
+			            break;
+			        case 3:
+			            Msg_addMessage(combatLog, "You ran away safely");
+			            break;
+			    }
+			    GameState = STATE_BATTLEAFTERMATH;
+			    printUI();
+			    Msg_clear(combatLog);
+			    waitForPress();
+			    GameState=STATE_MAP;
+                Monster_delete(monster);
+                if(battleResult == 1) done=1;
+            	break;
+
             case STATE_INVENTORY:
+            	handleInput(&key);
                 keyPressed = key.c-'a';
                 if(items[keyPressed]!=NULL){
                     GameState = STATE_INVENTORYDETAIL;
                 }
                 break;
+
             case STATE_INVENTORYDETAIL:
                 GameState=STATE_MAP;
+                waitForPress();
                 break;
         }
         
@@ -172,99 +270,6 @@ void printUI(){
             break;
     }
     TCOD_console_flush();
-}
-
-int battleLoop(){
-    TCOD_key_t key;
-    int actiontaken = 0;
-    int done = 0;
-    int itemchar;
-    int keyPressed;
-
-    while(!done){
-        actiontaken=0;
-        if( TCOD_console_is_window_closed() ){
-            break;
-        }
-        printUI();
-        Msg_clear(combatLog);
-        
-        TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
-        TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
-        if(key.c == 'a' || key.c == 'A'){
-            Msg_addMessage(combatLog, "You attack!");
-            Monster_attack(combatLog, player, monster);
-            actiontaken=1;
-        } else if(key.c == 'h' || key.c == 'H'){
-            itemchar=0;
-            Inventory* head = player->inventory->next;
-            /*Item* items[26];*/
-            Msg_addMessage(combatLog,"Use which item?");
-            while(head!=NULL){
-                Msg_addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
-                items[itemchar] = head->item;
-                itemchar++;
-                head=head->next;
-            }
-            Msg_addMessage(combatLog,"[1] Back");
-            printUI();
-            Msg_clear(combatLog);
-            TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, &key, NULL, false);
-            keyPressed = key.c-'a';
-            if(items[keyPressed]!=NULL){
-                if(items[keyPressed]->type==I_HEALING){
-                    Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(1,items[keyPressed]->power)));
-                    Inventory_removeItem(player->inventory, items[keyPressed]);
-                    actiontaken=1;
-                }
-            }
-           
-            
-            
-        } else if(key.c == 'r' || key.c == 'R'){
-            Msg_addMessage(consoleLog,"You ran away!");
-            Msg_addMessage(combatLog,"You ran away!");
-            done=3;
-            break;
-        }
-        if(actiontaken){
-            if(Monster_checkDead(monster)){
-                Msg_addMessage(consoleLog,"You win!");
-                Msg_addMessage(combatLog,"You win!");
-                done= 2;
-                break;
-            }
-            Msg_addMessage(combatLog, "The %s attacks!",monster->name);
-            Monster_attack(combatLog, monster, player);
-            if(Monster_checkDead(player)){
-                Msg_addMessage(consoleLog,"You lose");
-                Msg_addMessage(combatLog,"You lose");
-                done = 1;
-                break;
-            }
-        }
-    }
-    printUI();
-    waitForPress();
-    Msg_clear(combatLog);
-    switch(done){
-        case 1:
-            Msg_addMessage(combatLog, "You've died >:");
-            break;
-        case 2:
-            Msg_addMessage(combatLog, "You win!");
-            Msg_addMessage(combatLog, "You gained %d EXP", monster->xp);
-            player->xp += monster->xp;
-            break;
-        case 3:
-            Msg_addMessage(combatLog, "You ran away safely");
-            break;
-    }
-    GameState = STATE_BATTLEAFTERMATH;
-    printUI();
-    Msg_clear(combatLog);
-    waitForPress();
-    return done;
 }
 
 int handleInput(TCOD_key_t* key){

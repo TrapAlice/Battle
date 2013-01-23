@@ -5,10 +5,37 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static moonmem* MOONMEM;
+moonmem* MOONMEM;
 
-int findEmptySlot(size_t pSize);
-memnode* findEmptyNode();
+static int findEmptySlot(size_t pSize){
+    int x;
+    int n;
+    byte* slots = calloc(pSize,sizeof(byte*));
+    for( x = 0; x<(MOONMEM->size/4 - pSize); x++){
+        n = memcmp(MOONMEM->memoryslots+x, slots, pSize);
+        if( n==0 ){
+            memset(MOONMEM->memoryslots+x, x+1, pSize);
+            return x;
+        }
+    }
+    printf("Out of memory\n");
+    MOONMEM_memdump();
+    MOONMEM_uninit();
+    exit(0);
+}
+
+static memnode* findEmptyNode(){
+    int x = 0;
+    while((MOONMEM->head+x)->memory != NULL){
+        x++;
+        if (x > MOONMEM->size/2){
+            printf("Out of empty nodes\n");
+            MOONMEM_uninit();
+            exit(0);
+        }
+    }
+    return MOONMEM->head+x;
+}
 
 void MOONMEM_init(unsigned int pSize){
     MOONMEM = calloc(1,sizeof(moonmem)+pSize/4+pSize);
@@ -29,35 +56,7 @@ void* MOONMEM_alloc(size_t pSize){
     return data->memory;
 }
 
-int findEmptySlot(size_t pSize){
-    int x;
-    int n;
-    byte* slots = calloc(pSize,sizeof(byte*));
-    for( x = 0; x<(MOONMEM->size/4 - pSize); x++){
-        n = memcmp(MOONMEM->memoryslots+x, slots, pSize);
-        if( n==0 ){
-            memset(MOONMEM->memoryslots+x, x+1, pSize);
-            return x;
-        }
-    }
-    printf("Out of memory\n");
-    MOONMEM_memdump();
-    MOONMEM_uninit();
-    exit(0);
-}
 
-memnode* findEmptyNode(){
-    int x = 0;
-    while((MOONMEM->head+x)->memory != NULL){
-        x++;
-        if (x > MOONMEM->size/2){
-            printf("Out of empty nodes\n");
-            MOONMEM_uninit();
-            exit(0);
-        }
-    }
-    return MOONMEM->head+x;
-}
 
 void MOONMEM_dealloc(void* ptr){
     int x = 0;

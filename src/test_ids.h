@@ -1,1 +1,0 @@
-#define MEMORY_TEST 0

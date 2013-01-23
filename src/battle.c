@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 		            keyPressed = key.c-'a';
 		            if(items[keyPressed]!=NULL){
 		                if(items[keyPressed]->type==I_HEALING){
-		                    Combat_takeDamage(combatLog, player->combat, player->name, -(RNG_roll(1,items[keyPressed]->power)));
+		                    Monster_takeDamage(combatLog, player, -(RNG_roll(1,items[keyPressed]->power)));
 		                    Inventory_removeItem(player->inventory, items[keyPressed]);
 		                    battleActionTaken=1;
 		                }

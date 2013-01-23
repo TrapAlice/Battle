@@ -24,5 +24,6 @@ Monster* Monster_clone(Monster*);
 int Monster_checkDead(Monster*);
 void Monster_delete(Monster*);
 void Monster_attack(MessageList*, Monster*, Monster*);
+void Monster_takeDamage(MessageList*, Monster*, int);
 
 #endif

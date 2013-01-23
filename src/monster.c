@@ -56,5 +56,19 @@ void Monster_attack(MessageList* messageLog, Monster* attacker, Monster* defende
 			damage = RNG_roll(attacker->combat->hits, attacker->combat->power);
 		}
 	}
-	Combat_takeDamage(messageLog, defender->combat, defender->name, damage);
+	Monster_takeDamage(messageLog, defender, damage);
+}
+
+void Monster_takeDamage(MessageList* messageLog, Monster* defender, int damage){
+	if(damage>0){
+		Msg_addMessage(messageLog, "%s takes %d damage", defender->name, damage);
+	} else if (damage < 0){
+		Msg_addMessage(messageLog, "%s is healed for %d", defender->name, -damage);
+	} else {
+		Msg_addMessage(messageLog, "%s avoids the attack", defender->name, damage);
+	}
+	defender->combat->hp -= damage;
+	if(defender->combat->hp > defender->combat->maxhp){
+		defender->combat->hp = defender->combat->maxhp;
+	}
 }

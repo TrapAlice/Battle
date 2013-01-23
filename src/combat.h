@@ -10,7 +10,6 @@ typedef struct{
 	int hits;
 }Combat;
 
-void Combat_takeDamage(MessageList*, Combat*, const char*, int);
 Combat* Combat_create(int, int, int);
 void Combat_delete(Combat*);
 

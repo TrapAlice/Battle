@@ -17,5 +17,7 @@ typedef struct
 
 Equipment* createEquipmentSlots();
 void deleteEquipmentSlots(Equipment*);
+Item* getEquipment(Equipment*, enum Slot);
+void Equip(Equipment*, enum Slot, Item*);
 
 #endif

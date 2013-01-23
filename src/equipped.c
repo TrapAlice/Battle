@@ -11,3 +11,11 @@ void deleteEquipmentSlots(Equipment* equipment){
 	free(equipment->equipped);
 	free(equipment);
 }
+
+Item* getEquipment(Equipment* equipment, enum Slot slot){
+	return equipment->equipped[slot];
+}
+
+void Equip(Equipment* equipment, enum Slot slot, Item* item){
+	equipment->equipped[slot]=item;
+}

@@ -6,6 +6,7 @@
 #include "inventory.h"
 #include "equipped.h"
 #include "msg.h"
+#include "skills.h"
 
 typedef struct{
 	char* name;
@@ -14,6 +15,7 @@ typedef struct{
 	Inventory* inventory;
 	Object* object;
 	Equipment* equipment;
+	Skills* skills;
 }Monster;
 
 extern Monster* player;

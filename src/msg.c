@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "moonmem.h"
 
+MessageList* globalMessage;
+
 Message* createMessage(char* msg){
 	Message* message = malloc(sizeof(Message));
 	message->msg = msg;

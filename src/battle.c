@@ -16,6 +16,7 @@
 
 
 extern Monster* player;
+extern MessageList* globalMessage;
 Monster* monster;
 TCOD_console_t msgConsole;
 enum State_e GameState;
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]) {
     char done=0;
     int steps=25;
     int battleCooldown=10;
-    int battleResult;
+    int battleResult=0;
     int battleActionTaken;
     int itemchar;
 
@@ -56,6 +57,9 @@ int main(int argc, char *argv[]) {
                 }
                 if(key.c=='e'){
                 	GameState = STATE_EQUIP;
+                }
+                if(key.c=='@'){
+                    GameState = STATE_STATS;
                 }
                 if(battleCooldown<=0){
                     if(oneIn(steps)){
@@ -102,7 +106,7 @@ int main(int argc, char *argv[]) {
 		            handleInput(&key);
 		            keyPressed = key.c-'a';
 		            if(items[keyPressed]!=NULL){
-		                if(items[keyPressed]->type==I_HEALING){
+		                if(itemIsType(items[keyPressed], I_HEALING)){
 		                    takeDamage(combatLog, player, -(roll(1,items[keyPressed]->power)));
 		                    removeItemInventory(player->inventory, items[keyPressed]);
 		                    battleActionTaken=1;
@@ -177,6 +181,8 @@ int main(int argc, char *argv[]) {
                 keyPressed = key.c-'a';
                 if(items[keyPressed]!=NULL){
                     GameState = STATE_INVENTORYDETAIL;
+                } else {
+                    GameState = STATE_MAP;
                 }
                 break;
 
@@ -189,16 +195,21 @@ int main(int argc, char *argv[]) {
             	handleInput(&key);
                 keyPressed = key.c-'a';
                 if(items[keyPressed]!=NULL){
-                	if(items[keyPressed]->type == I_EQUIPMENT){
-                		if(items[keyPressed]->type2 == IS_WEAPON){
-	                		player->equipment->equipped[E_Hand] = items[keyPressed];
-	                	} else if(items[keyPressed]->type2 == IS_CHESTARMOR){
-	                		player->equipment->equipped[E_Chest] = items[keyPressed];
+                	if(itemIsType(items[keyPressed], I_EQUIPMENT)){
+                		if(itemIsSubType(items[keyPressed], IS_WEAPON)){
+	                		Equip(player->equipment, E_Hand, items[keyPressed]);
+	                	} else if(itemIsSubType(items[keyPressed], IS_CHESTARMOR)){
+                            Equip(player->equipment, E_Chest, items[keyPressed]);
 	                	}
                 	}
-                	GameState = STATE_MAP;
                 }
+                GameState = STATE_MAP;
             	break;
+
+            case STATE_STATS:
+                GameState = STATE_MAP;
+                waitForPress();
+                break;
         }
         
     }
@@ -293,9 +304,9 @@ void printUI(){
         	x = 0;
         	while(head != NULL){
         		item = head->item;
-        		if(item->type == I_EQUIPMENT){
-        			if(player->equipment->equipped[E_Hand] != item &&
-        			   player->equipment->equipped[E_Chest] != item){
+        		if(itemIsType(item, I_EQUIPMENT)){
+        			if(getEquipment(player->equipment, E_Hand) != item &&
+        			   getEquipment(player->equipment, E_Chest) != item){
 	        			TCOD_console_print(inventoryPanel,0,x,"[%c] %s",'A'+itemchar, item->name);
 	        			x++;
 	        		}
@@ -304,10 +315,16 @@ void printUI(){
         		head=head->next;
         		itemchar++;
         	}
-        	TCOD_console_print(inventoryPanel,50,0,"Hand:  %s", (player->equipment->equipped[E_Hand] != NULL ? player->equipment->equipped[E_Hand]->name : ""));
-        	TCOD_console_print(inventoryPanel,50,1,"Chest: %s", (player->equipment->equipped[E_Chest] != NULL ? player->equipment->equipped[E_Chest]->name : ""));
+        	TCOD_console_print(inventoryPanel,50,0,"Hand:  %s", (getEquipment(player->equipment, E_Hand) != NULL ? getEquipment(player->equipment, E_Hand)->name : ""));
+        	TCOD_console_print(inventoryPanel,50,1,"Chest: %s", (getEquipment(player->equipment, E_Chest) != NULL ? getEquipment(player->equipment, E_Chest)->name : ""));
         	TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
         	break;
+        case STATE_STATS:
+            for(x=0; x<num_skills; x++){
+                TCOD_console_print(inventoryPanel,0,x,"%s - %d",getSkillName(x),player->skills->skillLevel[x]);
+            }
+            TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
+            break;
     }
     TCOD_console_flush();
 }
@@ -342,6 +359,7 @@ void init(){
     initMonsters();
     initItems();
     consoleLog = createMessageList(15);
+    globalMessage = consoleLog;
     msgConsole = TCOD_console_new(80,20);
     GameState = 0;
     combatLog = createMessageList(15);

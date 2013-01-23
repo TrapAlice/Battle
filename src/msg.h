@@ -13,6 +13,8 @@ typedef struct{
 	int limit;
 }MessageList;
 
+extern MessageList* globalMessage;
+
 MessageList* createMessageList(int);
 void clearMessageList(MessageList*);
 void deleteMessageList(MessageList*);

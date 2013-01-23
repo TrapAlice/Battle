@@ -12,6 +12,7 @@ Monster* createPlayer(int x, int y){
 	monster->object = obj;
 	monster->inventory = createInventory();
 	monster->equipment = createEquipmentSlots();
+	monster->skills = createSkillSlots();
 	return monster;
 }
 
@@ -41,21 +42,28 @@ void deleteMonster(Monster* monster){
 	if( monster->inventory != NULL) deleteInventory(monster->inventory);
 	if( monster->combat != NULL) deleteCombat(monster->combat);
 	if( monster->equipment != NULL) deleteEquipmentSlots(monster->equipment);
+	if( monster->skills != NULL ) deleteSkillSlots(monster->skills);
 	free(monster);
 }
 
 void attackMonster(MessageList* messageLog, Monster* attacker, Monster* defender){
 	int damage;
+	int basepower = attacker->combat->power;
+	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_Hand) == NULL ? 0 : getEquipment(attacker->equipment, E_Hand)->power));
 	addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
-	if(attacker->equipment==NULL){
-		damage = roll(attacker->combat->hits, attacker->combat->power);
-	} else {
-		if(attacker->equipment->equipped[E_Hand]!=NULL){
-			damage = roll(attacker->combat->hits, attacker->equipment->equipped[E_Hand]->power);
-		} else {
-			damage = roll(attacker->combat->hits, attacker->combat->power);
+
+	damage = roll(attacker->combat->hits, basepower);
+	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
+	damage -= defender->combat->defense;
+
+	if(attacker == player){
+		if(player->equipment->equipped[E_Hand] != NULL){
+			if(increaseSkill(player->skills, SKILL_SWORD, 2)){
+				addMessage(globalMessage, "Sword skill is now level %d.",player->skills->skillLevel[SKILL_SWORD]);
+			}
 		}
 	}
+
 	takeDamage(messageLog, defender, damage);
 }
 

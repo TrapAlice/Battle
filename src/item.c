@@ -48,3 +48,11 @@ void getItemDescription(Item* item, TCOD_console_t panel){
             break;
     }
 }
+
+int itemIsType(Item* item, enum ItemType type){
+	return item->type == type;
+}
+
+int itemIsSubType(Item* item, enum ItemSubType subType){
+	return item->type2 == subType;
+}

@@ -27,5 +27,7 @@ Item* createItem(char*, char*, int, int, int, int);
 Item* cloneItem(const Item*);
 void deleteItem(Item*);
 void getItemDescription(Item*, TCOD_console_t);
+int itemIsType(Item*, enum ItemType);
+int itemIsSubType(Item*, enum ItemSubType);
 
 #endif

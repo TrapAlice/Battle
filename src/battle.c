@@ -54,6 +54,9 @@ int main(int argc, char *argv[]) {
                 if(key.c=='i'){
                     GameState = STATE_INVENTORY;
                 }
+                if(key.c=='e'){
+                	GameState = STATE_EQUIP;
+                }
                 if(battleCooldown<=0){
                     if(RNG_roll(1,steps) == 1){
                         steps = 50;
@@ -181,6 +184,21 @@ int main(int argc, char *argv[]) {
                 GameState=STATE_MAP;
                 waitForPress();
                 break;
+
+            case STATE_EQUIP:
+            	handleInput(&key);
+                keyPressed = key.c-'a';
+                if(items[keyPressed]!=NULL){
+                	if(items[keyPressed]->type == I_EQUIPMENT){
+                		if(items[keyPressed]->type2 == IS_WEAPON){
+	                		player->equipment->equipped[E_Hand] = items[keyPressed];
+	                	} else if(items[keyPressed]->type2 == IS_ARMOR){
+	                		player->equipment->equipped[E_Chest] = items[keyPressed];
+	                	}
+                	}
+                	GameState = STATE_MAP;
+                }
+            	break;
         }
         
     }
@@ -197,17 +215,19 @@ void test(){
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
     Inventory_addItem(player->inventory, Item_clone(ItemList[item_potion]));
+    Inventory_addItem(player->inventory, Item_clone(ItemList[item_sword]));
     
     Inventory_addItem(player->inventory, hammer);
-    player->equipment->equipped[1] = hammer;
+    player->equipment->equipped[E_Hand] = hammer;
     Inventory_addItem(player->inventory, armor);
-    player->equipment->equipped[0] = armor;
+    /*player->equipment->equipped[E_Chest] = armor;*/
 }
 
 void printUI(){
     int x;
     Inventory* head;
     Item* item;
+    int itemchar;
 
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
@@ -249,7 +269,7 @@ void printUI(){
         case STATE_INVENTORY:
             head = player->inventory->next;
             
-            int itemchar = 0;
+            itemchar = 0;
             while( head != NULL ){
                 if(head->item->stackable){
                     TCOD_console_print(inventoryPanel,0,itemchar,"[%c] %s x%d",'A'+itemchar, head->item->name, head->quantity);
@@ -268,6 +288,27 @@ void printUI(){
             Item_description(item, inventoryPanel);
             TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
             break;
+        case STATE_EQUIP:
+        	head = player->inventory->next;
+        	itemchar = 0;
+        	x = 0;
+        	while(head != NULL){
+        		item = head->item;
+        		if(item->type == I_EQUIPMENT){
+        			if(player->equipment->equipped[E_Hand] != item &&
+        			   player->equipment->equipped[E_Chest] != item){
+	        			TCOD_console_print(inventoryPanel,0,x,"[%c] %s",'A'+itemchar, item->name);
+	        			x++;
+	        		}
+        		}
+        		items[itemchar]=item;
+        		head=head->next;
+        		itemchar++;
+        	}
+        	TCOD_console_print(inventoryPanel,50,0,"Hand:  %s", (player->equipment->equipped[E_Hand] != NULL ? player->equipment->equipped[E_Hand]->name : ""));
+        	TCOD_console_print(inventoryPanel,50,1,"Chest: %s", (player->equipment->equipped[E_Chest] != NULL ? player->equipment->equipped[E_Chest]->name : ""));
+        	TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
+        	break;
     }
     TCOD_console_flush();
 }

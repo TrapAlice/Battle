@@ -16,6 +16,7 @@ enum State_e{
     STATE_BATTLEAFTERMATH,
     STATE_INVENTORY,
     STATE_INVENTORYDETAIL,
+    STATE_EQUIP,
 };
 
 #endif

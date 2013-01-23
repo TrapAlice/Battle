@@ -1,39 +1,39 @@
 #include "inventory.h"
 #include "moonmem.h"
 
-Inventory* Inventory_create(){
+Inventory* createInventory(){
 	Inventory* inventory = malloc(sizeof(Inventory));
 	inventory->quantity=0;
 	inventory->item=0;
 	return inventory;
 }
 
-Inventory* Inventory_add(Item* item){
+static Inventory* Inventory_add(Item* item){
 	Inventory* inventory = malloc(sizeof(Inventory));
 	inventory->quantity=1;
 	inventory->item=item;
 	return inventory;
 }
 
-void Inventory_delete(Inventory* inventory){
+void deleteInventory(Inventory* inventory){
 	Inventory* temp = inventory;
 	Inventory* head = inventory;
 	while(temp!=NULL){
 		head = head->next;
-		Item_delete(temp->item);
+		deleteItem(temp->item);
 		free(temp);
 		temp = head;
 	}
 }
 
-void Inventory_addItem(Inventory* inventory, Item* item){
+void addItemInventory(Inventory* inventory, Item* item){
 	Inventory* temp = inventory; 
 	Inventory* temp2 = inventory; 
 	Inventory* tail;
 	while(temp != NULL){ 
 		if(temp->item!=NULL){
 			if(temp->item->stackable && temp->item->name == item->name){
-				Item_delete(item);
+				deleteItem(item);
 				temp->quantity++;
 				return;
 			}
@@ -45,7 +45,7 @@ void Inventory_addItem(Inventory* inventory, Item* item){
 	temp2->next = tail;
 }
 
-void Inventory_removeItem(Inventory* inventory, Item* item){
+void removeItemInventory(Inventory* inventory, Item* item){
 	Inventory* temp = inventory;
 	Inventory* temp2 = inventory;
 	while(temp != NULL){
@@ -53,7 +53,7 @@ void Inventory_removeItem(Inventory* inventory, Item* item){
 			if(temp->item->name == item->name){
 				temp->quantity--;
 				if(temp->quantity<=0){
-					Item_delete(temp->item);
+					deleteItem(temp->item);
 					temp2->next = temp->next;
 					free(temp);
 					return;

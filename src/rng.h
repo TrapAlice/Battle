@@ -1,7 +1,8 @@
 #ifndef _RNG_H
 #define _RNG_H
 
-void RNG_init(int);
-int RNG_roll(int,int);
+void initSeed(int);
+int roll(int,int);
+int oneIn(int);
 
 #endif

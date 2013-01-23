@@ -16,8 +16,7 @@ enum ITEM_ID{
 };
 
 
-void ItemsInit();
-void ItemsGet(enum ITEM_ID);
-void ItemsUninit();
+void initItems();
+void uninitItems();
 
 #endif

@@ -13,10 +13,10 @@ typedef struct{
 	int limit;
 }MessageList;
 
-MessageList* Msg_create(int);
-void Msg_clear(MessageList*);
-void Msg_delete(MessageList*);
-void Msg_addMessage(MessageList*, const char*, ...);
-char* Msg_getMessage(MessageList*, int);
+MessageList* createMessageList(int);
+void clearMessageList(MessageList*);
+void deleteMessageList(MessageList*);
+void addMessage(MessageList*, const char*, ...);
+char* getMessage(MessageList*, int);
 
 #endif

@@ -15,7 +15,7 @@ void deleteMessage(Message* message){
 	free(message);
 }
 
-MessageList* Msg_create(int limit){
+MessageList* createMessageList(int limit){
 	MessageList* messageList = malloc(sizeof(MessageList));
 	messageList->limit = limit;
 	return messageList;
@@ -23,7 +23,7 @@ MessageList* Msg_create(int limit){
 
 
 
-void Msg_addMessage(MessageList* messageList, const char* msg, ...){
+void addMessage(MessageList* messageList, const char* msg, ...){
 	char* buff=malloc(sizeof(char)*32);
 	int size = messageList->size;
 	Message* head = messageList->head;
@@ -58,7 +58,7 @@ void Msg_addMessage(MessageList* messageList, const char* msg, ...){
 	messageList->size = size;
 }
 
-char* Msg_getMessage(MessageList* messageList, int pos){
+char* getMessage(MessageList* messageList, int pos){
 	Message* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;
@@ -68,7 +68,7 @@ char* Msg_getMessage(MessageList* messageList, int pos){
 	return (temp == NULL) ? "" : temp->msg;
 }
 
-void Msg_clear(MessageList* messageList){
+void clearMessageList(MessageList* messageList){
 	Message* temp = messageList->head;
 	Message* head = messageList->head;
 	while(temp != NULL){
@@ -81,7 +81,7 @@ void Msg_clear(MessageList* messageList){
 
 }
 
-void Msg_delete(MessageList* messageList){
-	Msg_clear(messageList);
+void deleteMessageList(MessageList* messageList){
+	clearMessageList(messageList);
 	free(messageList);
 }

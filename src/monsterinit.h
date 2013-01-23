@@ -14,8 +14,7 @@ enum MON_ID{
 
 extern Monster** MonsterList;
 
-void MonstersInit();
-void MonstersGet(enum MON_ID);
-void MonstersUninit();
+void initMonsters();
+void uninitMonsters();
 
 #endif

@@ -15,7 +15,7 @@ typedef struct
 	Item** equipped;
 }Equipment;
 
-Equipment* Equipment_slotsCreate();
-void Equipment_delete(Equipment*);
+Equipment* createEquipmentSlots();
+void deleteEquipmentSlots(Equipment*);
 
 #endif

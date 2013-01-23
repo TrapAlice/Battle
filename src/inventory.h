@@ -9,11 +9,10 @@ typedef struct Inventory{
 	struct Inventory* next;
 }Inventory;
 
-Inventory* Inventory_create();
-Inventory* Inventory_add(Item*);
-void Inventory_delete(Inventory*);
-void Inventory_addItem(Inventory*, Item*);
-void Inventory_removeItem(Inventory*, Item*);
+Inventory* createInventory();
+void deleteInventory(Inventory*);
+void addItemInventory(Inventory*, Item*);
+void removeItemInventory(Inventory*, Item*);
 
 
 #endif

@@ -18,12 +18,12 @@ typedef struct{
 
 extern Monster* player;
 
-Monster* Monster_playerCreate(int,int);
-Monster* Monster_create(char*, int, int, int, int);
-Monster* Monster_clone(Monster*);
-int Monster_checkDead(Monster*);
-void Monster_delete(Monster*);
-void Monster_attack(MessageList*, Monster*, Monster*);
-void Monster_takeDamage(MessageList*, Monster*, int);
+Monster* createPlayer(int,int);
+Monster* createMonster(char*, int, int, int, int);
+Monster* cloneMonster(Monster*);
+int checkDead(Monster*);
+void deleteMonster(Monster*);
+void attackMonster(MessageList*, Monster*, Monster*);
+void takeDamage(MessageList*, Monster*, int);
 
 #endif

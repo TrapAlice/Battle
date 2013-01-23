@@ -11,7 +11,7 @@ enum ItemType{
 enum ItemSubType{
 	IS_NONE,
 	IS_WEAPON,
-	IS_ARMOR,
+	IS_CHESTARMOR,
 };
 
 typedef struct{
@@ -23,9 +23,9 @@ typedef struct{
 	int stackable;
 }Item;
 
-Item* Item_create(char*, char*, int, int, int, int);
-Item* Item_clone(const Item*);
-void Item_delete(Item*);
-void Item_description(Item*, TCOD_console_t);
+Item* createItem(char*, char*, int, int, int, int);
+Item* cloneItem(const Item*);
+void deleteItem(Item*);
+void getItemDescription(Item*, TCOD_console_t);
 
 #endif

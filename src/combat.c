@@ -3,7 +3,7 @@
 #include "rng.h"
 #include "msg.h"
 
-Combat* Combat_create(int maxhp, int power, int defense){
+Combat* createCombat(int maxhp, int power, int defense){
 	Combat* combat = malloc(sizeof(Combat));
 	combat->hp = maxhp;
 	combat->maxhp = maxhp;
@@ -13,6 +13,6 @@ Combat* Combat_create(int maxhp, int power, int defense){
 	return combat;
 }
 
-void Combat_delete(Combat* combat){
+void deleteCombat(Combat* combat){
 	free(combat);
 }

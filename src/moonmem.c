@@ -5,6 +5,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef struct memnode{
+    size_t size;
+    byte* memory;
+    int pos;
+}memnode;
+
+typedef struct{
+    unsigned int size;
+    memnode* head;
+    byte* memoryslots;
+    byte* memory;
+}moonmem;
+
 moonmem* MOONMEM;
 
 static int findEmptySlot(size_t pSize){
@@ -19,8 +32,8 @@ static int findEmptySlot(size_t pSize){
         }
     }
     printf("Out of memory\n");
-    MOONMEM_memdump();
-    MOONMEM_uninit();
+    memdump();
+    uninitMoonMem();
     exit(0);
 }
 
@@ -30,14 +43,14 @@ static memnode* findEmptyNode(){
         x++;
         if (x > MOONMEM->size/2){
             printf("Out of empty nodes\n");
-            MOONMEM_uninit();
+            uninitMoonMem();
             exit(0);
         }
     }
     return MOONMEM->head+x;
 }
 
-void MOONMEM_init(unsigned int pSize){
+void initMoonMem(unsigned int pSize){
     MOONMEM = calloc(1,sizeof(moonmem)+pSize/4+pSize);
     MOONMEM->size = pSize;
     MOONMEM->head = (memnode*)calloc(sizeof(memnode)*pSize/2, sizeof(memnode));
@@ -46,7 +59,7 @@ void MOONMEM_init(unsigned int pSize){
     
 }
 
-void* MOONMEM_alloc(size_t pSize){
+void* moonAlloc(size_t pSize){
     memnode *data = findEmptyNode();
     int pos;
     data->size = pSize;
@@ -58,7 +71,7 @@ void* MOONMEM_alloc(size_t pSize){
 
 
 
-void MOONMEM_dealloc(void* ptr){
+void moonDealloc(void* ptr){
     int x = 0;
     memnode* obj;
     if(ptr==NULL)return;
@@ -75,7 +88,7 @@ void MOONMEM_dealloc(void* ptr){
 
 }
 
-void MOONMEM_memout(){
+void memout(){
     int x = 16;
     while( x < (sizeof(moonmem)+MOONMEM->size+MOONMEM->size/4) ){
         printf("%02X",*((byte*)(MOONMEM)+x));
@@ -85,12 +98,12 @@ void MOONMEM_memout(){
     printf("\n\n");
 }
 
-void MOONMEM_memdump(){
-    MOONMEM_memout();
+void memdump(){
+    memout();
     exit(0);
 }
 
-void MOONMEM_uninit(){
-    MOONMEM_memout();
+void uninitMoonMem(){
+    memout();
     free(MOONMEM);
 }

@@ -3,7 +3,7 @@
 #include "moonmem.h"
 #include "combat.h"
 
-Object* Object_create(char self, int x, int y){
+Object* createObject(char self, int x, int y){
 	Object* obj = malloc(sizeof(Object));
 	obj->self = self;
 	obj->x=x;
@@ -11,15 +11,15 @@ Object* Object_create(char self, int x, int y){
 	return obj;
 }
 
-void Object_draw(Object* obj){
+void drawObject(Object* obj){
 	TCOD_console_put_char( NULL, obj->x, obj->y, obj->self, TCOD_BKGND_NONE);
 }
 
-void Object_move(Object* obj, int dx, int dy){
+void moveObject(Object* obj, int dx, int dy){
 	obj->x+=dx;
 	obj->y+=dy;
 }
 
-void Object_delete(Object* object){
+void deleteObject(Object* object){
 	free(object);
 }

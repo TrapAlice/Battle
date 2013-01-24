@@ -60,7 +60,6 @@ void addMessage(MessageList* messageList, const char* msg, ...){
 }
 
 char* getMessage(MessageList* messageList, int pos){
-	int x=pos;
 	Message* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;

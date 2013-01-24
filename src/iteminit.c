@@ -11,6 +11,7 @@ void initItems(){
 	item(item_sword, "Sword", "A standard sword", I_EQUIPMENT, IS_SWORD, 6, 0);
 	item(item_pomfhammer, "Pomf Hammer", "In the name of Rorans, be pomf'd", I_EQUIPMENT, IS_HAMMER, 20, 0);
 	item(item_leatherarmor, "Leather Armor", "A piece of leather armor", I_EQUIPMENT, IS_CHESTARMOR, 3, 0);
+	item(item_meat, "Chunk of meat", "A chunk of meat carved from a piggie", I_HEALING, IS_NONE, 5, 1);
 }
 
 void uninitItems(){

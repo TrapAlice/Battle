@@ -320,8 +320,12 @@ void printUI(){
         	TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
         	break;
         case STATE_STATS:
+            itemchar=0;
             for(x=0; x<num_skills; x++){
-                TCOD_console_print(inventoryPanel,0,x,"%s - %d",getSkillName(x),player->skills->skillLevel[x]);
+                if(player->skills->skillLevel[x]>0){
+                    TCOD_console_print(inventoryPanel,0,itemchar,"%s- %d",getSkillName(x),player->skills->skillLevel[x]);
+                    itemchar++;
+                }
             }
             TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
             break;

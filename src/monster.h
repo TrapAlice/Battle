@@ -8,7 +8,7 @@
 #include "msg.h"
 #include "skills.h"
 
-typedef struct{
+typedef struct Monster{
 	char* name;
 	Combat* combat;
 	int xp;
@@ -16,12 +16,13 @@ typedef struct{
 	Object* object;
 	Equipment* equipment;
 	Skills* skills;
+	void (*deathFunction)();
 }Monster;
 
 extern Monster* player;
 
 Monster* createPlayer(int,int);
-Monster* createMonster(char*, int, int, int, int);
+Monster* createMonster(char*, int, int, int, int,void(*deathfunc)());
 Monster* cloneMonster(Monster*);
 int checkDead(Monster*);
 void deleteMonster(Monster*);

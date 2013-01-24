@@ -12,6 +12,7 @@ enum ITEM_ID{
 	item_sword,
 	item_pomfhammer,
 	item_leatherarmor,
+	item_meat,
 	num_items,
 };
 

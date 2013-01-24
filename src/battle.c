@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
     int battleResult=0;
     int battleActionTaken;
     int itemchar;
+    int x;
 
     init();
     test(); 
@@ -65,7 +66,9 @@ int main(int argc, char *argv[]) {
                     if(oneIn(steps)){
                         steps = 50;
                         battleCooldown=10;
-                        if(oneIn(3)){
+                        if(oneIn(5)){
+                            monster = cloneMonster(MonsterList[mob_fairy]);
+                        } else if(oneIn(3)){
                             monster = cloneMonster(MonsterList[mob_pig]);
                         } else {
                             monster = cloneMonster(MonsterList[mob_slime]);
@@ -94,9 +97,12 @@ int main(int argc, char *argv[]) {
 		            itemchar=0;
 		            Inventory* head = player->inventory->next;
 		            addMessage(combatLog,"Use which item?");
+                    x=0;
 		            while(head!=NULL){
-		                addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
-		                items[itemchar] = head->item;
+                        if(itemIsType(head->item, I_HEALING)){
+                            addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
+                            items[itemchar] = head->item;
+                        }
 		                itemchar++;
 		                head=head->next;
 		            }
@@ -118,8 +124,9 @@ int main(int argc, char *argv[]) {
 		        } else if(key.c == 'r' || key.c == 'R'){
 		            addMessage(consoleLog,"You ran away!");
 		            addMessage(combatLog,"You ran away!");
-		            GameState=STATE_BATTLEAFTERMATH;
+		            
 		            printUI();
+                    GameState=STATE_BATTLEAFTERMATH;
 		            battleResult=3;
 		            
 		            waitForPress();
@@ -135,6 +142,10 @@ int main(int argc, char *argv[]) {
 		                GameState=STATE_BATTLEAFTERMATH;
 		            	
 		                waitForPress();
+                        if(monster->deathFunction != NULL){
+                            (monster->deathFunction)();
+                        }
+                        
 			    		clearMessageList(combatLog);
 		            } else {
 			            addMessage(combatLog, "The %s attacks!",monster->name);
@@ -358,7 +369,7 @@ void waitForPress(){
 }
 
 void init(){
-    initMoonMem(2048);
+    initMoonMem(4096);
     initSeed(0);
     initMonsters();
     initItems();

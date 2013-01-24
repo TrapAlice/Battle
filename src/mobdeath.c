@@ -16,3 +16,8 @@ void pigDeath(){
 	}
 	increaseSkill(player->skills, SKILL_CARVING, 2);
 }
+
+void fairyDeath(){
+	addMessage(globalMessage, "The fairy explodes, you get covered in dust");
+	takeDamage(NULL, player, -10);
+}

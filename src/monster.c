@@ -46,18 +46,8 @@ void deleteMonster(Monster* monster){
 	free(monster);
 }
 
-void attackMonster(MessageList* messageLog, Monster* attacker, Monster* defender){
-	int damage;
-	int basepower = attacker->combat->power;
-	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_Hand) == NULL ? 0 : getEquipment(attacker->equipment, E_Hand)->power));
-	/*addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);*/
-
-	damage = roll(attacker->combat->hits, basepower);
-	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
-	damage -= defender->combat->defense;
-
-	/*if(attacker == player){
-		if(player->equipment->equipped[E_Hand] != NULL){
+static void _improvePlayerSkills(){
+	if(player->equipment->equipped[E_Hand] != NULL){
 			switch(player->equipment->equipped[E_Hand]->type2){
 				case IS_SWORD:
 					increaseSkill(player->skills, SKILL_SWORD, 2);
@@ -67,18 +57,32 @@ void attackMonster(MessageList* messageLog, Monster* attacker, Monster* defender
 					break;
 			}
 		}
-	}*/
+}
+
+void attackMonster(MessageList* messageLog, Monster* attacker, Monster* defender){
+	int damage;
+	int basepower = attacker->combat->power;
+	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_Hand) == NULL ? 0 : getEquipment(attacker->equipment, E_Hand)->power));
+	addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
+
+	damage = roll(attacker->combat->hits, basepower);
+	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
+	damage -= defender->combat->defense;
+
+	if(attacker == player){
+		_improvePlayerSkills();
+	}
 
 	takeDamage(messageLog, defender, damage);
 }
 
 void takeDamage(MessageList* messageLog, Monster* defender, int damage){
 	if(damage>0){
-		/*addMessage(messageLog, "%s takes %d damage", defender->name, damage);*/
+		addMessage(messageLog, "%s takes %d damage", defender->name, damage);
 	} else if (damage < 0){
 		addMessage(messageLog, "%s is healed for %d", defender->name, -damage);
 	} else {
-		/*addMessage(messageLog, "%s avoids the attack", defender->name, damage);*/
+		addMessage(messageLog, "%s avoids the attack", defender->name, damage);
 	}
 	defender->combat->hp -= damage;
 	if(defender->combat->hp > defender->combat->maxhp){

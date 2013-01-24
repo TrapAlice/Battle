@@ -10,7 +10,8 @@ enum ItemType{
 
 enum ItemSubType{
 	IS_NONE,
-	IS_WEAPON,
+	IS_SWORD,
+	IS_HAMMER,
 	IS_CHESTARMOR,
 };
 

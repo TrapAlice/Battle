@@ -62,12 +62,13 @@ void addMessage(MessageList* messageList, const char* msg, ...){
 
 char* getMessage(MessageList* messageList, int pos){
 	Message* temp = messageList->head;
+	int x=pos;
 	while(pos>0){
 		if(temp == NULL) break;
 		temp = temp->next;
 		pos--;
 	}
-	return (temp == NULL) ? "" : temp->msg;
+	return (temp == NULL ? "" : temp->msg);
 }
 
 void clearMessageList(MessageList* messageList){

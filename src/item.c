@@ -38,7 +38,8 @@ void getItemDescription(Item* item, TCOD_console_t panel){
             break;
         case I_EQUIPMENT:
         	switch(item->type2){
-        		case IS_WEAPON:
+        		case IS_SWORD:
+        		case IS_HAMMER:
         			TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
             		break;
             	case IS_CHESTARMOR:

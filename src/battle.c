@@ -196,11 +196,11 @@ int main(int argc, char *argv[]) {
                 keyPressed = key.c-'a';
                 if(items[keyPressed]!=NULL){
                 	if(itemIsType(items[keyPressed], I_EQUIPMENT)){
-                		if(itemIsSubType(items[keyPressed], IS_WEAPON)){
+                		/*if(itemIsSubType(items[keyPressed], IS_SWORD) || itemIsSubType(items[keyPressed], IS_HAMMER)){
 	                		Equip(player->equipment, E_Hand, items[keyPressed]);
 	                	} else if(itemIsSubType(items[keyPressed], IS_CHESTARMOR)){
                             Equip(player->equipment, E_Chest, items[keyPressed]);
-	                	}
+	                	}*/
                 	}
                 }
                 GameState = STATE_MAP;

@@ -3,6 +3,7 @@
 
 enum Skills_e{
 	SKILL_SWORD,
+	SKILL_HAMMER,
 	num_skills,
 };
 

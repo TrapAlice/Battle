@@ -4,7 +4,6 @@ Battle
 A roguelike written in C using the Libtcod library
 
 Todo:
-- Function pointers for Monsters
 - Gain items/gold at the end of battles
 - Have abilities to use
 - Player having more stats

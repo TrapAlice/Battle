@@ -74,6 +74,7 @@ void attackMonster(MessageList* messageLog, Monster* attacker, Monster* defender
 	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
 	damage -= basedefense;
 	damage -= roll(1,armordefense);
+	
 	damage = damage < 0 ? 0 : damage;
 
 	if(attacker == player){

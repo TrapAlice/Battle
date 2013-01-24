@@ -20,5 +20,6 @@ void clearMessageList(MessageList*);
 void deleteMessageList(MessageList*);
 void addMessage(MessageList*, const char*, ...);
 char* getMessage(MessageList*, int);
+int getMessageListSize(MessageList*);
 
 #endif

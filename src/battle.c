@@ -248,7 +248,7 @@ void printUI(){
         case STATE_MAP:
             drawObject(player->object);
             x=0;
-            while(x<=15){
+            while(x<getMessageListSize(consoleLog)){
                 TCOD_console_print(msgConsole,0,x,getMessage(consoleLog, x));
                 x++;
             }
@@ -258,7 +258,7 @@ void printUI(){
             break;
         case STATE_BATTLE:
             x=0;
-            while(x<=15){
+            while(x<getMessageListSize(combatLog)){
                 TCOD_console_print(combatConsole,0,x,getMessage(combatLog, x));
                 x++;
             }
@@ -270,7 +270,7 @@ void printUI(){
             break;
         case STATE_BATTLEAFTERMATH:
             x=0;
-            while(x<=15){
+            while(x<getMessageListSize(combatLog)){
                 TCOD_console_print(combatConsole,30,x,getMessage(combatLog, x));
                 x++;
             }

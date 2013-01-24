@@ -27,7 +27,7 @@ static int findEmptySlot(size_t pSize){
     for( x = 0; x<(MOONMEM->size/4 - pSize); x++){
         n = memcmp(MOONMEM->memoryslots+x, slots, pSize);
         if( n==0 ){
-            memset(MOONMEM->memoryslots+x, x+1, pSize);
+            memset(MOONMEM->memoryslots+x, 0xFF, pSize);
             return x;
         }
     }

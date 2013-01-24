@@ -4,8 +4,9 @@
 
 Skills* createSkillSlots(){
 	Skills* skills = malloc(sizeof(Skills));
-	/*skills->skillLevel = malloc(sizeof(int)*num_skills);*/
+	skills->skillLevel = malloc(sizeof(int)*num_skills);
 	skills->skillXP = malloc(sizeof(int)*num_skills);
+	memout();
 	return skills;
 }
 
@@ -17,9 +18,9 @@ void deleteSkillSlots(Skills* skills){
 
 int increaseSkill(Skills* skills, enum Skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
-	/*if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
+	if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
 		return levelUpSkill(skills, skill);
-	}*/
+	}
 	return 0;
 }
 

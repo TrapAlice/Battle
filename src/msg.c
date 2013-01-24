@@ -36,7 +36,6 @@ void addMessage(MessageList* messageList, const char* msg, ...){
 	va_start(ap, msg);
 	vsprintf(buff, msg, ap);
 	va_end(ap);
-	
 
 	size++;
 
@@ -61,6 +60,7 @@ void addMessage(MessageList* messageList, const char* msg, ...){
 }
 
 char* getMessage(MessageList* messageList, int pos){
+	int x=pos;
 	Message* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;
@@ -70,14 +70,20 @@ char* getMessage(MessageList* messageList, int pos){
 	return (temp == NULL ? "" : temp->msg);
 }
 
+int getMessageListSize(MessageList* messageList){
+	return messageList->size;
+}
+
 void clearMessageList(MessageList* messageList){
 	Message* temp = messageList->head;
 	Message* head = messageList->head;
+	int x=0;
 	while(temp != NULL){
 		head = head->next;
 		deleteMessage(temp);
 		temp = head;
 		messageList->size--;
+		x++;
 	}
 	messageList->head = NULL;
 

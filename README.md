@@ -7,6 +7,5 @@ Todo:
 - Have abilities to use
 - Player having more stats
   - Able to level up
-- Camera
 
 Diagram: http://yuml.me/edit/91094f0d

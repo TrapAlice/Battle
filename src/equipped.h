@@ -3,12 +3,12 @@
 
 #include "item.h"
 
-enum Slot{
-	E_Hand,
-	E_Head,
-	E_Chest,
+typedef enum slot_e{
+	E_HAND,
+	E_HEAD,
+	E_CHEST,
 	num_slots,
-};
+}slot_e;
 
 typedef struct
 {
@@ -17,7 +17,7 @@ typedef struct
 
 Equipment* createEquipmentSlots();
 void deleteEquipmentSlots(Equipment*);
-Item* getEquipment(Equipment*, enum Slot);
-void Equip(Equipment*, enum Slot, Item*);
+Item* getEquipment(Equipment*, slot_e);
+void Equip(Equipment*, slot_e, Item*);
 
 #endif

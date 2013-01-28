@@ -13,7 +13,7 @@ enum MON_ID{
 	num_monsters,
 };
 
-extern Monster** MonsterList;
+extern monster_t** MonsterList;
 
 void initMonsters();
 void uninitMonsters();

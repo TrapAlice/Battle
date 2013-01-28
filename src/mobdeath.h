@@ -3,7 +3,7 @@
 
 #include "monster.h"
 
-void pigDeath(Monster*);
-void fairyDeath(Monster*);
+void pigDeath(monster_t*);
+void fairyDeath(monster_t*);
 
 #endif

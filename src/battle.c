@@ -15,9 +15,9 @@
 #include <stdio.h>
 
 
-extern Monster* player;
+extern monster_t* player;
 extern MessageList* globalMessage;
-Monster* monster;
+monster_t* monster;
 TCOD_console_t msgConsole;
 enum State_e GameState;
 TCOD_console_t combatConsole;
@@ -36,7 +36,6 @@ int main(int argc, char *argv[]) {
     int battleResult=0;
     int battleActionTaken;
     int itemchar;
-    int x;
 
     init();
     test(); 
@@ -87,17 +86,16 @@ int main(int argc, char *argv[]) {
             case STATE_BATTLE:
             	handleInput(&key);
             	battleActionTaken=0;
-		        clearMessageList(combatLog);
+		        /*clearMessageList(combatLog);*/
 
 		        if(key.c == 'a' || key.c == 'A'){
-		            addMessage(combatLog, "You attack!");
-		            attackMonster(combatLog, player, monster);
+		            addMessage(consoleLog, "You attack!");
+		            attackMonster(consoleLog, player, monster);
 		            battleActionTaken=1;
 		        } else if(key.c == 'h' || key.c == 'H'){
 		            itemchar=0;
 		            Inventory* head = player->inventory->next;
 		            addMessage(combatLog,"Use which item?");
-                    x=0;
 		            while(head!=NULL){
                         if(itemIsType(head->item, I_HEALING)){
                             addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
@@ -113,7 +111,7 @@ int main(int argc, char *argv[]) {
 		            keyPressed = key.c-'a';
 		            if(items[keyPressed]!=NULL){
 		                if(itemIsType(items[keyPressed], I_HEALING)){
-		                    takeDamage(combatLog, player, -(roll(1,items[keyPressed]->power)));
+		                    takeDamage(consoleLog, player, -(roll(1,items[keyPressed]->power)));
 		                    removeItemInventory(player->inventory, items[keyPressed]);
 		                    battleActionTaken=1;
 		                }
@@ -123,42 +121,42 @@ int main(int argc, char *argv[]) {
 		            
 		        } else if(key.c == 'r' || key.c == 'R'){
 		            addMessage(consoleLog,"You ran away!");
-		            addMessage(combatLog,"You ran away!");
+		            /*addMessage(consoleLog,"You ran away!");*/
 		            
 		            printUI();
                     GameState=STATE_BATTLEAFTERMATH;
 		            battleResult=3;
 		            
 		            waitForPress();
-			    	clearMessageList(combatLog);
+			    	/*clearMessageList(combatLog);*/
 		            break;
 		        }
 		        if(battleActionTaken){
 		            if(checkDead(monster)){
 		                addMessage(consoleLog,"You win!");
-		                addMessage(combatLog,"You win!");
+		                /*addMessage(consoleLog,"You win!");*/
 		                battleResult=2;
 		                printUI();
 		                GameState=STATE_BATTLEAFTERMATH;
 		            	
 		                waitForPress();
                         if(monster->deathFunction != NULL){
-                            (monster->deathFunction)();
+                            (monster->deathFunction)(monster);
                         }
                         
-			    		clearMessageList(combatLog);
+			    		/*clearMessageList(combatLog);*/
 		            } else {
-			            addMessage(combatLog, "The %s attacks!",monster->name);
-			            attackMonster(combatLog, monster, player);
+			            addMessage(consoleLog, "The %s attacks!",monster->name);
+			            attackMonster(consoleLog, monster, player);
 			            if(checkDead(player)){
 			                addMessage(consoleLog,"You lose");
-			                addMessage(combatLog,"You lose");
+			                /*addMessage(consoleLog,"You lose");*/
 			                printUI();
 			                battleResult=1;
 			                GameState=STATE_BATTLEAFTERMATH;
 		          			
 			                waitForPress();
-			    			clearMessageList(combatLog);
+			    			/*clearMessageList(combatLog);*/
 			            }
 			        }
 		        }
@@ -167,21 +165,22 @@ int main(int argc, char *argv[]) {
             case STATE_BATTLEAFTERMATH:
 			    switch(battleResult){
 			        case 1:
-			            addMessage(combatLog, "You've died >:");
+			            /*addMessage(consoleLog, "You've died >:");*/
 			            break;
 			        case 2:
-			            addMessage(combatLog, "You win!");
-			            addMessage(combatLog, "You gained %d EXP", monster->xp);
+			            /*addMessage(consoleLog, "You win!");*/
+			            addMessage(consoleLog, "You gained %d EXP", monster->xp);
 			            player->xp += monster->xp;
 			            break;
 			        case 3:
-			            addMessage(combatLog, "You ran away safely");
+			            /*addMessage(consoleLog, "You ran away safely");*/
 			            break;
 			    }
 			    GameState = STATE_BATTLEAFTERMATH;
 			    printUI();
-			    clearMessageList(combatLog);
-			    waitForPress();
+			    /*clearMessageList(consoleLog);*/
+			    /*waitForPress();*/
+                addMessage(consoleLog,"");
 			    GameState=STATE_MAP;
                 deleteMonster(monster);
                 if(battleResult == 1) done=1;
@@ -207,10 +206,10 @@ int main(int argc, char *argv[]) {
                 keyPressed = key.c-'a';
                 if(items[keyPressed]!=NULL){
                 	if(itemIsType(items[keyPressed], I_EQUIPMENT)){
-                		if(itemIsSubType(items[keyPressed], IS_SWORD) || itemIsSubType(items[keyPressed], IS_HAMMER)){
-	                		Equip(player->equipment, E_Hand, items[keyPressed]);
+                		if(itemIsSubType(items[keyPressed], IS_WEAPON)){
+	                		Equip(player->equipment, E_HAND, items[keyPressed]);
 	                	} else if(itemIsSubType(items[keyPressed], IS_CHESTARMOR)){
-                            Equip(player->equipment, E_Chest, items[keyPressed]);
+                            Equip(player->equipment, E_CHEST, items[keyPressed]);
 	                	}
                 	}
                 }
@@ -269,8 +268,13 @@ void printUI(){
             break;
         case STATE_BATTLE:
             x=0;
+            while(x<getMessageListSize(consoleLog)){
+                TCOD_console_print(combatConsole,0,x,getMessage(consoleLog, x));
+                x++;
+            }
+            x=0;
             while(x<getMessageListSize(combatLog)){
-                TCOD_console_print(combatConsole,0,x,getMessage(combatLog, x));
+                TCOD_console_print(combatConsole,16,22+x,getMessage(combatLog, x));
                 x++;
             }
             TCOD_console_print(combatConsole,0,20,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
@@ -316,8 +320,8 @@ void printUI(){
         	while(head != NULL){
         		item = head->item;
         		if(itemIsType(item, I_EQUIPMENT)){
-        			if(getEquipment(player->equipment, E_Hand) != item &&
-        			   getEquipment(player->equipment, E_Chest) != item){
+        			if(getEquipment(player->equipment, E_HAND) != item &&
+        			   getEquipment(player->equipment, E_CHEST) != item){
 	        			TCOD_console_print(inventoryPanel,0,x,"[%c] %s",'A'+itemchar, item->name);
 	        			x++;
 	        		}
@@ -326,8 +330,8 @@ void printUI(){
         		head=head->next;
         		itemchar++;
         	}
-        	TCOD_console_print(inventoryPanel,50,0,"Hand:  %s", (getEquipment(player->equipment, E_Hand) != NULL ? getEquipment(player->equipment, E_Hand)->name : ""));
-        	TCOD_console_print(inventoryPanel,50,1,"Chest: %s", (getEquipment(player->equipment, E_Chest) != NULL ? getEquipment(player->equipment, E_Chest)->name : ""));
+        	TCOD_console_print(inventoryPanel,50,0,"Hand:  %s", (getEquipment(player->equipment, E_HAND) != NULL ? getEquipment(player->equipment, E_HAND)->name : ""));
+        	TCOD_console_print(inventoryPanel,50,1,"Chest: %s", (getEquipment(player->equipment, E_CHEST) != NULL ? getEquipment(player->equipment, E_CHEST)->name : ""));
         	TCOD_console_blit(inventoryPanel,0,0,80,50,NULL,5,5,128,255);
         	break;
         case STATE_STATS:

@@ -5,9 +5,9 @@
 #include "inventory.h"
 #include "iteminit.h"
 
-extern Monster* player;
+extern monster_t* player;
 
-void pigDeath(Monster* monster){
+void pigDeath(monster_t* monster){
 	int carving = player->skills->skillLevel[SKILL_CARVING];
 	if(oneIn(5-carving)){
 		addMessage(globalMessage, "Successfully carved some meat");
@@ -17,7 +17,7 @@ void pigDeath(Monster* monster){
 	increaseSkill(player->skills, SKILL_CARVING, 2);
 }
 
-void fairyDeath(Monster* monster){
+void fairyDeath(monster_t* monster){
 	addMessage(globalMessage, "The fairy explodes, you get covered in dust");
 	takeDamage(NULL, player, -10);
 }

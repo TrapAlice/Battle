@@ -4,5 +4,6 @@
 void initSeed(int);
 int roll(int,int);
 int oneIn(int);
+int between(int, int);
 
 #endif

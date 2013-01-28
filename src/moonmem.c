@@ -104,6 +104,6 @@ void memdump(){
 }
 
 void uninitMoonMem(){
-    memout();
+    /*memout();*/
     free(MOONMEM);
 }

@@ -18,3 +18,7 @@ int roll(int x, int d){
 int oneIn(int x){
 	return !(rand() % (x < 1 ? 1 : x));
 }
+
+int between(int min, int max){
+	return (rand() % (max-min))+min;
+}

@@ -384,7 +384,7 @@ void waitForPress(){
 }
 
 void init(){
-    initMoonMem(32000);
+    initMoonMem(64000);
     initSeed(0);
     initMonsters();
     initItems();
@@ -399,8 +399,8 @@ void init(){
 
     player = createPlayer(20,20);
     TCOD_console_init_root(80,50,TITLE,false,false);
-    map = createMap(30, 30);
-    makeMap(map, 10, 4, 7, 0);
+    map = createMap(40, 40);
+    makeMap(map, 10, 7, 12, 0);
 }
 
 void uninit(){

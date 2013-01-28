@@ -1,5 +1,6 @@
 #include "map.h"
 #include "moonmem.h"
+#include "rng.h"
 
 map_t* createMap(int width, int height){
 	map_t* map = malloc(sizeof(map_t));
@@ -33,13 +34,11 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 	}
 
 	for(numrooms=0; numrooms < maxrooms; numrooms++){
-		x = rand() % map->width;
-		y = rand() % map->height;
-		w = (rand() % (maxsize-minsize))+minsize;
-		h = (rand() % (maxsize-minsize))+minsize;
+		w = between(minsize, maxsize);
+		h = between(minsize, maxsize);
+		x = between(1, map->width-w-1);
+		y = between(1, map->height-h-1);
 
-		x = x+w>map->width ? map->width-x : x;
-		y = y+w>map->height ? map->height-y : y;
 
 		createRoom(map, x,y,w,h);
 

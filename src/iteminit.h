@@ -4,7 +4,7 @@
 #include "moonmem.h"
 #include "item.h"
 
-extern Item** ItemList;
+extern item_t** ItemList;
 
 enum ITEM_ID{
 	item_null,

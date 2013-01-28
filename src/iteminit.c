@@ -1,12 +1,12 @@
 #include "iteminit.h"
 #include "skills.h"
 
-Item** ItemList;
+item_t** ItemList;
 
 #define item(id, name, desc, type, type2, skill, power, stackable) ItemList[id]=createItem(name, desc, type, type2, skill, power, stackable)
 
 void initItems(){
-	ItemList=malloc(sizeof(Item)*num_items);
+	ItemList=malloc(sizeof(item_t)*num_items);
 	item(item_null, "", "", 0, 0, 0, 0, 0);
 	item(item_potion, "Potion", "A simple healing potion", I_HEALING, IS_NONE, SKILL_NONE, 6, 1);
 	item(item_sword, "Sword", "A standard sword", I_EQUIPMENT, IS_WEAPON, SKILL_SWORD, 6, 0);

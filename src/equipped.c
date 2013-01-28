@@ -1,21 +1,21 @@
 #include "equipped.h"
 #include "moonmem.h"
 
-Equipment* createEquipmentSlots(){
-	Equipment* equipment = malloc(sizeof(Equipment));
-	equipment->equipped = malloc(sizeof(Item)*num_slots);
+equipment_t* createEquipmentSlots(){
+	equipment_t* equipment = malloc(sizeof(equipment_t));
+	equipment->equipped = malloc(sizeof(item_t)*num_slots);
 	return equipment;
 }
 
-void deleteEquipmentSlots(Equipment* equipment){
+void deleteEquipmentSlots(equipment_t* equipment){
 	free(equipment->equipped);
 	free(equipment);
 }
 
-Item* getEquipment(Equipment* equipment, slot_e slot){
+item_t* getEquipment(equipment_t* equipment, slot_e slot){
 	return equipment->equipped[slot];
 }
 
-void Equip(Equipment* equipment, slot_e slot, Item* item){
+void Equip(equipment_t* equipment, slot_e slot, item_t* item){
 	equipment->equipped[slot]=item;
 }

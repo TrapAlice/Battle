@@ -5,11 +5,10 @@
 monster_t* player;
 
 monster_t* createPlayer(int x, int y){
-	Object* obj = createObject('@',x,y);
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = "Player";
 	monster->combat = createCombat(32,6,1);
-	monster->object = obj;
+	monster->object = createObject('@',x,y);
 	monster->inventory = createInventory();
 	monster->equipment = createEquipmentSlots();
 	monster->skills = createSkillSlots();
@@ -55,7 +54,7 @@ static void _improvePlayerSkills(){
 		}
 }
 
-void attackMonster(MessageList* messageLog, monster_t* attacker, monster_t* defender){
+void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* defender){
 	int damage;
 	int basepower = attacker->combat->power;
 	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_HAND) == NULL ? 0 : getEquipment(attacker->equipment, E_HAND)->power));
@@ -77,7 +76,7 @@ void attackMonster(MessageList* messageLog, monster_t* attacker, monster_t* defe
 	takeDamage(messageLog, defender, damage);
 }
 
-void takeDamage(MessageList* messageLog, monster_t* defender, int damage){
+void takeDamage(messagelist_t* messageLog, monster_t* defender, int damage){
 	if(damage>0){
 		addMessage(messageLog, "%s takes %d damage", defender->name, damage);
 	} else if (damage < 0){

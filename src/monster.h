@@ -12,12 +12,12 @@ typedef struct monster_t monster_t;
 
 struct monster_t{
 	char* name;
-	Combat* combat;
+	combat_t* combat;
 	int xp;
-	Inventory* inventory;
-	Object* object;
-	Equipment* equipment;
-	Skills* skills;
+	inventory_t* inventory;
+	object_t* object;
+	equipment_t* equipment;
+	skills_t* skills;
 	void (*deathFunction)(monster_t*);
 };
 
@@ -28,7 +28,7 @@ monster_t* createMonster(char*, int, int, int, int,void(*mobdeath)(monster_t*));
 monster_t* cloneMonster(monster_t*);
 int checkDead(monster_t*);
 void deleteMonster(monster_t*);
-void attackMonster(MessageList*, monster_t*, monster_t*);
-void takeDamage(MessageList*, monster_t*, int);
+void attackMonster(messagelist_t*, monster_t*, monster_t*);
+void takeDamage(messagelist_t*, monster_t*, int);
 
 #endif

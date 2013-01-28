@@ -3,16 +3,16 @@
 
 #include "item.h"
 
-typedef struct Inventory{
-	Item* item;
+typedef struct inventory_t{
+	item_t* item;
 	int quantity;
-	struct Inventory* next;
-}Inventory;
+	struct inventory_t* next;
+}inventory_t;
 
-Inventory* createInventory();
-void deleteInventory(Inventory*);
-void addItemInventory(Inventory*, Item*);
-void removeItemInventory(Inventory*, Item*);
+inventory_t* createInventory();
+void deleteInventory(inventory_t*);
+void addItemInventory(inventory_t*, item_t*);
+void removeItemInventory(inventory_t*, item_t*);
 
 
 #endif

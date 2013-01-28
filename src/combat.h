@@ -1,14 +1,14 @@
 #ifndef _COMBAT_H
 #define _COMBAT_H
 
-typedef struct{
+typedef struct combat_t{
 	int hp, maxhp;
 	int defense;
 	int power;
 	int hits;
-}Combat;
+}combat_t;
 
-Combat* createCombat(int, int, int);
-void deleteCombat(Combat*);
+combat_t* createCombat(int, int, int);
+void deleteCombat(combat_t*);
 
 #endif

@@ -2,20 +2,22 @@
 #include "moonmem.h"
 #include "msg.h"
 
-Skills* createSkillSlots(){
-	Skills* skills = malloc(sizeof(Skills));
+skills_t* createSkillSlots(){
+	skills_t* skills = malloc(sizeof(skills_t));
 	skills->skillLevel = malloc(sizeof(int)*num_skills);
 	skills->skillXP = malloc(sizeof(int)*num_skills);
+	skills->skillActive = malloc(sizeof(char)*num_skills);
 	return skills;
 }
 
-void deleteSkillSlots(Skills* skills){
+void deleteSkillSlots(skills_t* skills){
 	free(skills->skillLevel);
 	free(skills->skillXP);
+	free(skills->skillActive);
 	free(skills);
 }
 
-int increaseSkill(Skills* skills, Skills_e skill, int xp){
+int increaseSkill(skills_t* skills, Skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
 	if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
 		return levelUpSkill(skills, skill);
@@ -23,7 +25,7 @@ int increaseSkill(Skills* skills, Skills_e skill, int xp){
 	return 0;
 }
 
-int levelUpSkill(Skills* skills, Skills_e skill){
+int levelUpSkill(skills_t* skills, Skills_e skill){
 	skills->skillXP[skill]-=10;
 	skills->skillLevel[skill]++;
 	addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);

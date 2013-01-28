@@ -1,14 +1,14 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-typedef struct{
+typedef struct object_t{
 	int x, y;
 	char self;
-}Object;
+}object_t;
 
-Object* createObject(char, int, int);
-void drawObject(Object*);
-void moveObject(Object*, int, int);
-void deleteObject(Object*);
+object_t* createObject(char, int, int);
+void drawObject(object_t*);
+void moveObject(object_t*, int, int);
+void deleteObject(object_t*);
 
 #endif

@@ -9,15 +9,16 @@ typedef enum Skills_e{
 	num_skills,
 }Skills_e;
 
-typedef struct{
+typedef struct skills_t{
 	int* skillLevel;
 	int* skillXP;
-} Skills;
+	char* skillActive;
+} skills_t;
 
-Skills* createSkillSlots();
-void deleteSkillSlots(Skills*);
-int increaseSkill(Skills*, Skills_e, int);
-int levelUpSkill(Skills*, Skills_e);
+skills_t* createSkillSlots();
+void deleteSkillSlots(skills_t*);
+int increaseSkill(skills_t*, Skills_e, int);
+int levelUpSkill(skills_t*, Skills_e);
 char* getSkillName( Skills_e);
 
 

@@ -4,35 +4,35 @@
 #include <stdio.h>
 #include "moonmem.h"
 
-MessageList* globalMessage;
+messagelist_t* globalMessage;
 
-Message* createMessage(char* msg){
-	Message* message = malloc(sizeof(Message));
+message_t* createMessage(char* msg){
+	message_t* message = malloc(sizeof(message_t));
 	message->msg = msg;
 	return message;
 }
 
-void deleteMessage(Message* message){
+void deleteMessage(message_t* message){
 	free(message->msg);
 	free(message);
 }
 
-MessageList* createMessageList(int limit){
-	MessageList* messageList = malloc(sizeof(MessageList));
+messagelist_t* createMessageList(int limit){
+	messagelist_t* messageList = malloc(sizeof(messagelist_t));
 	messageList->limit = limit;
 	return messageList;
 }
 
 
 
-void addMessage(MessageList* messageList, const char* msg, ...){
+void addMessage(messagelist_t* messageList, const char* msg, ...){
 	char* buff;
 	int size;
-	Message* head;
-	Message* tail;
+	message_t* head;
+	message_t* tail;
 	va_list ap;
-	Message* message;
-	Message* temp;
+	message_t* message;
+	message_t* temp;
 	
 
 	if(messageList==NULL){
@@ -70,8 +70,8 @@ void addMessage(MessageList* messageList, const char* msg, ...){
 	messageList->size = size;
 }
 
-char* getMessage(MessageList* messageList, int pos){
-	Message* temp = messageList->head;
+char* getMessage(messagelist_t* messageList, int pos){
+	message_t* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;
 		temp = temp->next;
@@ -80,13 +80,13 @@ char* getMessage(MessageList* messageList, int pos){
 	return (temp == NULL ? "" : temp->msg);
 }
 
-int getMessageListSize(MessageList* messageList){
+int getMessageListSize(messagelist_t* messageList){
 	return messageList->size;
 }
 
-void clearMessageList(MessageList* messageList){
-	Message* temp = messageList->head;
-	Message* head = messageList->head;
+void clearMessageList(messagelist_t* messageList){
+	message_t* temp = messageList->head;
+	message_t* head = messageList->head;
 	int x=0;
 	while(temp != NULL){
 		head = head->next;
@@ -99,7 +99,7 @@ void clearMessageList(MessageList* messageList){
 
 }
 
-void deleteMessageList(MessageList* messageList){
+void deleteMessageList(messagelist_t* messageList){
 	clearMessageList(messageList);
 	free(messageList);
 }

@@ -1,8 +1,8 @@
 #include "item.h"
 #include "moonmem.h"
 
-Item* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
-	Item* item = malloc(sizeof(Item));
+item_t* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
+	item_t* item = malloc(sizeof(item_t));
 	item->name = name;
 	item->desc = desc;
 	item->type = type;
@@ -14,8 +14,8 @@ Item* createItem(char* name, char* desc, int type, int type2, int relatedSkill, 
 	return item;
 }
 
-Item* cloneItem(const Item* item){
-	Item* clone = malloc(sizeof(Item));
+item_t* cloneItem(const item_t* item){
+	item_t* clone = malloc(sizeof(item_t));
 	clone->name = item->name;
 	clone->desc = item->desc;
 	clone->type = item->type;
@@ -27,11 +27,11 @@ Item* cloneItem(const Item* item){
 	return clone;
 }
 
-void deleteItem(Item* item){
+void deleteItem(item_t* item){
 	free(item);
 }
 
-void getItemDescription(Item* item, TCOD_console_t panel){
+void getItemDescription(item_t* item, TCOD_console_t panel){
 	TCOD_console_print(panel,0,0,"%s",item->name);
 	TCOD_console_print(panel,0,2,"%s",item->desc);
     switch(item->type){
@@ -55,10 +55,10 @@ void getItemDescription(Item* item, TCOD_console_t panel){
     }
 }
 
-int itemIsType(Item* item, enum ItemType type){
+int itemIsType(item_t* item, enum ItemType type){
 	return item->type == type;
 }
 
-int itemIsSubType(Item* item, enum ItemSubType subType){
+int itemIsSubType(item_t* item, enum ItemSubType subType){
 	return item->type2 == subType;
 }

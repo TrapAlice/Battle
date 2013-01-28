@@ -15,7 +15,7 @@ enum ItemSubType{
 	IS_CHESTARMOR,
 };
 
-typedef struct{
+typedef struct item_t{
 	char* name;
 	char* desc;
 	enum ItemType type;
@@ -23,13 +23,13 @@ typedef struct{
 	enum Skills_e relatedSkill;
 	int power;
 	int stackable;
-}Item;
+}item_t;
 
-Item* createItem(char*, char*, int, int, int, int, int);
-Item* cloneItem(const Item*);
-void deleteItem(Item*);
-void getItemDescription(Item*, TCOD_console_t);
-int itemIsType(Item*, enum ItemType);
-int itemIsSubType(Item*, enum ItemSubType);
+item_t* createItem(char*, char*, int, int, int, int, int);
+item_t* cloneItem(const item_t*);
+void deleteItem(item_t*);
+void getItemDescription(item_t*, TCOD_console_t);
+int itemIsType(item_t*, enum ItemType);
+int itemIsSubType(item_t*, enum ItemSubType);
 
 #endif

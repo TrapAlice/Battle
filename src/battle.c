@@ -11,23 +11,26 @@
 #include "inventory.h"
 #include "iteminit.h"
 #include "equipped.h"
+#include "map.h"
+#include "tile.h"
 
 #include <stdio.h>
 
 
 extern monster_t* player;
-extern MessageList* globalMessage;
+extern messagelist_t* globalMessage;
 monster_t* monster;
 TCOD_console_t msgConsole;
 enum State_e GameState;
 TCOD_console_t combatConsole;
-MessageList* consoleLog;
-MessageList* combatLog;
+messagelist_t* consoleLog;
+messagelist_t* combatLog;
 TCOD_console_t statusPanel;
 TCOD_console_t inventoryPanel;
 TCOD_key_t key;
-Item* items[26];
+item_t* items[26];
 int keyPressed;
+map_t* map;
 
 int main(int argc, char *argv[]) {    
     char done=0;
@@ -94,7 +97,7 @@ int main(int argc, char *argv[]) {
 		            battleActionTaken=1;
 		        } else if(key.c == 'h' || key.c == 'H'){
 		            itemchar=0;
-		            Inventory* head = player->inventory->next;
+		            inventory_t* head = player->inventory->next;
 		            addMessage(combatLog,"Use which item?");
 		            while(head!=NULL){
                         if(itemIsType(head->item, I_HEALING)){
@@ -230,8 +233,8 @@ int main(int argc, char *argv[]) {
 }
 
 void test(){
-    Item* armor = cloneItem(ItemList[item_leatherarmor]);
-    Item* hammer = cloneItem(ItemList[item_pomfhammer]);
+    item_t* armor = cloneItem(ItemList[item_leatherarmor]);
+    item_t* hammer = cloneItem(ItemList[item_pomfhammer]);
     
     addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
     addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
@@ -245,8 +248,9 @@ void test(){
 
 void printUI(){
     int x;
-    Inventory* head;
-    Item* item;
+    int y;
+    inventory_t* head;
+    item_t* item;
     int itemchar;
 
     TCOD_console_clear(NULL);
@@ -256,12 +260,19 @@ void printUI(){
     TCOD_console_clear(inventoryPanel);
     switch(GameState){
         case STATE_MAP:
-            drawObject(player->object);
+            
             x=0;
             while(x<getMessageListSize(consoleLog)){
                 TCOD_console_print(msgConsole,0,x,getMessage(consoleLog, x));
                 x++;
             }
+
+            for(x=0; x<map->width; x++){
+                for(y=0; y<map->height; y++){
+                    drawObject(map->mapTiles[x+(y*map->width)]->object);
+                }
+            }
+            drawObject(player->object);
             TCOD_console_print(statusPanel,0,0,"HP: %d/%d  XP: %d",player->combat->hp, player->combat->maxhp, player->xp);
             TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,33,128,128);
             TCOD_console_blit(statusPanel,0,0,80,1,NULL,0,48,128,0);
@@ -373,7 +384,7 @@ void waitForPress(){
 }
 
 void init(){
-    initMoonMem(4096);
+    initMoonMem(32000);
     initSeed(0);
     initMonsters();
     initItems();
@@ -388,9 +399,12 @@ void init(){
 
     player = createPlayer(20,20);
     TCOD_console_init_root(80,50,TITLE,false,false);
+    map = createMap(30, 30);
+    makeMap(map, 10, 4, 7, 0);
 }
 
 void uninit(){
+    deleteMap(map);
     deleteMonster(player);
     TCOD_console_delete(statusPanel);
     TCOD_console_delete(msgConsole);

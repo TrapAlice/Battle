@@ -16,13 +16,13 @@ Monster* createPlayer(int x, int y){
 	return monster;
 }
 
-Monster* createMonster(char* name, int hp, int power, int defense, int xp, void(*deathfunc)()){
+Monster* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobdeath)(Monster*)){
 	Monster* monster = malloc(sizeof(Monster));
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
 	monster->xp = xp;
 	monster->inventory = createInventory();
-	monster->deathFunction = deathfunc;
+	monster->deathFunction = mobdeath;
 	return monster;
 }
 
@@ -51,14 +51,7 @@ void deleteMonster(Monster* monster){
 
 static void _improvePlayerSkills(){
 	if(player->equipment->equipped[E_Hand] != NULL){
-			switch(player->equipment->equipped[E_Hand]->type2){
-				case IS_SWORD:
-					increaseSkill(player->skills, SKILL_SWORD, 1);
-					break;
-				case IS_HAMMER:
-					increaseSkill(player->skills, SKILL_HAMMER, 1);
-					break;
-			}
+			increaseSkill(player->skills, player->equipment->equipped[E_Hand]->relatedSkill, 1);
 		}
 }
 

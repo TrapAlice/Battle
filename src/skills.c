@@ -15,7 +15,7 @@ void deleteSkillSlots(Skills* skills){
 	free(skills);
 }
 
-int increaseSkill(Skills* skills, enum Skills_e skill, int xp){
+int increaseSkill(Skills* skills, Skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
 	if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
 		return levelUpSkill(skills, skill);
@@ -23,14 +23,14 @@ int increaseSkill(Skills* skills, enum Skills_e skill, int xp){
 	return 0;
 }
 
-int levelUpSkill(Skills* skills, enum Skills_e skill){
+int levelUpSkill(Skills* skills, Skills_e skill){
 	skills->skillXP[skill]-=10;
 	skills->skillLevel[skill]++;
 	addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);
 	return 1;
 }
 
-char* getSkillName(enum Skills_e skills){
+char* getSkillName(Skills_e skills){
 	switch(skills){
 		case SKILL_SWORD:
 			return "Swords";
@@ -38,6 +38,9 @@ char* getSkillName(enum Skills_e skills){
 			return "Hammers";
 		case SKILL_CARVING:
 			return "Carving";
+		case SKILL_NONE:
+		case num_skills:
+			return "";
 	}
 	return "";
 }

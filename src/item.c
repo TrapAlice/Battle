@@ -1,12 +1,13 @@
 #include "item.h"
 #include "moonmem.h"
 
-Item* createItem(char* name, char* desc, int type, int type2, int power, int stackable){
+Item* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
 	Item* item = malloc(sizeof(Item));
 	item->name = name;
 	item->desc = desc;
 	item->type = type;
 	item->type2 = type2;
+	item->relatedSkill = relatedSkill;
 	item->power = power;
 	item->stackable = stackable;
 	
@@ -19,6 +20,7 @@ Item* cloneItem(const Item* item){
 	clone->desc = item->desc;
 	clone->type = item->type;
 	clone->type2 = item->type2;
+	clone->relatedSkill = item->relatedSkill;
 	clone->power = item->power;
 	clone->stackable = item->stackable;
 
@@ -38,15 +40,18 @@ void getItemDescription(Item* item, TCOD_console_t panel){
             break;
         case I_EQUIPMENT:
         	switch(item->type2){
-        		case IS_SWORD:
-        		case IS_HAMMER:
+        		case IS_WEAPON:
         			TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
             		break;
             	case IS_CHESTARMOR:
             		TCOD_console_print(panel,0,3,"It blocks about 1d%d damage.",item->power);
             		break;
+            	case IS_NONE:
+            		break;
         	}
             break;
+        case I_NONE:
+        	break;
     }
 }
 

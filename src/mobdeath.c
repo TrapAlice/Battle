@@ -7,7 +7,7 @@
 
 extern Monster* player;
 
-void pigDeath(){
+void pigDeath(Monster* monster){
 	int carving = player->skills->skillLevel[SKILL_CARVING];
 	if(oneIn(5-carving)){
 		addMessage(globalMessage, "Successfully carved some meat");
@@ -17,7 +17,7 @@ void pigDeath(){
 	increaseSkill(player->skills, SKILL_CARVING, 2);
 }
 
-void fairyDeath(){
+void fairyDeath(Monster* monster){
 	addMessage(globalMessage, "The fairy explodes, you get covered in dust");
 	takeDamage(NULL, player, -10);
 }

@@ -1,10 +1,11 @@
 #ifndef _TILE_H
 #define _TILE_H
 
-#include "object.h"
 
 typedef struct tile_t{
-	object_t* object;
+	char self;
+	int x;
+	int y;
 	char blocked;
 	char blockSight;
 	char visible;

@@ -25,11 +25,11 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 	int x, y;
 	int w, h;
 	int x2, y2;
-	int numrooms = 0;
+	int numrooms;
 	
 	for(x=0; x<map->width; x++){
 		for(y=0; y<map->height; y++){
-			map->mapTiles[x+(y*map->width)] = createTile('#', x, y, 0, 0);
+			map->mapTiles[x+(y*map->width)] = createTile('#', x, y, 1, 1);
 		}
 	}
 
@@ -61,9 +61,9 @@ void createRoom(map_t* map, int x, int y, int w, int h){
 	for(i=x;i<x+w;i++){
 		for(j=y;j<y+h;j++){
 			tile = map->mapTiles[i+(j*map->width)];
-			tile->blocked=1;
-			tile->blockSight=1;
-			tile->object->self='.';
+			tile->blocked=0;
+			tile->blockSight=0;
+			tile->self='.';
 		}
 	}
 }
@@ -74,9 +74,9 @@ void createVTunnel(map_t* map, int y1, int y2, int x){
 	int ymax = y1 < y2 ? y2+1 : y1+1;
 	for(;ymin<ymax;ymin++){
 		tile = map->mapTiles[x+(ymin*map->width)];
-		tile->blocked=1;
-		tile->blockSight=1;
-		tile->object->self='.';
+		tile->blocked=0;
+		tile->blockSight=0;
+		tile->self='.';
 	}
 }
 
@@ -86,8 +86,8 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 	int xmax = x1 < x2 ? x2+1 : x1+1;
 	for(;xmin<xmax;xmin++){
 		tile = map->mapTiles[xmin+(y*map->width)];
-		tile->blocked=1;
-		tile->blockSight=1;
-		tile->object->self='.';
+		tile->blocked=0;
+		tile->blockSight=0;
+		tile->self='.';
 	}
 }

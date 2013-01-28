@@ -15,9 +15,12 @@ void drawObject(object_t* obj){
 	TCOD_console_put_char( NULL, obj->x, obj->y, obj->self, TCOD_BKGND_NONE);
 }
 
-void moveObject(object_t* obj, int dx, int dy){
-	obj->x+=dx;
-	obj->y+=dy;
+void moveObject(object_t* obj, map_t* map, int dx, int dy){
+	tile_t* tile = map->mapTiles[obj->x+dx+((obj->y+dy)*map->width)];
+	if(!tile->blocked){
+		obj->x+=dx;
+		obj->y+=dy;
+	}
 }
 
 void deleteObject(object_t* object){

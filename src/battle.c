@@ -252,6 +252,7 @@ void printUI(){
     inventory_t* head;
     item_t* item;
     int itemchar;
+    tile_t* tile;
 
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
@@ -269,7 +270,8 @@ void printUI(){
 
             for(x=0; x<map->width; x++){
                 for(y=0; y<map->height; y++){
-                    drawObject(map->mapTiles[x+(y*map->width)]->object);
+                    tile = map->mapTiles[x+(y*map->width)];
+                    TCOD_console_put_char( NULL, tile->x, tile->y, tile->self, TCOD_BKGND_NONE);
                 }
             }
             drawObject(player->object);
@@ -365,14 +367,14 @@ int handleInput(TCOD_key_t* key){
     
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_PRESS, key, NULL, false);
     switch(key->vk) {
-        case TCODK_KP7 : moveObject(player->object, -1, -1); action=1; break;
-        case TCODK_KP9 : moveObject(player->object, 1, -1); action=1; break;
-        case TCODK_KP8 : moveObject(player->object, 0, -1); action=1; break;
-        case TCODK_KP1 : moveObject(player->object, -1, 1); action=1; break;
-        case TCODK_KP2 : moveObject(player->object, 0, 1); action=1; break;
-        case TCODK_KP3 : moveObject(player->object, 1, 1); action=1; break;
-        case TCODK_KP4 : moveObject(player->object, -1, 0); action=1; break;
-        case TCODK_KP6 : moveObject(player->object, 1, 0); action=1; break;
+        case TCODK_KP7 : moveObject(player->object, map, -1, -1); action=1; break;
+        case TCODK_KP9 : moveObject(player->object, map, 1, -1); action=1; break;
+        case TCODK_KP8 : moveObject(player->object, map, 0, -1); action=1; break;
+        case TCODK_KP1 : moveObject(player->object, map, -1, 1); action=1; break;
+        case TCODK_KP2 : moveObject(player->object, map, 0, 1); action=1; break;
+        case TCODK_KP3 : moveObject(player->object, map, 1, 1); action=1; break;
+        case TCODK_KP4 : moveObject(player->object, map, -1, 0); action=1; break;
+        case TCODK_KP6 : moveObject(player->object, map, 1, 0); action=1; break;
         default:break;
     }
     return action;

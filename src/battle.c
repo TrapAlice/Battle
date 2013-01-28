@@ -248,11 +248,9 @@ void test(){
 
 void printUI(){
     int x;
-    int y;
     inventory_t* head;
     item_t* item;
     int itemchar;
-    tile_t* tile;
 
     TCOD_console_clear(NULL);
     TCOD_console_clear(msgConsole);
@@ -268,13 +266,9 @@ void printUI(){
                 x++;
             }
 
-            for(x=0; x<map->width; x++){
-                for(y=0; y<map->height; y++){
-                    tile = map->mapTiles[x+(y*map->width)];
-                    TCOD_console_put_char( NULL, tile->x, tile->y, tile->self, TCOD_BKGND_NONE);
-                }
-            }
-            drawObject(player->object);
+            renderMap(map,player->object->x, player->object->y);
+            /*drawObject(player->object);*/
+            TCOD_console_print(NULL,40,15,"@");
             TCOD_console_print(statusPanel,0,0,"HP: %d/%d  XP: %d",player->combat->hp, player->combat->maxhp, player->xp);
             TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,33,128,128);
             TCOD_console_blit(statusPanel,0,0,80,1,NULL,0,48,128,0);
@@ -386,7 +380,7 @@ void waitForPress(){
 }
 
 void init(){
-    initMoonMem(64000);
+    initMoonMem(40000);
     initSeed(0);
     initMonsters();
     initItems();
@@ -398,7 +392,7 @@ void init(){
     combatConsole = TCOD_console_new(80,40);
     statusPanel = TCOD_console_new(80,2);
     inventoryPanel = TCOD_console_new(80,50);
-
+    
     player = createPlayer(20,20);
     TCOD_console_init_root(80,50,TITLE,false,false);
     map = createMap(40, 40);

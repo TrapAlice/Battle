@@ -1,13 +1,11 @@
 #include "tile.h"
 #include "moonmem.h"
 
-tile_t* createTile(char self, int x, int y, char blocked, char blockSight){
+tile_t* createTile(char self, char blocked, char blockSight){
 	tile_t* tile = malloc(sizeof(tile_t));
 	tile->self = self;
-	tile->x = x;
-	tile->y=y;
-	tile->blocked = blocked;
-	tile->blockSight = blockSight;
+	tile->ops = tile->ops | blocked<<0;
+	tile->ops = tile->ops | blockSight<<1;
 	return tile;
 }
 

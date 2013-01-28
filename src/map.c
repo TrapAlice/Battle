@@ -1,6 +1,7 @@
 #include "map.h"
 #include "moonmem.h"
 #include "rng.h"
+#include "libtcod.h"
 
 map_t* createMap(int width, int height){
 	map_t* map = malloc(sizeof(map_t));
@@ -24,12 +25,12 @@ void deleteMap(map_t* map){
 void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkIntersect){
 	int x, y;
 	int w, h;
-	int x2, y2;
+	int x2 =0, y2 =0;
 	int numrooms;
 	
 	for(x=0; x<map->width; x++){
 		for(y=0; y<map->height; y++){
-			map->mapTiles[x+(y*map->width)] = createTile('#', x, y, 1, 1);
+			map->mapTiles[x+(y*map->width)] = createTile('#', 1, 1);
 		}
 	}
 
@@ -61,8 +62,8 @@ void createRoom(map_t* map, int x, int y, int w, int h){
 	for(i=x;i<x+w;i++){
 		for(j=y;j<y+h;j++){
 			tile = map->mapTiles[i+(j*map->width)];
-			tile->blocked=0;
-			tile->blockSight=0;
+			tile->ops = tile->ops & 1<<0;
+			tile->ops = tile->ops & 1<<1;
 			tile->self='.';
 		}
 	}
@@ -74,8 +75,8 @@ void createVTunnel(map_t* map, int y1, int y2, int x){
 	int ymax = y1 < y2 ? y2+1 : y1+1;
 	for(;ymin<ymax;ymin++){
 		tile = map->mapTiles[x+(ymin*map->width)];
-		tile->blocked=0;
-		tile->blockSight=0;
+		tile->ops = tile->ops & 1<<0; 
+		tile->ops = tile->ops & 1<<1;
 		tile->self='.';
 	}
 }
@@ -86,8 +87,20 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 	int xmax = x1 < x2 ? x2+1 : x1+1;
 	for(;xmin<xmax;xmin++){
 		tile = map->mapTiles[xmin+(y*map->width)];
-		tile->blocked=0;
-		tile->blockSight=0;
+		tile->ops = tile->ops & 1<<0;
+		tile->ops = tile->ops & 1<<1;
 		tile->self='.';
 	}
+}
+
+void renderMap(map_t* map, int centerx, int centery){
+	tile_t *tile;
+	int x, y;
+	for(x=0; x<map->width; x++){
+        for(y=0; y<map->height; y++){
+        	if(y-centery+15>32) break;
+            tile = map->mapTiles[x+(y*map->width)];
+            TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
+        }
+    }
 }

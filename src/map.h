@@ -15,5 +15,6 @@ void makeMap(map_t*, int, int, int, int);
 void createRoom(map_t*, int, int, int, int);
 void createVTunnel(map_t*, int, int, int);
 void createHTunnel(map_t*, int, int, int);
+void renderMap(map_t*, int, int);
 
 #endif

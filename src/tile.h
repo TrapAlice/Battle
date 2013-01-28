@@ -3,16 +3,13 @@
 
 
 typedef struct tile_t{
+	char ops;
 	char self;
-	int x;
-	int y;
-	char blocked;
-	char blockSight;
-	char visible;
-	char explored;
+	short twobytes;
+
 }tile_t;
 
-tile_t* createTile(char, int, int, char, char);
+tile_t* createTile(char, char, char);
 void deleteTile(tile_t*);
 
 #endif

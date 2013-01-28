@@ -17,7 +17,7 @@ void drawObject(object_t* obj){
 
 void moveObject(object_t* obj, map_t* map, int dx, int dy){
 	tile_t* tile = map->mapTiles[obj->x+dx+((obj->y+dy)*map->width)];
-	if(!tile->blocked){
+	if(!(tile->ops & 2)){
 		obj->x+=dx;
 		obj->y+=dy;
 	}

@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
             case STATE_BATTLE:
             	handleInput(&key);
             	battleActionTaken=0;
-		        /*clearMessageList(combatLog);*/
 
 		        if(key.c == 'a' || key.c == 'A'){
 		            addMessage(consoleLog, "You attack!");
@@ -135,20 +134,17 @@ int main(int argc, char *argv[]) {
 		            
 		        } else if(key.c == 'r' || key.c == 'R'){
 		            addMessage(consoleLog,"You ran away!");
-		            /*addMessage(consoleLog,"You ran away!");*/
 		            
 		            printUI();
                     GameState=STATE_BATTLEAFTERMATH;
 		            battleResult=3;
 		            
 		            waitForPress();
-			    	/*clearMessageList(combatLog);*/
 		            break;
 		        }
 		        if(battleActionTaken){
 		            if(checkDead(monster)){
 		                addMessage(consoleLog,"You win!");
-		                /*addMessage(consoleLog,"You win!");*/
 		                battleResult=2;
 		                printUI();
 		                GameState=STATE_BATTLEAFTERMATH;
@@ -158,19 +154,16 @@ int main(int argc, char *argv[]) {
                             (monster->deathFunction)(monster);
                         }
                         
-			    		/*clearMessageList(combatLog);*/
 		            } else {
 			            addMessage(consoleLog, "The %s attacks!",monster->name);
 			            attackMonster(consoleLog, monster, player);
 			            if(checkDead(player)){
 			                addMessage(consoleLog,"You lose");
-			                /*addMessage(consoleLog,"You lose");*/
 			                printUI();
 			                battleResult=1;
 			                GameState=STATE_BATTLEAFTERMATH;
 		          			
 			                waitForPress();
-			    			/*clearMessageList(combatLog);*/
 			            }
 			        }
 		        }
@@ -179,21 +172,16 @@ int main(int argc, char *argv[]) {
             case STATE_BATTLEAFTERMATH:
 			    switch(battleResult){
 			        case 1:
-			            /*addMessage(consoleLog, "You've died >:");*/
 			            break;
 			        case 2:
-			            /*addMessage(consoleLog, "You win!");*/
 			            addMessage(consoleLog, "You gained %d EXP", monster->xp);
 			            player->xp += monster->xp;
 			            break;
 			        case 3:
-			            /*addMessage(consoleLog, "You ran away safely");*/
 			            break;
 			    }
 			    GameState = STATE_BATTLEAFTERMATH;
 			    printUI();
-			    /*clearMessageList(consoleLog);*/
-			    /*waitForPress();*/
                 addMessage(consoleLog,"");
 			    GameState=STATE_MAP;
                 deleteMonster(monster);
@@ -286,12 +274,12 @@ void printUI(){
         case STATE_BATTLE:
             x=0;
             while(x<getMessageListSize(consoleLog)){
-                TCOD_console_print(combatConsole,0,x,getMessage(consoleLog, x));
+                TCOD_console_print(msgConsole,0,x,getMessage(consoleLog, x));
                 x++;
             }
             x=0;
             while(x<getMessageListSize(combatLog)){
-                TCOD_console_print(combatConsole,16,22+x,getMessage(combatLog, x));
+                TCOD_console_print(combatConsole,21,22+x,getMessage(combatLog, x));
                 x++;
             }
             TCOD_console_print(combatConsole,0,20,"HP: %d/%d",player->combat->hp, player->combat->maxhp);
@@ -299,6 +287,7 @@ void printUI(){
             TCOD_console_print(combatConsole,0,23,"[H] Use Item");
             TCOD_console_print(combatConsole,0,24,"[R] Run");
             TCOD_console_blit(combatConsole,0,0,80,40,NULL,0,5,128,255);
+            TCOD_console_blit(msgConsole, 0,0,80,20,NULL,0,33,128,0);
             break;
         case STATE_BATTLEAFTERMATH:
             x=0;

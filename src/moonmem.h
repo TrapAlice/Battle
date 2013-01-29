@@ -13,6 +13,7 @@ void initMoonMem(unsigned int pSize);
 void* moonAlloc(size_t pSize);
 void moonDealloc(void* ptr);
 void memout();
+void objectMemout(void* ptr);
 void memdump();
 void uninitMoonMem();
 

@@ -5,7 +5,7 @@
 typedef struct tile_t{
 	char ops;
 	char self;
-	short twobytes;
+	/*short twobytes;*/
 
 }tile_t;
 

@@ -62,9 +62,9 @@ void initMoonMem(unsigned int pSize){
 void* moonAlloc(size_t pSize){
     memnode *data = findEmptyNode();
     int pos;
-    pSize += pSize % 4;
-    data->size = pSize;
-    pos = findEmptySlot(pSize/4);
+    size_t size = pSize + pSize % 4;
+    data->size = size;
+    pos = findEmptySlot(size/4);
     data->memory = MOONMEM->memory+pos*4;
     data->pos = pos;
     return data->memory;
@@ -97,6 +97,30 @@ void memout(){
         if(x%4==0)printf(" ");
     }
     printf("\n\n");
+}
+
+void objectMemout(void* ptr){
+    int x = 0;
+    memnode* obj;
+    if(ptr==NULL)return;
+    while( (MOONMEM->head+x)->memory != ptr ){
+        x++;
+        if( x > MOONMEM->size/2){
+            return;
+        }
+    }
+    obj = MOONMEM->head+x;
+
+    printf("ptr   -> %08X\n",*((byte*)ptr));
+    printf("size  -> %d\n",obj->size);
+    printf("memory-> ");
+    x=0;
+    while(x<obj->size){
+        printf("%02X",*((byte*)(obj->memory)+x));
+        x++;
+        if(x%4==0)printf(" ");
+    }
+    printf("\n");
 }
 
 void memdump(){

@@ -7,7 +7,7 @@ map_t* createMap(int width, int height){
 	map_t* map = malloc(sizeof(map_t));
 	map->width = width;
 	map->height = height;
-	map->mapTiles = malloc(sizeof(tile_t)*width*height);
+	map->mapTiles = malloc((sizeof(tile_t)+sizeof(tile_t)%4)*width*height);
 	return map;
 }
 
@@ -28,9 +28,9 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 	int x2 =0, y2 =0;
 	int numrooms;
 	
-	for(x=0; x<map->width; x++){
-		for(y=0; y<map->height; y++){
-			map->mapTiles[x+(y*map->width)] = createTile('#', 1, 1);
+	for(y=0; y<map->height; y++){
+		for(x=0; x<map->width; x++){
+			map->mapTiles[x+(y*map->width)] = createTile('~', 1, 1);
 		}
 	}
 
@@ -59,8 +59,8 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 void createRoom(map_t* map, int x, int y, int w, int h){
 	tile_t* tile;
 	int i, j;
-	for(i=x;i<x+w;i++){
-		for(j=y;j<y+h;j++){
+	for(j=y;j<y+h;j++){
+		for(i=x;i<x+w;i++){
 			tile = map->mapTiles[i+(j*map->width)];
 			tile->ops = tile->ops & 1<<0;
 			tile->ops = tile->ops & 1<<1;
@@ -96,8 +96,8 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 void renderMap(map_t* map, int centerx, int centery){
 	tile_t *tile;
 	int x, y;
-	for(x=0; x<map->width; x++){
-        for(y=0; y<map->height; y++){
+	for(y=0; y<map->height; y++){
+		for(x=0; x<map->width; x++){
         	if(y-centery+15>32) break;
             tile = map->mapTiles[x+(y*map->width)];
             TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);

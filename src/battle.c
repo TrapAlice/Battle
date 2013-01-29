@@ -395,6 +395,7 @@ void init(){
     inventoryPanel = TCOD_console_new(80,50);
     
     player = createPlayer(20,20);
+
     TCOD_console_init_root(80,50,TITLE,false,false);
     map = createMap(40, 40);
     makeMap(map, 15, 4, 9, 0);

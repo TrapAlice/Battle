@@ -58,7 +58,7 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 static void _digTile(map_t* map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
-	tile->ops = tile->ops & 1<<0; 
+	tile->ops = tile->ops & 1<<0;
 	tile->ops = tile->ops & 1<<1;
 	tile->self='.';
 	TCOD_map_set_properties(map->mapFov, x,y, 1,1);

@@ -8,7 +8,7 @@ typedef unsigned char byte;
 #define malloc(x) moonAlloc(x)
 #define calloc(x,y) moonAlloc(x*y)
 #define free(x) moonDealloc(x)
-#define sizeof(x) sizeof(x) + sizeof(x) % 4
+#define sizeof(x) (sizeof(x) + sizeof(x) % 4)
 
 void initMoonMem(unsigned int pSize);
 void* moonAlloc(size_t pSize);

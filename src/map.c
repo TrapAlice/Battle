@@ -53,12 +53,9 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 		x2 = x;
 		y2 = y;
 	}
-
-	
-
 }
 
-void _digTile(map_t* map, int x, int y){
+static void _digTile(map_t* map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
 	tile->ops = tile->ops & 1<<0; 
@@ -72,7 +69,6 @@ void createRoom(map_t* map, int x, int y, int w, int h){
 	for(j=y;j<y+h;j++){
 		for(i=x;i<x+w;i++){
 			_digTile(map,i,j);
-			
 		}
 	}
 }
@@ -82,7 +78,6 @@ void createVTunnel(map_t* map, int y1, int y2, int x){
 	int ymax = y1 < y2 ? y2+1 : y1+1;
 	for(;ymin<ymax;ymin++){
 		_digTile(map,x,ymin);
-		
 	}
 }
 
@@ -91,7 +86,6 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 	int xmax = x1 < x2 ? x2+1 : x1+1;
 	for(;xmin<xmax;xmin++){
 		_digTile(map,xmin,y);
-		
 	}
 }
 

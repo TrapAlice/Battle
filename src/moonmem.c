@@ -53,7 +53,7 @@ static memnode* findEmptyNode(){
 void initMoonMem(unsigned int pSize){
     MOONMEM = calloc(1,sizeof(moonmem)+pSize/4+pSize);
     MOONMEM->size = pSize;
-    MOONMEM->head = (memnode*)calloc(sizeof(memnode)*pSize/2, sizeof(memnode));
+    MOONMEM->head = calloc(sizeof(memnode)*pSize/2, sizeof(memnode));
     MOONMEM->memoryslots = (byte*)(MOONMEM+1);
     MOONMEM->memory = (byte*)(MOONMEM+1)+pSize/4;
     
@@ -128,6 +128,6 @@ void memdump(){
 }
 
 void uninitMoonMem(){
-    /*memout();*/
+    free(MOONMEM->head);
     free(MOONMEM);
 }

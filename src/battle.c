@@ -84,6 +84,7 @@ int main(int argc, char *argv[]) {
                         
                     }
                 } 
+                TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
                 break;
 
             case STATE_BATTLE:
@@ -396,7 +397,7 @@ void init(){
     player = createPlayer(20,20);
     TCOD_console_init_root(80,50,TITLE,false,false);
     map = createMap(40, 40);
-    makeMap(map, 10, 2, 9, 0);
+    makeMap(map, 15, 2, 9, 0);
 }
 
 void uninit(){

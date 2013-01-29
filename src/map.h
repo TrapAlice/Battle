@@ -2,11 +2,13 @@
 #define _MAP_H
 
 #include "tile.h"
+#include "libtcod.h"
 
 typedef struct map_t{
 	int width;
 	int height;
 	tile_t** mapTiles;
+	TCOD_map_t* mapFov;
 }map_t;
 
 map_t* createMap(int, int);

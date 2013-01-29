@@ -5,8 +5,6 @@
 typedef struct tile_t{
 	char ops;
 	char self;
-	/*short twobytes;*/
-
 }tile_t;
 
 tile_t* createTile(char, char, char);

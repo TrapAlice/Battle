@@ -62,9 +62,8 @@ void initMoonMem(unsigned int pSize){
 void* moonAlloc(size_t pSize){
     memnode *data = findEmptyNode();
     int pos;
-    size_t size = pSize + pSize % 4;
-    data->size = size;
-    pos = findEmptySlot(size/4);
+    data->size = pSize;
+    pos = findEmptySlot(pSize/4);
     data->memory = MOONMEM->memory+pos*4;
     data->pos = pos;
     return data->memory;

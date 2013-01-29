@@ -1,7 +1,6 @@
 #ifndef _TILE_H
 #define _TILE_H
 
-
 typedef struct tile_t{
 	char ops;
 	char self;

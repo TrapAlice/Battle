@@ -1,6 +1,7 @@
 #include "equipped.h"
 #include "moonmem.h"
 #include "item.h"
+#include "skills.h"
 
 equipment_t* createEquipmentSlots(){
 	equipment_t* equipment = malloc(sizeof(equipment_t));

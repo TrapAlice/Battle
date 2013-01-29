@@ -1,4 +1,5 @@
 #include "monsterinit.h"
+#include "moonmem.h"
 #include "mobdeath.h"
 
 monster_t** MonsterList;

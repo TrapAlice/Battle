@@ -1,7 +1,6 @@
 #ifndef _ITEMINIT_H
 #define _ITEMINIT_H
 
-#include "moonmem.h"
 #include "item.h"
 
 extern item_t** ItemList;

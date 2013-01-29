@@ -1,15 +1,15 @@
 #ifndef _MAP_H
 #define _MAP_H
 
-#include "tile.h"
 #include "libtcod.h"
 
 struct object_t;
+struct tile_t;
 
 typedef struct map_t{
 	int width;
 	int height;
-	tile_t** mapTiles;
+	struct tile_t** mapTiles;
 	TCOD_map_t* mapFov;
 	struct object_t **objects;
 }map_t;

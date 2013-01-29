@@ -1,8 +1,6 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-/*#include "map.h"*/
-
 struct map_t;
 
 typedef struct object_t{

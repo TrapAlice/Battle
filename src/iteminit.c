@@ -1,4 +1,5 @@
 #include "iteminit.h"
+#include "moonmem.h"
 #include "skills.h"
 
 item_t** ItemList;

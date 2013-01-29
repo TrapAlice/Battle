@@ -3,6 +3,7 @@
 #include "moonmem.h"
 #include "combat.h"
 #include "map.h"
+#include "tile.h"
 
 object_t* createObject(char self, int x, int y){
 	object_t* obj = malloc(sizeof(object_t));

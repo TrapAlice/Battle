@@ -1,9 +1,9 @@
 #ifndef _MONSTERINIT_H
 #define _MONSTERINIT_H
 
-#include "moonmem.h"
 #include "monster.h"
 
+extern monster_t** MonsterList;
 
 enum MON_ID{
 	mob_null,
@@ -12,8 +12,6 @@ enum MON_ID{
 	mob_fairy,
 	num_monsters,
 };
-
-extern monster_t** MonsterList;
 
 void initMonsters();
 void uninitMonsters();

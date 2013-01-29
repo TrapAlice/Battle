@@ -2,6 +2,14 @@
 #include "moonmem.h"
 #include "rng.h"
 
+#include "combat.h"
+#include "object.h"
+#include "inventory.h"
+#include "equipped.h"
+#include "msg.h"
+#include "skills.h"
+#include "item.h"
+
 monster_t* player;
 
 monster_t* createPlayer(int x, int y){
@@ -50,8 +58,8 @@ void deleteMonster(monster_t* monster){
 
 static void _improvePlayerSkills(){
 	if(player->equipment->equipped[E_HAND] != NULL){
-			increaseSkill(player->skills, player->equipment->equipped[E_HAND]->relatedSkill, 1);
-		}
+		increaseSkill(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill, 1);
+	}
 }
 
 void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* defender){

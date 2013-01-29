@@ -1,8 +1,6 @@
 #ifndef _EQUIPPED_H
 #define _EQUIPPED_H
 
-/*#include "item.h"*/
-
 struct item_t;
 
 typedef enum slot_e{

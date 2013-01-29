@@ -1,5 +1,6 @@
 #include "item.h"
 #include "moonmem.h"
+#include "skills.h"
 
 item_t* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
 	item_t* item = malloc(sizeof(item_t));
@@ -55,10 +56,10 @@ void getItemDescription(item_t* item, TCOD_console_t panel){
     }
 }
 
-int itemIsType(item_t* item, enum ItemType type){
+int itemIsType(item_t* item, enum itemType_e type){
 	return item->type == type;
 }
 
-int itemIsSubType(item_t* item, enum ItemSubType subType){
+int itemIsSubType(item_t* item, enum itemSubType_e subType){
 	return item->type2 == subType;
 }

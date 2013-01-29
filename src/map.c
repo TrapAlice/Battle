@@ -3,6 +3,7 @@
 #include "rng.h"
 #include "libtcod.h"
 #include "object.h"
+#include "tile.h"
 
 map_t* createMap(int width, int height){
 	int x,y;

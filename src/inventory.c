@@ -1,4 +1,5 @@
 #include "inventory.h"
+#include "item.h"
 #include "moonmem.h"
 
 inventory_t* createInventory(){

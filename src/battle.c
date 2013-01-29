@@ -13,6 +13,7 @@
 #include "equipped.h"
 #include "map.h"
 #include "tile.h"
+#include "skills.h"
 
 #include <stdio.h>
 
@@ -386,8 +387,8 @@ void generateNewMap(){
 
 void positionPlayer(){
     tile_t *tile;
-    int x;
-    int y;
+    int x=0;
+    int y=0;
     tile = map->mapTiles[0];
     while((tile->ops & 1 << 1)){
         x= between(0, map->width);

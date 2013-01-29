@@ -2,13 +2,23 @@
 #include "moonmem.h"
 #include "rng.h"
 #include "libtcod.h"
+#include "object.h"
 
 map_t* createMap(int width, int height){
+	int x,y;
 	map_t* map = malloc(sizeof(map_t));
 	map->width = width;
 	map->height = height;
 	map->mapTiles = malloc((sizeof(tile_t))*width*height);
 	map->mapFov = TCOD_map_new(width, height);
+	map->objects = malloc(sizeof(object_t)*5);
+
+	for(y=0; y<map->height; y++){
+		for(x=0; x<map->width; x++){
+			map->mapTiles[x+(y*map->width)] = createTile('#', 1, 1);
+		}
+	}
+
 	return map;
 }
 
@@ -19,9 +29,33 @@ void deleteMap(map_t* map){
 			deleteTile(map->mapTiles[x+(y*map->width)]);
 		}
 	}
+	for(x=0; x<5; x++){
+		if(map->objects[x]){
+			deleteObject(map->objects[x]);
+		}
+	}
+	free(map->objects);
 	free(map->mapTiles);
 	TCOD_map_delete(map->mapFov);
 	free(map);
+}
+
+static void _fillTile(map_t *map, int x, int y){
+	tile_t* tile;
+	tile = map->mapTiles[x+(y*map->width)];
+	tile->ops = tile->ops | 1<<0;
+	tile->ops = tile->ops | 1<<1;
+	tile->self='#';
+	TCOD_map_set_properties(map->mapFov, x,y, 0,0);
+}
+
+static void _digTile(map_t* map, int x, int y){
+	tile_t* tile;
+	tile = map->mapTiles[x+(y*map->width)];
+	tile->ops = tile->ops & 1<<0;
+	tile->ops = tile->ops & 1<<1;
+	tile->self='.';
+	TCOD_map_set_properties(map->mapFov, x,y, 1,1);
 }
 
 void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkIntersect){
@@ -29,10 +63,11 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 	int w, h;
 	int x2 =0, y2 =0;
 	int numrooms;
+	int stairs =0;
 	
 	for(y=0; y<map->height; y++){
 		for(x=0; x<map->width; x++){
-			map->mapTiles[x+(y*map->width)] = createTile('~', 1, 1);
+			_fillTile(map, x, y);	
 		}
 	}
 
@@ -45,6 +80,11 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 
 		createRoom(map, x,y,w,h);
 
+		if(!stairs){
+			stairs=1;
+			map->objects[0] = createObject('>', between(x,x+w), between(y,y+h));
+		}
+
 		if(numrooms){
 			createVTunnel(map, y2, y, x2);
 			createHTunnel(map, x2, x, y);
@@ -55,14 +95,7 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 	}
 }
 
-static void _digTile(map_t* map, int x, int y){
-	tile_t* tile;
-	tile = map->mapTiles[x+(y*map->width)];
-	tile->ops = tile->ops & 1<<0;
-	tile->ops = tile->ops & 1<<1;
-	tile->self='.';
-	TCOD_map_set_properties(map->mapFov, x,y, 1,1);
-}
+
 
 void createRoom(map_t* map, int x, int y, int w, int h){
 	int i, j;
@@ -92,12 +125,22 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 void renderMap(map_t* map, int centerx, int centery){
 	tile_t *tile;
 	int x, y;
+	int i;
+	object_t* object;
 	for(y=0; y<map->height; y++){
 		for(x=0; x<map->width; x++){
         	if(y-centery+15>32) break;
         	if(TCOD_map_is_in_fov(map->mapFov,x,y)){
 	            tile = map->mapTiles[x+(y*map->width)];
 	            TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
+	            for(i=0; i<5; i++){
+	            	object = map->objects[i];
+	            	if(object){
+		            	if(TCOD_map_is_in_fov(map->mapFov, object->x, object->y)){
+		            		TCOD_console_put_char( NULL, object->x-centerx+40, object->y-centery+15, object->self, TCOD_BKGND_NONE);
+		            	}
+		            }
+	            }
 	        }
         }
     }

@@ -9,6 +9,8 @@ int handleInput();
 void test();
 void printUI();
 void waitForPress();
+void generateNewMap();
+void positionPlayer();
 
 enum State_e{
     STATE_MAP,

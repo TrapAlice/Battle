@@ -2,6 +2,7 @@
 #include "libtcod.h"
 #include "moonmem.h"
 #include "combat.h"
+#include "map.h"
 
 object_t* createObject(char self, int x, int y){
 	object_t* obj = malloc(sizeof(object_t));
@@ -25,4 +26,13 @@ void moveObject(object_t* obj, map_t* map, int dx, int dy){
 
 void deleteObject(object_t* object){
 	free(object);
+}
+
+int isCollided(object_t* a ,object_t* b){
+	if(a->x == b->x){
+		if(a->y == b->y){
+			return 1;
+		}
+	}
+	return 0;
 }

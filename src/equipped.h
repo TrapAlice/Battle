@@ -1,7 +1,9 @@
 #ifndef _EQUIPPED_H
 #define _EQUIPPED_H
 
-#include "item.h"
+/*#include "item.h"*/
+
+struct item_t;
 
 typedef enum slot_e{
 	E_HAND,
@@ -11,12 +13,12 @@ typedef enum slot_e{
 }slot_e;
 
 typedef struct equipment_t{
-	item_t** equipped;
+	struct item_t** equipped;
 }equipment_t;
 
 equipment_t* createEquipmentSlots();
 void deleteEquipmentSlots(equipment_t*);
-item_t* getEquipment(equipment_t*, slot_e);
-void Equip(equipment_t*, slot_e, item_t*);
+struct item_t* getEquipment(equipment_t*, slot_e);
+void Equip(equipment_t*, slot_e, struct item_t*);
 
 #endif

@@ -31,6 +31,7 @@ TCOD_key_t key;
 item_t* items[26];
 int keyPressed;
 map_t* map;
+int currentFloor;
 
 int main(int argc, char *argv[]) {    
     char done=0;
@@ -40,9 +41,10 @@ int main(int argc, char *argv[]) {
     int battleActionTaken;
     int itemchar;
 
+
     init();
     test(); 
-
+    TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
     while(!done){
         if( TCOD_console_is_window_closed() ){
             break;
@@ -54,6 +56,7 @@ int main(int argc, char *argv[]) {
             	if( handleInput(&key) != 0 ){
 		            steps--;
 		            battleCooldown--;
+                    TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
 		        }
                 if(key.c=='i'){
                     GameState = STATE_INVENTORY;
@@ -63,6 +66,13 @@ int main(int argc, char *argv[]) {
                 }
                 if(key.c=='@'){
                     GameState = STATE_STATS;
+                }
+                if(key.c=='>'){
+                    if(isCollided(player->object, map->objects[0])){
+                        generateNewMap();
+                        currentFloor++;
+                        positionPlayer();
+                    }
                 }
                 if(battleCooldown<=0){
                     if(oneIn(steps)){
@@ -84,7 +94,7 @@ int main(int argc, char *argv[]) {
                         
                     }
                 } 
-                TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
+                
                 break;
 
             case STATE_BATTLE:
@@ -268,9 +278,8 @@ void printUI(){
             }
 
             renderMap(map,player->object->x, player->object->y);
-            /*drawObject(player->object);*/
             TCOD_console_print(NULL,40,15,"@");
-            TCOD_console_print(statusPanel,0,0,"HP: %d/%d  XP: %d",player->combat->hp, player->combat->maxhp, player->xp);
+            TCOD_console_print(statusPanel,0,0,"HP: %d/%d  XP: %d  Floor: %d",player->combat->hp, player->combat->maxhp, player->xp, currentFloor);
             TCOD_console_blit(msgConsole,0,0,80,20,NULL,0,33,128,128);
             TCOD_console_blit(statusPanel,0,0,80,1,NULL,0,48,128,0);
             break;
@@ -380,6 +389,27 @@ void waitForPress(){
     TCOD_sys_wait_for_event(TCOD_EVENT_KEY_RELEASE, NULL, NULL, false);
 }
 
+void generateNewMap(){
+    if(map) deleteMap(map);
+    map = createMap(between(30,50),between(30,50));
+    makeMap(map, between(5,15), between(2,5), between(6,10), 0);
+}
+
+void positionPlayer(){
+    tile_t *tile;
+    int x;
+    int y;
+    tile = map->mapTiles[0];
+    while((tile->ops & 1 << 1)){
+        x= between(0, map->width);
+        y= between(0, map->height);
+        tile = map->mapTiles[x+(y*map->width)];
+    }
+    player->object->x = x;
+    player->object->y = y;
+    TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
+}
+
 void init(){
     initMoonMem(64000);
     initSeed(0);
@@ -395,10 +425,11 @@ void init(){
     inventoryPanel = TCOD_console_new(80,50);
     
     player = createPlayer(20,20);
-
+    currentFloor = 0;
     TCOD_console_init_root(80,50,TITLE,false,false);
     map = createMap(40, 40);
-    makeMap(map, 15, 4, 9, 0);
+    generateNewMap();
+    positionPlayer();
 }
 
 void uninit(){

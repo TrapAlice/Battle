@@ -17,7 +17,7 @@ void deleteSkillSlots(skills_t* skills){
 	free(skills);
 }
 
-int increaseSkill(skills_t* skills, Skills_e skill, int xp){
+int increaseSkill(skills_t* skills, skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
 	if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
 		return levelUpSkill(skills, skill);
@@ -25,14 +25,14 @@ int increaseSkill(skills_t* skills, Skills_e skill, int xp){
 	return 0;
 }
 
-int levelUpSkill(skills_t* skills, Skills_e skill){
+int levelUpSkill(skills_t* skills, skills_e skill){
 	skills->skillXP[skill]-=10;
 	skills->skillLevel[skill]++;
 	addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);
 	return 1;
 }
 
-char* getSkillName(Skills_e skills){
+char* getSkillName(skills_e skills){
 	switch(skills){
 		case SKILL_SWORD:
 			return "Swords";

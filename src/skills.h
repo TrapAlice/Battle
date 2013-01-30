@@ -1,13 +1,13 @@
 #ifndef _SKILLS_H
 #define _SKILLS_H
 
-typedef enum Skills_e{
+typedef enum skills_e{
 	SKILL_NONE,
 	SKILL_SWORD,
 	SKILL_HAMMER,
 	SKILL_CARVING,
 	num_skills,
-}Skills_e;
+}skills_e;
 
 typedef struct skills_t{
 	int* skillLevel;
@@ -17,9 +17,9 @@ typedef struct skills_t{
 
 skills_t* createSkillSlots();
 void deleteSkillSlots(skills_t*);
-int increaseSkill(skills_t*, Skills_e, int);
-int levelUpSkill(skills_t*, Skills_e);
-char* getSkillName( Skills_e);
+int increaseSkill(skills_t*, skills_e, int);
+int levelUpSkill(skills_t*, skills_e);
+char* getSkillName( skills_e);
 
 
 #endif

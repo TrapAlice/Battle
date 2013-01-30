@@ -58,7 +58,9 @@ void deleteMonster(monster_t* monster){
 
 static void _improvePlayerSkills(){
 	if(player->equipment->equipped[E_HAND] != NULL){
-		increaseSkill(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill, 1);
+		if(isSkillActive(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill)){
+			increaseSkill(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill, 10);
+		}
 	}
 }
 

@@ -46,3 +46,19 @@ char* getSkillName(skills_e skills){
 	}
 	return "";
 }
+
+int isSkillActive(skills_t* skills, skills_e skill){
+	if( skills->skillLevel[skill] < 1 ){
+		return 1;
+	}
+	return skills->skillActive[skill];
+}
+
+int skillsCurrentlyActive(skills_t* skills){
+	int x=1;
+	int amount=0;
+	for(;x<num_skills;x++){
+		amount+=skills->skillActive[x];
+	}
+	return amount;
+}

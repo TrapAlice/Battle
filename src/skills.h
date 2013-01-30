@@ -20,6 +20,8 @@ void deleteSkillSlots(skills_t*);
 int increaseSkill(skills_t*, skills_e, int);
 int levelUpSkill(skills_t*, skills_e);
 char* getSkillName( skills_e);
+int isSkillActive(skills_t*, skills_e);
+int skillsCurrentlyActive(skills_t*);
 
 
 #endif

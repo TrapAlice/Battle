@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
 	int battleResult=0;
 	int battleActionTaken;
 	int itemchar;
+	int x;
 
 
 	init();
@@ -221,7 +222,29 @@ int main(int argc, char *argv[]) {
 
 			case STATE_STATS:
 				GameState = STATE_MAP;
-				waitForPress();
+				handleInput(&key);
+				keyPressed = key.c-'a';
+				itemchar = -1;
+				for(x=1; x<num_skills;x++){
+					if(player->skills->skillLevel[x]>0){
+						itemchar++;
+					}
+					if(itemchar == keyPressed){
+						if(!player->skills->skillActive[x])
+						{
+							if(skillsCurrentlyActive(player->skills)<2){
+								player->skills->skillActive[x] = 1;
+							}
+						} else {
+							player->skills->skillActive[x] = 0;
+						}
+
+						GameState = STATE_STATS;
+						break;
+					}
+					
+				}
+				skillsCurrentlyActive(player->skills);
 				break;
 		}
 		
@@ -256,7 +279,7 @@ void printUI(){
 	TCOD_console_clear(msgConsole);
 	TCOD_console_clear(combatConsole);
 	TCOD_console_clear(statusPanel);
-	TCOD_console_clear(inventoryPanel);
+	TCOD_console_clear(inventoryPanel);TCOD_console_set_default_foreground(inventoryPanel,TCOD_white);
 	switch(GameState){
 		case STATE_MAP:
 			
@@ -329,7 +352,7 @@ void printUI(){
 				if(itemIsType(item, I_EQUIPMENT)){
 					if(getEquipment(player->equipment, E_HAND) != item &&
 					   getEquipment(player->equipment, E_CHEST) != item){
-						TCOD_console_print(inventoryPanel,0,x,"[%c] %s",'A'+itemchar, item->name);
+						TCOD_console_print(inventoryPanel,0,x,"%c] %s",'A'+itemchar, item->name);
 						x++;
 					}
 				}
@@ -343,9 +366,18 @@ void printUI(){
 			break;
 		case STATE_STATS:
 			itemchar=0;
+
+			TCOD_console_set_default_foreground(inventoryPanel,TCOD_yellow);
+			TCOD_console_print(inventoryPanel,0,0,"[Active]");
+			TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
+			TCOD_console_print(inventoryPanel,10,0,"[Inactive]");
+
 			for(x=0; x<num_skills; x++){
 				if(player->skills->skillLevel[x]>0){
-					TCOD_console_print(inventoryPanel,0,itemchar,"%s- %d",getSkillName(x),player->skills->skillLevel[x]);
+					if(isSkillActive(player->skills,x)){ TCOD_console_set_default_foreground(inventoryPanel,TCOD_yellow);}
+					else{TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);}
+					TCOD_console_print(inventoryPanel,0,itemchar+2,"%c] %s",itemchar+'A',getSkillName(x));
+					TCOD_console_print(inventoryPanel,13,itemchar+2,"- %d",player->skills->skillLevel[x]);
 					itemchar++;
 				}
 			}

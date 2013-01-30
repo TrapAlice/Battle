@@ -130,19 +130,19 @@ void renderMap(map_t* map, int centerx, int centery){
 	object_t* object;
 	for(y=0; y<map->height; y++){
 		for(x=0; x<map->width; x++){
-        	if(y-centery+15>32) break;
-        	if(TCOD_map_is_in_fov(map->mapFov,x,y)){
-	            tile = map->mapTiles[x+(y*map->width)];
-	            TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
-	            for(i=0; i<5; i++){
-	            	object = map->objects[i];
-	            	if(object){
-		            	if(TCOD_map_is_in_fov(map->mapFov, object->x, object->y)){
-		            		TCOD_console_put_char( NULL, object->x-centerx+40, object->y-centery+15, object->self, TCOD_BKGND_NONE);
-		            	}
-		            }
-	            }
-	        }
-        }
-    }
+			if(y-centery+15>32) break;
+			if(TCOD_map_is_in_fov(map->mapFov,x,y)){
+				tile = map->mapTiles[x+(y*map->width)];
+				TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
+				for(i=0; i<5; i++){
+					object = map->objects[i];
+					if(object){
+						if(TCOD_map_is_in_fov(map->mapFov, object->x, object->y)){
+							TCOD_console_put_char( NULL, object->x-centerx+40, object->y-centery+15, object->self, TCOD_BKGND_NONE);
+						}
+					}
+				}
+			}
+		}
+	}
 }

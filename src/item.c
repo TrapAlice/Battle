@@ -35,25 +35,25 @@ void deleteItem(item_t* item){
 void getItemDescription(item_t* item, TCOD_console_t panel){
 	TCOD_console_print(panel,0,0,"%s",item->name);
 	TCOD_console_print(panel,0,2,"%s",item->desc);
-    switch(item->type){
-        case I_HEALING:
-            TCOD_console_print(panel,0,3,"It heals for about 1d%d.",item->power);
-            break;
-        case I_EQUIPMENT:
-        	switch(item->type2){
-        		case IS_WEAPON:
-        			TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
-            		break;
-            	case IS_CHESTARMOR:
-            		TCOD_console_print(panel,0,3,"It blocks about 1d%d damage.",item->power);
-            		break;
-            	case IS_NONE:
-            		break;
-        	}
-            break;
-        case I_NONE:
-        	break;
-    }
+	switch(item->type){
+		case I_HEALING:
+			TCOD_console_print(panel,0,3,"It heals for about 1d%d.",item->power);
+			break;
+		case I_EQUIPMENT:
+			switch(item->type2){
+				case IS_WEAPON:
+					TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
+					break;
+				case IS_CHESTARMOR:
+					TCOD_console_print(panel,0,3,"It blocks about 1d%d damage.",item->power);
+					break;
+				case IS_NONE:
+					break;
+			}
+			break;
+		case I_NONE:
+			break;
+	}
 }
 
 int itemIsType(item_t* item, enum itemType_e type){

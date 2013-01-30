@@ -9,13 +9,13 @@
 void standardAttack(monster_t* attacker, monster_t* defender){
 	int damage;
 	int basepower = attacker->combat->power;
-	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_HAND) == NULL ? 0 : getEquipment(attacker->equipment, E_HAND)->power));
+	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
 	int basedefense = defender->combat->defense;
-	int armordefense = (defender->equipment==NULL ? 0 : (getEquipment(defender->equipment, E_CHEST) == NULL ? 0 : getEquipment(defender->equipment, E_CHEST)->power));
+	int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
 	addMessage(globalMessage, "The %s attacks %s",attacker->name, defender->name);
 
 	damage = roll(attacker->combat->hits, basepower);
-	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
+	damage += roll(1, weaponpower);
 	damage -= basedefense;
 	damage -= roll(1,armordefense);
 	

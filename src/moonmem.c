@@ -13,7 +13,7 @@ typedef struct memnode{
 
 typedef struct{
     unsigned int size;
-    memnode* head;
+    memnode* nodes;
     byte* memoryslots;
     byte* memory;
 }moonmem;
@@ -39,7 +39,7 @@ static int findEmptySlot(size_t pSize){
 
 static memnode* findEmptyNode(){
     int x = 0;
-    while((MOONMEM->head+x)->memory != NULL){
+    while((MOONMEM->nodes+x)->memory != NULL){
         x++;
         if (x > MOONMEM->size/2){
             printf("Out of empty nodes\n");
@@ -47,13 +47,13 @@ static memnode* findEmptyNode(){
             exit(0);
         }
     }
-    return MOONMEM->head+x;
+    return MOONMEM->nodes+x;
 }
 
 void initMoonMem(unsigned int pSize){
     MOONMEM = calloc(1,sizeof(moonmem)+pSize/4+pSize);
     MOONMEM->size = pSize;
-    MOONMEM->head = calloc(sizeof(memnode)*pSize/2, sizeof(memnode));
+    MOONMEM->nodes = calloc(sizeof(memnode)*pSize/2, sizeof(memnode));
     MOONMEM->memoryslots = (byte*)(MOONMEM+1);
     MOONMEM->memory = (byte*)(MOONMEM+1)+pSize/4;
     
@@ -75,13 +75,13 @@ void moonDealloc(void* ptr){
     int x = 0;
     memnode* obj;
     if(ptr==NULL)return;
-    while( (MOONMEM->head+x)->memory != ptr ){
+    while( (MOONMEM->nodes+x)->memory != ptr ){
         x++;
         if( x > MOONMEM->size/2){
             return;
         }
     }
-    obj = MOONMEM->head+x;
+    obj = MOONMEM->nodes+x;
     memset(obj->memory, 0, obj->size);
     obj->memory = NULL;
     memset(MOONMEM->memoryslots+obj->pos, 0, obj->size/4);
@@ -102,13 +102,13 @@ void objectMemout(void* ptr){
     int x = 0;
     memnode* obj;
     if(ptr==NULL)return;
-    while( (MOONMEM->head+x)->memory != ptr ){
+    while( (MOONMEM->nodes+x)->memory != ptr ){
         x++;
         if( x > MOONMEM->size/2){
             return;
         }
     }
-    obj = MOONMEM->head+x;
+    obj = MOONMEM->nodes+x;
 
     printf("ptr   -> %08X\n",*((byte*)ptr));
     printf("size  -> %d\n",obj->size);
@@ -128,6 +128,6 @@ void memdump(){
 }
 
 void uninitMoonMem(){
-    free(MOONMEM->head);
+    free(MOONMEM->nodes);
     free(MOONMEM);
 }

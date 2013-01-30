@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 						} else if(oneIn(3)){
 							monster = cloneMonster(MonsterList[mob_pig]);
 						} else {
-							monster = cloneMonster(MonsterList[mob_kobold]);
+							monster = cloneMonster(MonsterList[mob_slime]);
 						}
 
 						addMessage(consoleLog,"A wild %s appears!",monster->name);

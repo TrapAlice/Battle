@@ -3,7 +3,7 @@
 #include "rng.h"
 #include "skills.h"
 #include "inventory.h"
-#include "iteminit.h"
+#include "item.h"
 #include "msg.h"
 
 extern monster_t* player;

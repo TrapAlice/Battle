@@ -12,6 +12,8 @@
 
 monster_t* player;
 
+monster_t** MonsterList;
+
 monster_t* createPlayer(int x, int y){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = "Player";
@@ -23,12 +25,14 @@ monster_t* createPlayer(int x, int y){
 	return monster;
 }
 
-monster_t* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobdeath)(monster_t*)){
+monster_t* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*), void(*mobdeath)(monster_t*)){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
 	monster->xp = xp;
 	monster->inventory = createInventory();
+	monster->birthFunction = mobbirth;
+	monster->attackFunction = mobattack;
 	monster->deathFunction = mobdeath;
 	return monster;
 }
@@ -38,6 +42,10 @@ monster_t* cloneMonster(monster_t* monster){
 	clone->name = monster->name;
 	clone->xp = monster->xp;
 	clone->combat = createCombat(monster->combat->maxhp, monster->combat->power, monster->combat->defense);
+	if(monster->birthFunction){
+		(monster->birthFunction)(clone);
+	}
+	clone->attackFunction = monster->attackFunction;
 	clone->deathFunction = monster->deathFunction;
 	return clone;
 }

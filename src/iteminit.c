@@ -1,8 +1,9 @@
-#include "iteminit.h"
+#include "iteminit.h"	
+#include "item.h"
 #include "moonmem.h"
 #include "skills.h"
 
-item_t** ItemList;
+
 
 #define item(id, name, desc, type, type2, skill, power, stackable) ItemList[id]=createItem(name, desc, type, type2, skill, power, stackable)
 
@@ -22,7 +23,7 @@ void initItems(){
 	item(item_sword,        "Sword",         "A standard sword", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  6,      0);
 	item(item_knife,         "Little Knife", "A small worn knife", 
-	     I_EQUIMENT,  IS_WEAPON,     SKILL_SWORD,  2,      0);
+	     I_EQUIPMENT,  IS_WEAPON,     SKILL_SWORD,  2,      0);
 	item(item_pomfhammer,   "Pomf Hammer",   "In the name of Rorans, be pomf'd", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_HAMMER, 20,     0);
 	item(item_leatherarmor, "Leather Armor", "A piece of leather armor", 

@@ -1,6 +1,7 @@
 #ifndef _ITEM_H
 #define _ITEM_H
 #include "libtcod.h"
+#include "itemid.h"
 
 typedef enum itemType_e{
 	I_NONE,
@@ -23,6 +24,8 @@ typedef struct item_t{
 	int power;
 	int stackable;
 }item_t;
+
+extern item_t** ItemList;
 
 item_t* createItem(char*, char*, int, int, int, int, int);
 item_t* cloneItem(const item_t*);

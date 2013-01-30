@@ -2,6 +2,8 @@
 #include "moonmem.h"
 #include "skills.h"
 
+item_t** ItemList;
+
 item_t* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
 	item_t* item = malloc(sizeof(item_t));
 	item->name = name;

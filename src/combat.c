@@ -9,7 +9,6 @@ combat_t* createCombat(int maxhp, int power, int defense){
 	combat->maxhp = maxhp;
 	combat->power = power;
 	combat->defense = defense;
-	combat->hits = 1;
 	return combat;
 }
 

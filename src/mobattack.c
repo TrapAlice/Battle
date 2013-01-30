@@ -10,14 +10,14 @@ void standardAttack(monster_t* attacker, monster_t* defender){
 	int damage;
 	int basepower = attacker->combat->power;
 	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
+	int power = basepower + weaponpower;
 	int basedefense = defender->combat->defense;
 	int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
-	addMessage(globalMessage, "The %s attacks %s",attacker->name, defender->name);
+	int defense = basedefense + armordefense;
+	addMessage(globalMessage, "%s attacks %s",attacker->name, defender->name);
 
-	damage = roll(attacker->combat->hits, basepower);
-	damage += roll(1, weaponpower);
-	damage -= basedefense;
-	damage -= roll(1,armordefense);
+	damage = roll(power, 6);
+	damage -= roll(defense, 6);
 	
 	damage = damage < 0 ? 0 : damage;
 

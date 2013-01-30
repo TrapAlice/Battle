@@ -17,7 +17,7 @@ monster_t** MonsterList;
 monster_t* createPlayer(int x, int y){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = "Player";
-	monster->combat = createCombat(32,6,1);
+	monster->combat = createCombat(32,2,1);
 	monster->object = createObject('@',x,y);
 	monster->inventory = createInventory();
 	monster->equipment = createEquipmentSlots();
@@ -82,14 +82,14 @@ void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* de
 		int damage;
 		int basepower = attacker->combat->power;
 		int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
+		int power = basepower + weaponpower;
 		int basedefense = defender->combat->defense;
 		int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
+		int defense = basedefense + armordefense;
 		addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
 
-		damage = roll(attacker->combat->hits, basepower);
-		damage += roll(1, weaponpower);
-		damage -= basedefense;
-		damage -= roll(1,armordefense);
+		damage = roll(power, 6);
+		damage -= roll(defense, 6);
 		
 		damage = damage < 0 ? 0 : damage;
 

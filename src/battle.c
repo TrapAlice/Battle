@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 					keyPressed = key.c-'a';
 					if(items[keyPressed]!=NULL){
 						if(itemIsType(items[keyPressed], I_HEALING)){
-							takeDamage(consoleLog, player, -(roll(1,items[keyPressed]->power)));
+							takeDamage(consoleLog, player, -(roll(items[keyPressed]->power,6)));
 							removeItemInventory(player->inventory, items[keyPressed]);
 							battleActionTaken=1;
 						}

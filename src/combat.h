@@ -5,7 +5,6 @@ typedef struct combat_t{
 	int hp, maxhp;
 	int defense;
 	int power;
-	int hits;
 }combat_t;
 
 combat_t* createCombat(int, int, int);

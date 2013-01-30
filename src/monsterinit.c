@@ -8,10 +8,10 @@ monster_t** MonsterList;
 
 void initMonsters(){
 	MonsterList=malloc(sizeof(monster_t)*num_monsters);
-	mon(mob_null, "", 0, 0, 0, 0, NULL);
+	mon(mob_null,  "",      0,  0, 0, 0,  NULL);
 	mon(mob_slime, "Slime", 10, 2, 1, 15, NULL);
-	mon(mob_pig, "Pig", 12, 4, 1, 20, &pigDeath);
-	mon(mob_fairy, "Fairy", 5, 2, 0, 10, &fairyDeath);
+	mon(mob_pig,   "Pig",   12, 4, 1, 20, &pigDeath);
+	mon(mob_fairy, "Fairy", 5,  2, 0, 10, &fairyDeath);
 }
 
 void uninitMonsters(){

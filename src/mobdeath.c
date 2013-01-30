@@ -8,6 +8,10 @@
 
 extern monster_t* player;
 
+void standardDeath(monster_t* monster){
+	addMessage(globalMessage, "The %s dies",monster->name);
+}
+
 void pigDeath(monster_t* monster){
 	int carving = player->skills->skillLevel[SKILL_CARVING];
 	if(oneIn(5-carving)){

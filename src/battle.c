@@ -152,12 +152,10 @@ int main(int argc, char *argv[]) {
 						GameState=STATE_BATTLEAFTERMATH;
 						
 						waitForPress();
-						if(monster->deathFunction != NULL){
-							(monster->deathFunction)(monster);
-						}
+						
 						
 					} else {
-						addMessage(consoleLog, "The %s attacks!",monster->name);
+						/*addMessage(consoleLog, "The %s attacks!",monster->name);*/
 						attackMonster(consoleLog, monster, player);
 						if(checkDead(player)){
 							addMessage(consoleLog,"You lose");

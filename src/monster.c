@@ -25,7 +25,7 @@ monster_t* createPlayer(int x, int y){
 	return monster;
 }
 
-monster_t* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*), void(*mobdeath)(monster_t*)){
+monster_t* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(monster_t*)){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
@@ -52,6 +52,9 @@ monster_t* cloneMonster(monster_t* monster){
 
 int checkDead(monster_t* monster){
 	int dead = ( monster->combat->hp < 0  ? 1 : 0 );
+	if(monster->deathFunction != NULL && dead){
+		(monster->deathFunction)(monster);
+	}
 	return dead;
 }
 
@@ -73,25 +76,27 @@ static void _improvePlayerSkills(){
 }
 
 void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* defender){
-	int damage;
-	int basepower = attacker->combat->power;
-	int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_HAND) == NULL ? 0 : getEquipment(attacker->equipment, E_HAND)->power));
-	int basedefense = defender->combat->defense;
-	int armordefense = (defender->equipment==NULL ? 0 : (getEquipment(defender->equipment, E_CHEST) == NULL ? 0 : getEquipment(defender->equipment, E_CHEST)->power));
-	addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
+	if(attacker->attackFunction){
+		(attacker->attackFunction)(attacker, defender);
+	} else {
+		int damage;
+		int basepower = attacker->combat->power;
+		int weaponpower = (attacker->equipment==NULL ? 0 : (getEquipment(attacker->equipment, E_HAND) == NULL ? 0 : getEquipment(attacker->equipment, E_HAND)->power));
+		int basedefense = defender->combat->defense;
+		int armordefense = (defender->equipment==NULL ? 0 : (getEquipment(defender->equipment, E_CHEST) == NULL ? 0 : getEquipment(defender->equipment, E_CHEST)->power));
+		addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
 
-	damage = roll(attacker->combat->hits, basepower);
-	damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
-	damage -= basedefense;
-	damage -= roll(1,armordefense);
-	
-	damage = damage < 0 ? 0 : damage;
+		damage = roll(attacker->combat->hits, basepower);
+		damage += (weaponpower < 0 ? 0 : roll(1, weaponpower));
+		damage -= basedefense;
+		damage -= roll(1,armordefense);
+		
+		damage = damage < 0 ? 0 : damage;
 
-	if(attacker == player){
 		_improvePlayerSkills();
-	}
 
-	takeDamage(messageLog, defender, damage);
+		takeDamage(messageLog, defender, damage);
+	}
 }
 
 void takeDamage(messagelist_t* messageLog, monster_t* defender, int damage){

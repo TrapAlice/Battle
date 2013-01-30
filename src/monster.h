@@ -21,7 +21,7 @@ struct monster_t{
 	struct equipment_t *equipment;
 	struct skills_t *skills;
 	void (*birthFunction)(monster_t*);
-	void (*attackFunction)(monster_t*);
+	void (*attackFunction)(monster_t*,monster_t*);
 	void (*deathFunction)(monster_t*);
 };
 
@@ -29,7 +29,7 @@ extern monster_t* player;
 extern monster_t** MonsterList;
 
 monster_t* createPlayer(int,int);
-monster_t* createMonster(char*, int, int, int, int,void(*mobbirth)(monster_t*),void(*mobattack)(monster_t*),void(*mobdeath)(monster_t*));
+monster_t* createMonster(char*, int, int, int, int,void(*mobbirth)(monster_t*),void(*mobattack)(monster_t*,monster_t*),void(*mobdeath)(monster_t*));
 monster_t* cloneMonster(monster_t*);
 int checkDead(monster_t*);
 void deleteMonster(monster_t*);

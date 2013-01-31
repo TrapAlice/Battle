@@ -5,6 +5,7 @@
 #include "equipped.h"
 #include "rng.h"
 #include "combat.h"
+#include "skills.h"
 
 void standardAttack(monster_t* const attacker, monster_t* const defender){
 	int damage;
@@ -12,7 +13,7 @@ void standardAttack(monster_t* const attacker, monster_t* const defender){
 	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_RHAND) ? getEquipment(attacker->equipment, E_RHAND)->power : 0 ) : 0);
 	int power = basepower + weaponpower;
 	int basedefense = defender->combat->defense;
-	/*int armordefense = getEquipmentDefense(defender->equipment);*/
+	int armordefense = getEquipmentDefense(defender->equipment);
 	int defense = basedefense + armordefense;
 	int shield;
 	addMessage(globalMessage, "%s attacks %s", attacker->name, defender->name);
@@ -22,7 +23,7 @@ void standardAttack(monster_t* const attacker, monster_t* const defender){
 		if( shield ){
 			if( roll(basepower, 6) < roll(shield + defender->combat->power, 6) ){
 				addMessage(globalMessage, "You blocked the attack with your shield!");
-				increaseSkillifActive(defender->equipment, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
+				increaseSkillifActive(defender->skills, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
 				return;
 			}
 		}

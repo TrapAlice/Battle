@@ -82,8 +82,10 @@ int main(int argc, char *argv[]) {
 						battleCooldown=10;
 						if( oneIn(5) ){
 							monster = cloneMonster(MonsterList[mob_fairy]);
-						} else if( oneIn(3) ){
+						} else if( oneIn(4) ){
 							monster = cloneMonster(MonsterList[mob_pig]);
+						} else if( oneIn(5) ){
+							monster = cloneMonster(MonsterList[mob_kobold]);
 						} else {
 							monster = cloneMonster(MonsterList[mob_slime]);
 						}

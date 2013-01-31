@@ -13,6 +13,7 @@ typedef enum itemSubType_e{
 	IS_NONE,
 	IS_WEAPON,
 	IS_CHESTARMOR,
+	IS_SHIELD,
 }itemSubType_e;
 
 typedef struct item_t{

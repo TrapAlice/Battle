@@ -24,11 +24,13 @@ void initItems(){
 	item(item_sword,        "Sword",         "A standard sword", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  2,      0,          10);
 	item(item_knife,         "Little Knife", "A small worn knife", 
-	     I_EQUIPMENT,  IS_WEAPON,    SKILL_SWORD,  1,      0,          2);
+	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  1,      0,          2);
 	item(item_pomfhammer,   "Pomf Hammer",   "In the name of Rorans, be pomf'd", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_HAMMER, 10,     0,          20);
 	item(item_leatherarmor, "Leather Armor", "A piece of leather armor", 
 	     I_EQUIPMENT, IS_CHESTARMOR, SKILL_NONE,   1,      0,          10);
+	item(item_shield,       "Wooden Shield", "A shield made from wood",
+		 I_EQUIPMENT, IS_SHIELD,     SKILL_SHIELD, 1,      0,          20);
 }
 
 void uninitItems(){

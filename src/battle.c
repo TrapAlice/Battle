@@ -208,9 +208,11 @@ int main(int argc, char *argv[]) {
 				if( items[keyPressed] ){
 					if( itemIsType(items[keyPressed], I_EQUIPMENT) ){
 						if( itemIsSubType(items[keyPressed], IS_WEAPON) ){
-							Equip(player->equipment, E_HAND, items[keyPressed]);
+							Equip(player->equipment, E_RHAND, items[keyPressed]);
 						} else if( itemIsSubType(items[keyPressed], IS_CHESTARMOR) ){
 							Equip(player->equipment, E_CHEST, items[keyPressed]);
+						} else if( itemIsSubType(items[keyPressed], IS_SHIELD) ){
+							Equip(player->equipment, E_LHAND, items[keyPressed]);
 						}
 					}
 				}
@@ -241,7 +243,6 @@ int main(int argc, char *argv[]) {
 					}
 					
 				}
-				skillsCurrentlyActive(player->skills);
 				break;
 		}
 		
@@ -254,14 +255,14 @@ int main(int argc, char *argv[]) {
 
 void test(){
 	item_t* armor = cloneItem(ItemList[item_leatherarmor]);
-	item_t* hammer = cloneItem(ItemList[item_pomfhammer]);
+	item_t* shield = cloneItem(ItemList[item_shield]);
 	
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_sword]));
 	
-	addItemInventory(player->inventory, hammer);
+	addItemInventory(player->inventory, shield);
 	
 	addItemInventory(player->inventory, armor);
 }
@@ -352,8 +353,9 @@ void printUI(){
 				head=head->next;
 				itemchar++;
 			}
-			TCOD_console_print(inventoryPanel, 50, 0,"Hand:  %s", (getEquipment(player->equipment, E_HAND) != NULL ? getEquipment(player->equipment, E_HAND)->name : ""));
-			TCOD_console_print(inventoryPanel, 50, 1,"Chest: %s", (getEquipment(player->equipment, E_CHEST) != NULL ? getEquipment(player->equipment, E_CHEST)->name : ""));
+			TCOD_console_print(inventoryPanel, 50, 0,"R Hand:  %s", (getEquipment(player->equipment, E_RHAND) ? getEquipment(player->equipment, E_RHAND)->name : ""));
+			TCOD_console_print(inventoryPanel, 50, 1,"L Hand:  %s", (getEquipment(player->equipment, E_LHAND) ? getEquipment(player->equipment, E_LHAND)->name : ""));
+			TCOD_console_print(inventoryPanel, 50, 2,"Chest:   %s", (getEquipment(player->equipment, E_CHEST) ? getEquipment(player->equipment, E_CHEST)->name : ""));
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
 		case STATE_STATS:
@@ -364,9 +366,9 @@ void printUI(){
 			TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
 			TCOD_console_print(inventoryPanel, 10, 0, "[Inactive]");
 
-			for( x=0; x<num_skills; --x ){
+			for( x=0; x<num_skills; ++x ){
 				if( player->skills->skillLevel[x]>0 ){
-					if( isSkillActive(player->skills,x) ){ TCOD_console_set_default_foreground(inventoryPanel,TCOD_yellow);}
+					if( isSkillActive(player->skills, x) ){ TCOD_console_set_default_foreground(inventoryPanel, TCOD_yellow);}
 					else{TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);}
 					TCOD_console_print(inventoryPanel, 0, itemchar+2, "%c] %s", itemchar+'A', getSkillName(x));
 					TCOD_console_print(inventoryPanel, 13, itemchar+2, "- %d", player->skills->skillLevel[x]);
@@ -441,7 +443,6 @@ void init(){
 	player = createPlayer(20,20);
 	currentFloor = 0;
 	TCOD_console_init_root(80,50,TITLE,false,false);
-	map = createMap(40, 40);
 	generateNewMap();
 	positionPlayer();
 }

@@ -17,19 +17,21 @@ void deleteSkillSlots(skills_t* const skills){
 	free(skills);
 }
 
-int increaseSkill(skills_t* const skills, skills_e skill, int xp){
+void increaseSkill(skills_t* const skills, skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
 	if( skills->skillXP[skill]>skills->skillLevel[skill]*10+5 ){
-		return levelUpSkill(skills, skill);
+		levelUpSkill(skills, skill);
 	}
-	return( 0 );
 }
 
-int levelUpSkill(skills_t* const skills, skills_e skill){
+void levelUpSkill(skills_t* const skills, skills_e skill){
 	skills->skillXP[skill]-=10;
 	skills->skillLevel[skill]++;
-	addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);
-	return( 1 );
+	if( skills->skillLevel[skill]==1 ){
+		addMessage(globalMessage, "You learnt the skill: %s.", getSkillName(skill));
+	} else {
+		addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);
+	}
 }
 
 const char* getSkillName(skills_e skills){
@@ -40,6 +42,8 @@ const char* getSkillName(skills_e skills){
 			return( "Hammers" );
 		case SKILL_CARVING:
 			return( "Carving" );
+		case SKILL_SHIELD:
+			return( "Shield" );
 		case SKILL_NONE:
 		case num_skills:
 			return( "" );
@@ -61,4 +65,10 @@ int skillsCurrentlyActive(const skills_t* const skills){
 		amount+=skills->skillActive[x];
 	}
 	return( amount );
+}
+
+void increaseSkillifActive(skills_t* const skills, skills_e skill, int xp ){
+	if( isSkillActive(skills, skill) ){
+		increaseSkill(skills, skill, xp);
+	}
 }

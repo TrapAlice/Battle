@@ -9,12 +9,24 @@
 void standardAttack(monster_t* const attacker, monster_t* const defender){
 	int damage;
 	int basepower = attacker->combat->power;
-	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
+	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_RHAND) ? getEquipment(attacker->equipment, E_RHAND)->power : 0 ) : 0);
 	int power = basepower + weaponpower;
 	int basedefense = defender->combat->defense;
-	int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
+	/*int armordefense = getEquipmentDefense(defender->equipment);*/
 	int defense = basedefense + armordefense;
+	int shield;
 	addMessage(globalMessage, "%s attacks %s", attacker->name, defender->name);
+
+	if( weaponpower ){		
+		shield = (defender->equipment ? (getEquipment(defender->equipment, E_LHAND) ? getEquipment(defender->equipment, E_LHAND)->power : 0) : 0);
+		if( shield ){
+			if( roll(basepower, 6) < roll(shield + defender->combat->power, 6) ){
+				addMessage(globalMessage, "You blocked the attack with your shield!");
+				increaseSkillifActive(defender->equipment, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
+				return;
+			}
+		}
+	}
 
 	damage = roll(power, 6);
 	damage -= roll(defense, 6);

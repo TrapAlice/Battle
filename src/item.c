@@ -51,6 +51,8 @@ void getItemDescription(const item_t* const item, TCOD_console_t panel){
 				case IS_CHESTARMOR:
 					TCOD_console_print(panel, 0, 3, "Defense: %d.", item->power);
 					break;
+				case IS_SHIELD:
+					break;
 				case IS_NONE:
 					break;
 			}

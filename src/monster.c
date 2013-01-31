@@ -68,9 +68,9 @@ void deleteMonster(monster_t* const monster){
 }
 
 static void _improvePlayerSkills(){
-	if( player->equipment->equipped[E_HAND] ){
-		if( isSkillActive(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill) ){
-			increaseSkill(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill, 10);
+	if( player->equipment->equipped[E_RHAND] ){
+		if( isSkillActive(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill) ){
+			increaseSkill(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill, 10);
 		}
 	}
 }
@@ -81,10 +81,10 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 	} else {
 		int damage;
 		int basepower = attacker->combat->power;
-		int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
+		int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_RHAND) ? getEquipment(attacker->equipment, E_RHAND)->power : 0 ) : 0);
 		int power = basepower + weaponpower;
 		int basedefense = defender->combat->defense;
-		int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
+		/*int armordefense = getEquipmentDefense(defender->equipment);*/
 		int defense = basedefense + armordefense;
 		addMessage(messageLog, "You attack the %s", defender->name);
 

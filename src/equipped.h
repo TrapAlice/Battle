@@ -4,7 +4,8 @@
 struct item_t;
 
 typedef enum slot_e{
-	E_HAND,
+	E_RHAND,
+	E_LHAND,
 	E_HEAD,
 	E_CHEST,
 	num_slots,
@@ -19,5 +20,6 @@ void            deleteEquipmentSlots ( equipment_t* );
 struct item_t*  getEquipment         ( const equipment_t*, slot_e );
 void            Equip                ( const equipment_t*, slot_e, struct item_t* );
 int             isEquipped           ( const equipment_t*, struct item_t* );
+/*int             getEquipmentDefense  ( const equipment_t* );*/
 
 #endif

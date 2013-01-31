@@ -21,3 +21,13 @@ item_t* getEquipment(const equipment_t* const equipment, slot_e slot){
 void Equip(const equipment_t* const equipment, slot_e slot, item_t* const item){
 	equipment->equipped[slot]=item;
 }
+
+int isEquipped(const equipment_t* const equipment, item_t* const item){
+	int x;
+	for( x=0; x<num_slots; ++x){
+		if( equipment->equipped[x] == item ){
+			return( 1 );
+		}
+	}
+	return( 0 );
+}

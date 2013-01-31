@@ -343,8 +343,7 @@ void printUI(){
 			while( head ){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
-					if( getEquipment(player->equipment, E_HAND) != item &&
-					   getEquipment(player->equipment, E_CHEST) != item ){
+					if( !isEquipped(player->equipment, item) ){
 						TCOD_console_print(inventoryPanel, 0, x, "%c] %s", 'A'+itemchar, item->name);
 						x++;
 					}

@@ -4,7 +4,7 @@
 
 item_t** ItemList;
 
-item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable){
+item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable, int durability){
 	item_t* item = malloc(sizeof(item_t));
 	item->name = name;
 	item->desc = desc;
@@ -13,7 +13,8 @@ item_t* createItem(const char* const name, const char* const desc, int type, int
 	item->relatedSkill = relatedSkill;
 	item->power = power;
 	item->stackable = stackable;
-	
+	item->durability = durability;
+
 	return( item );
 }
 
@@ -26,6 +27,7 @@ item_t* cloneItem(const item_t* const item){
 	clone->relatedSkill = item->relatedSkill;
 	clone->power = item->power;
 	clone->stackable = item->stackable;
+	clone->durability = item->durability;
 
 	return( clone );
 }

@@ -86,7 +86,7 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 		int basedefense = defender->combat->defense;
 		int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
 		int defense = basedefense + armordefense;
-		addMessage(messageLog, "%s attacks %s",attacker->name, defender->name);
+		addMessage(messageLog, "You attack the %s", defender->name);
 
 		damage = roll(power, 6);
 		damage -= roll(defense, 6);

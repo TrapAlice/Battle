@@ -24,6 +24,7 @@ const char*  getSkillName          ( skills_e );
 int          isSkillActive         ( const skills_t*, skills_e );
 int          skillsCurrentlyActive ( const skills_t* );
 void         increaseSkillifActive ( skills_t*, skills_e, int );
+int          getSkillLevelifActive ( const skills_t*, skills_e );
 
 
 #endif

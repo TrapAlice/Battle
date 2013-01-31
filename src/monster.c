@@ -82,13 +82,39 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 		int damage;
 		int basepower = attacker->combat->power;
 		int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_RHAND) ? getEquipment(attacker->equipment, E_RHAND)->power : 0 ) : 0);
-		int power = basepower + weaponpower;
+		int damagemod = 0;
+		int power;
 		int basedefense = defender->combat->defense;
 		int armordefense = getEquipmentDefense(defender->equipment);
 		int defense = basedefense + armordefense;
-		addMessage(messageLog, "You attack the %s", defender->name);
+		int shield;
 
-		damage = roll(power, 6);
+		if( weaponpower ){
+			weaponpower += getSkillLevelifActive(attacker->skills, getEquipment(attacker->equipment, E_RHAND)->relatedSkill)/3;
+			damagemod += getSkillLevelifActive(attacker->skills, getEquipment(attacker->equipment, E_RHAND)->relatedSkill);
+			shield = (defender->equipment ? (getEquipment(defender->equipment, E_LHAND) ? getEquipment(defender->equipment, E_LHAND)->power : 0) : 0);
+			if( shield ){
+				if( roll(basepower, 6) + weaponpower < roll(shield + defender->combat->power, 6) + getSkillLevelifActive(defender->skills, SKILL_SHIELD)*2 ){
+					if( defender == player ){
+						addMessage(globalMessage, "You blocked the attack with your shield!");
+					} else {
+						addMessage(globalMessage, "The %s blocked your attack with their shield!", defender->name);
+					}
+					
+					increaseSkillifActive(defender->skills, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
+					return;
+				}
+			}
+		}
+
+		power = basepower + weaponpower;
+		if( attacker == player ){
+			addMessage(messageLog, "You attack the %s", defender->name);
+		} else {
+			addMessage(messageLog, "The %s attacks you", attacker->name);
+		}
+		
+		damage = roll(power, 6)+damagemod;
 		damage -= roll(defense, 6);
 		
 		damage = damage < 0 ? 0 : damage;
@@ -105,7 +131,12 @@ void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int 
 	} else if (damage < 0){
 		addMessage(messageLog, "%s is healed for %d", defender->name, -damage);
 	} else {
-		addMessage(messageLog, "%s avoids the attack", defender->name, damage);
+		if( defender == player ){
+			addMessage(messageLog, "You avoid the attack", defender->name);
+		} else {
+			addMessage(messageLog, "The %s avoids the attack", defender->name);
+		}
+		
 	}
 	defender->combat->hp -= damage;
 	if( defender->combat->hp > defender->combat->maxhp ){

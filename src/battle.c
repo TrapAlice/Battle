@@ -66,8 +66,8 @@ int main(int argc, char *argv[]) {
 				if( key.c=='e' ){
 					GameState = STATE_EQUIP;
 				}
-				if( key.c=='@' ){
-					GameState = STATE_STATS;
+				if( key.c=='s' ){
+					GameState = STATE_SKILLS;
 				}
 				if( key.c=='>' ){
 					if( isCollided(player->object, map->objects[0]) ){
@@ -205,6 +205,7 @@ int main(int argc, char *argv[]) {
 				break;
 
 			case STATE_EQUIP:
+				GameState = STATE_MAP;
 				handleInput(&key);
 				keyPressed = key.c-'a';
 				if( items[keyPressed] ){
@@ -216,12 +217,13 @@ int main(int argc, char *argv[]) {
 						} else if( itemIsSubType(items[keyPressed], IS_SHIELD) ){
 							Equip(player->equipment, E_LHAND, items[keyPressed]);
 						}
+						GameState = STATE_EQUIP;
 					}
 				}
-				GameState = STATE_MAP;
+				
 				break;
 
-			case STATE_STATS:
+			case STATE_SKILLS:
 				GameState = STATE_MAP;
 				handleInput(&key);
 				keyPressed = key.c-'a';
@@ -240,7 +242,7 @@ int main(int argc, char *argv[]) {
 							player->skills->skillActive[x] = 0;
 						}
 
-						GameState = STATE_STATS;
+						GameState = STATE_SKILLS;
 						break;
 					}
 					
@@ -360,7 +362,7 @@ void printUI(){
 			TCOD_console_print(inventoryPanel, 50, 2,"Chest:   %s", (getEquipment(player->equipment, E_CHEST) ? getEquipment(player->equipment, E_CHEST)->name : ""));
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
-		case STATE_STATS:
+		case STATE_SKILLS:
 			itemchar=0;
 
 			TCOD_console_set_default_foreground(inventoryPanel,TCOD_yellow);

@@ -32,7 +32,7 @@ void initItems(){
 
 void uninitItems(){
 	int x;
-	for( x = 0; x < num_items; x++){
+	for( x = 0; x < num_items; x++ ){
 		deleteItem(ItemList[x]);
 	}
 	free(ItemList);

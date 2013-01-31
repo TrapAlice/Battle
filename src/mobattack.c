@@ -14,7 +14,7 @@ void standardAttack(monster_t* const attacker, monster_t* const defender){
 	int basedefense = defender->combat->defense;
 	int armordefense = (defender->equipment ? (getEquipment(defender->equipment, E_CHEST) ? getEquipment(defender->equipment, E_CHEST)->power : 0) : 0);
 	int defense = basedefense + armordefense;
-	addMessage(globalMessage, "%s attacks %s",attacker->name, defender->name);
+	addMessage(globalMessage, "%s attacks %s", attacker->name, defender->name);
 
 	damage = roll(power, 6);
 	damage -= roll(defense, 6);
@@ -26,7 +26,7 @@ void standardAttack(monster_t* const attacker, monster_t* const defender){
 
 void fairyAttack(monster_t* const attacker, monster_t* const defender){
 	int damage;
-	addMessage(globalMessage,"The fairy fires a fireball");
-	damage = roll(attacker->combat->power,6);
+	addMessage(globalMessage, "The fairy fires a fireball");
+	damage = roll(attacker->combat->power, 6);
 	takeDamage(globalMessage, defender, damage);
 }

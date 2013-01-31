@@ -10,7 +10,7 @@ object_t* createObject(char self, int x, int y){
 	obj->self = self;
 	obj->x=x;
 	obj->y=y;
-	return obj;
+	return( obj );
 }
 
 void drawObject(const object_t* const obj){
@@ -19,7 +19,7 @@ void drawObject(const object_t* const obj){
 
 void moveObject(object_t* const obj, const map_t* const map, int dx, int dy){
 	tile_t* tile = map->mapTiles[obj->x+dx+((obj->y+dy)*map->width)];
-	if(!(tile->ops & 2)){
+	if( !(tile->ops & 2) ){
 		obj->x+=dx;
 		obj->y+=dy;
 	}
@@ -30,10 +30,10 @@ void deleteObject(object_t* const object){
 }
 
 int isCollided(const object_t* const a, const object_t* const b){
-	if(a->x == b->x){
-		if(a->y == b->y){
-			return 1;
+	if( a->x == b->x ){
+		if( a->y == b->y ){
+			return( 1 );
 		}
 	}
-	return 0;
+	return( 0 );
 }

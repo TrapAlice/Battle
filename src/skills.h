@@ -15,13 +15,13 @@ typedef struct skills_t{
 	char *skillActive;
 } skills_t;
 
-skills_t*  createSkillSlots      ( );
-void       deleteSkillSlots      ( skills_t* );
-int        increaseSkill         ( skills_t*, skills_e, int );
-int        levelUpSkill          ( skills_t*, skills_e );
-char*      getSkillName          ( skills_e );
-int        isSkillActive         ( const skills_t*, skills_e );
-int        skillsCurrentlyActive ( const skills_t* );
+skills_t*    createSkillSlots      ( );
+void         deleteSkillSlots      ( skills_t* );
+int          increaseSkill         ( skills_t*, skills_e, int );
+int          levelUpSkill          ( skills_t*, skills_e );
+const char*  getSkillName          ( skills_e );
+int          isSkillActive         ( const skills_t*, skills_e );
+int          skillsCurrentlyActive ( const skills_t* );
 
 
 #endif

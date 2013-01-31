@@ -14,7 +14,7 @@ item_t* createItem(const char* const name, const char* const desc, int type, int
 	item->power = power;
 	item->stackable = stackable;
 	
-	return item;
+	return( item );
 }
 
 item_t* cloneItem(const item_t* const item){
@@ -27,7 +27,7 @@ item_t* cloneItem(const item_t* const item){
 	clone->power = item->power;
 	clone->stackable = item->stackable;
 
-	return clone;
+	return( clone );
 }
 
 void deleteItem(item_t* const item){
@@ -35,19 +35,19 @@ void deleteItem(item_t* const item){
 }
 
 void getItemDescription(const item_t* const item, TCOD_console_t panel){
-	TCOD_console_print(panel,0,0,"%s",item->name);
-	TCOD_console_print(panel,0,2,"%s",item->desc);
-	switch(item->type){
+	TCOD_console_print(panel, 0, 0, "%s", item->name);
+	TCOD_console_print(panel, 0, 2, "%s", item->desc);
+	switch( item->type ){
 		case I_HEALING:
-			TCOD_console_print(panel,0,3,"It has a healing factor of %d.",item->power);
+			TCOD_console_print(panel, 0, 3, "It has a healing factor of %d.", item->power);
 			break;
 		case I_EQUIPMENT:
-			switch(item->type2){
+			switch( item->type2 ){
 				case IS_WEAPON:
-					TCOD_console_print(panel,0,3,"Power: %d.",item->power);
+					TCOD_console_print(panel, 0, 3, "Power: %d.", item->power);
 					break;
 				case IS_CHESTARMOR:
-					TCOD_console_print(panel,0,3,"Defense: %d.",item->power);
+					TCOD_console_print(panel, 0, 3, "Defense: %d.", item->power);
 					break;
 				case IS_NONE:
 					break;
@@ -59,9 +59,9 @@ void getItemDescription(const item_t* const item, TCOD_console_t panel){
 }
 
 int itemIsType(const item_t* const item, enum itemType_e type){
-	return item->type == type;
+	return( item->type == type );
 }
 
 int itemIsSubType(const item_t* const item, enum itemSubType_e subType){
-	return item->type2 == subType;
+	return ( item->type2 == subType );
 }

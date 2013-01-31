@@ -20,7 +20,7 @@ void initMonsters(){
 
 void uninitMonsters(){
 	int x;
-	for( x = 0; x < num_monsters; x++){
+	for( x = 0; x < num_monsters; ++x ){
 		deleteMonster(MonsterList[x]);
 	}
 	free(MonsterList);

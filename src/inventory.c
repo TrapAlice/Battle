@@ -6,20 +6,20 @@ inventory_t* createInventory(){
 	inventory_t* inventory = malloc(sizeof(inventory_t));
 	inventory->quantity=0;
 	inventory->item=0;
-	return inventory;
+	return( inventory );
 }
 
 static inventory_t* Inventory_add(item_t* item){
 	inventory_t* inventory = malloc(sizeof(inventory_t));
 	inventory->quantity=1;
 	inventory->item=item;
-	return inventory;
+	return( inventory );
 }
 
 void deleteInventory(inventory_t* const inventory){
 	inventory_t* temp = inventory;
 	inventory_t* head = inventory;
-	while(temp!=NULL){
+	while( temp ){
 		head = head->next;
 		deleteItem(temp->item);
 		free(temp);
@@ -31,8 +31,8 @@ void addItemInventory(inventory_t* const inventory, item_t* const item){
 	inventory_t* temp = inventory; 
 	inventory_t* temp2 = inventory; 
 	inventory_t* tail;
-	while(temp != NULL){ 
-		if(temp->item!=NULL){
+	while( temp ){ 
+		if( temp->item ){
 			if(temp->item->stackable && temp->item->name == item->name){
 				deleteItem(item);
 				temp->quantity++;
@@ -49,11 +49,11 @@ void addItemInventory(inventory_t* const inventory, item_t* const item){
 void removeItemInventory(inventory_t* const inventory, item_t* const item){
 	inventory_t* temp = inventory;
 	inventory_t* temp2 = inventory;
-	while(temp != NULL){
-		if(temp->item!=NULL){
-			if(temp->item->name == item->name){
+	while( temp ){
+		if( temp->item ){
+			if( temp->item->name == item->name ){
 				temp->quantity--;
-				if(temp->quantity<=0){
+				if( temp->quantity<=0 ){
 					deleteItem(temp->item);
 					temp2->next = temp->next;
 					free(temp);

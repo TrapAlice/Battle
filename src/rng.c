@@ -7,18 +7,19 @@ void initSeed(int seed){
 }
 
 int roll(int x, int d){
-	if( d == 0 ) return 0;
 	int result=0;
-	for(; x>0 ; x--){
+	if( !x || !d ) return 0;
+	
+	while(x--){
 		result += (rand() % d)+1;
 	}
-	return result;
+	return( result );
 }
 
 int oneIn(int x){
-	return !(rand() % (x < 1 ? 1 : x));
+	return( !(rand() % (x < 1 ? 1 : x)) );
 }
 
 int between(int min, int max){
-	return (rand() % (max-min))+min;
+	return( (rand() % (max-min))+min );
 }

@@ -22,7 +22,7 @@ monster_t* createPlayer(int x, int y){
 	monster->inventory = createInventory();
 	monster->equipment = createEquipmentSlots();
 	monster->skills = createSkillSlots();
-	return monster;
+	return( monster );
 }
 
 monster_t* createMonster(const char* const name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
@@ -34,7 +34,7 @@ monster_t* createMonster(const char* const name, int hp, int power, int defense,
 	monster->birthFunction = mobbirth;
 	monster->attackFunction = mobattack;
 	monster->deathFunction = mobdeath;
-	return monster;
+	return( monster );
 }
 
 monster_t* cloneMonster(const monster_t* const monster){
@@ -42,20 +42,20 @@ monster_t* cloneMonster(const monster_t* const monster){
 	clone->name = monster->name;
 	clone->xp = monster->xp;
 	clone->combat = createCombat(monster->combat->maxhp, monster->combat->power, monster->combat->defense);
-	if(monster->birthFunction){
+	if( monster->birthFunction ){
 		(monster->birthFunction)(clone);
 	}
 	clone->attackFunction = monster->attackFunction;
 	clone->deathFunction = monster->deathFunction;
-	return clone;
+	return( clone );
 }
 
 int checkDead(const monster_t* const monster){
 	int dead = ( monster->combat->hp < 0  ? 1 : 0 );
-	if(monster->deathFunction != NULL && dead){
+	if( monster->deathFunction && dead ){
 		(monster->deathFunction)(monster);
 	}
-	return dead;
+	return( dead );
 }
 
 void deleteMonster(monster_t* const monster){
@@ -68,15 +68,15 @@ void deleteMonster(monster_t* const monster){
 }
 
 static void _improvePlayerSkills(){
-	if(player->equipment->equipped[E_HAND] != NULL){
-		if(isSkillActive(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill)){
+	if( player->equipment->equipped[E_HAND] ){
+		if( isSkillActive(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill) ){
 			increaseSkill(player->skills, getEquipment(player->equipment, E_HAND)->relatedSkill, 10);
 		}
 	}
 }
 
 void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, monster_t* const defender){
-	if(attacker->attackFunction){
+	if( attacker->attackFunction ){
 		(attacker->attackFunction)(attacker, defender);
 	} else {
 		int damage;
@@ -100,7 +100,7 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 }
 
 void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int damage){
-	if(damage>0){
+	if( damage>0 ){
 		addMessage(messageLog, "%s takes %d damage", defender->name, damage);
 	} else if (damage < 0){
 		addMessage(messageLog, "%s is healed for %d", defender->name, -damage);
@@ -108,7 +108,7 @@ void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int 
 		addMessage(messageLog, "%s avoids the attack", defender->name, damage);
 	}
 	defender->combat->hp -= damage;
-	if(defender->combat->hp > defender->combat->maxhp){
+	if( defender->combat->hp > defender->combat->maxhp ){
 		defender->combat->hp = defender->combat->maxhp;
 	}
 }

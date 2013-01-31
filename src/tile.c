@@ -7,7 +7,7 @@ tile_t* createTile(char self, char blocked, char blockSight){
 	tile->self = self;
 	tile->ops = tile->ops | blocked<<0;
 	tile->ops = tile->ops | blockSight<<1;
-	return tile;
+	return( tile );
 }
 
 void deleteTile(tile_t* const tile){

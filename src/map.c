@@ -14,23 +14,23 @@ map_t* createMap(int width, int height){
 	map->mapFov = TCOD_map_new(width, height);
 	map->objects = malloc(sizeof(object_t)*5);
 
-	for(y=0; y<map->height; y++){
-		for(x=0; x<map->width; x++){
+	for( y=0; y<map->height; ++y ){
+		for( x=0; x<map->width; ++x ){
 			map->mapTiles[x+(y*map->width)] = createTile('#', 1, 1);
 		}
 	}
 
-	return map;
+	return( map );
 }
 
 void deleteMap(map_t* const map){
 	int x, y;
-	for(x=0; x<map->width; x++){
-		for(y=0; y<map->height; y++){
+	for( x=0; x<map->width; ++x ){
+		for( y=0; y<map->height; ++y ){
 			deleteTile(map->mapTiles[x+(y*map->width)]);
 		}
 	}
-	for(x=0; x<5; x++){
+	for( x=0; x<5; ++x ){
 		if(map->objects[x]){
 			deleteObject(map->objects[x]);
 		}
@@ -66,13 +66,13 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 	int numrooms;
 	int stairs =0;
 	
-	for(y=0; y<map->height; y++){
-		for(x=0; x<map->width; x++){
+	for( y=0; y<map->height; ++y ){
+		for( x=0; x<map->width; ++x ){
 			_fillTile(map, x, y);	
 		}
 	}
 
-	for(numrooms=0; numrooms < maxrooms; numrooms++){
+	for( numrooms=0; numrooms < maxrooms; numrooms++ ){
 		w = between(minsize, maxsize);
 		h = between(minsize, maxsize);
 		x = between(1, map->width-w-1);
@@ -81,12 +81,12 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 
 		createRoom(map, x,y,w,h);
 
-		if(!stairs){
+		if(! stairs ){
 			stairs=1;
 			map->objects[0] = createObject('>', between(x,x+w), between(y,y+h));
 		}
 
-		if(numrooms){
+		if( numrooms ){
 			createVTunnel(map, y2, y, x2);
 			createHTunnel(map, x2, x, y);
 		}
@@ -100,8 +100,8 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 
 void createRoom(map_t* const map, int x, int y, int w, int h){
 	int i, j;
-	for(j=y;j<y+h;j++){
-		for(i=x;i<x+w;i++){
+	for( j=y; j<y+h; j++ ){
+		for( i=x; i<x+w; i++ ){
 			_digTile(map,i,j);
 		}
 	}
@@ -110,7 +110,7 @@ void createRoom(map_t* const map, int x, int y, int w, int h){
 void createVTunnel(map_t* const map, int y1, int y2, int x){
 	int ymin = y1 < y2 ? y1 : y2;
 	int ymax = y1 < y2 ? y2+1 : y1+1;
-	for(;ymin<ymax;ymin++){
+	for( ; ymin<ymax; ++ymin ){
 		_digTile(map,x,ymin);
 	}
 }
@@ -118,7 +118,7 @@ void createVTunnel(map_t* const map, int y1, int y2, int x){
 void createHTunnel(map_t* const map, int x1, int x2, int y){
 	int xmin = x1 < x2 ? x1 : x2;
 	int xmax = x1 < x2 ? x2+1 : x1+1;
-	for(;xmin<xmax;xmin++){
+	for( ; xmin<xmax; ++xmin ){
 		_digTile(map,xmin,y);
 	}
 }
@@ -127,17 +127,17 @@ void renderMap(const map_t* const map, int centerx, int centery){
 	tile_t *tile;
 	int x, y;
 	int i;
-	object_t* object;
-	for(y=0; y<map->height; y++){
-		for(x=0; x<map->width; x++){
-			if(y-centery+15>32) break;
-			if(TCOD_map_is_in_fov(map->mapFov,x,y)){
+	object_t *object;
+	for( y=0; y<map->height; ++y ){
+		for( x=0; x<map->width; ++x ){
+			if( y-centery+15>32 ) break;
+			if( TCOD_map_is_in_fov(map->mapFov,x,y) ){
 				tile = map->mapTiles[x+(y*map->width)];
 				TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
-				for(i=0; i<5; i++){
+				for( i=0; i<5; i++ ){
 					object = map->objects[i];
-					if(object){
-						if(TCOD_map_is_in_fov(map->mapFov, object->x, object->y)){
+					if( object ){
+						if( TCOD_map_is_in_fov(map->mapFov, object->x, object->y) ){
 							TCOD_console_put_char( NULL, object->x-centerx+40, object->y-centery+15, object->self, TCOD_BKGND_NONE);
 						}
 					}

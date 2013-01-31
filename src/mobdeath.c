@@ -14,7 +14,7 @@ void standardDeath(const monster_t* const monster){
 
 void pigDeath(const monster_t* const monster){
 	int carving = player->skills->skillLevel[SKILL_CARVING];
-	if(oneIn(5-carving)){
+	if( oneIn(5-carving) ){
 		addMessage(globalMessage, "Successfully carved some meat");
 		addItemInventory(player->inventory, cloneItem(ItemList[item_meat]));
 		increaseSkill(player->skills, SKILL_CARVING, 3);

@@ -6,7 +6,7 @@
 equipment_t* createEquipmentSlots(){
 	equipment_t* equipment = malloc(sizeof(equipment_t));
 	equipment->equipped = malloc(sizeof(item_t)*num_slots);
-	return equipment;
+	return( equipment );
 }
 
 void deleteEquipmentSlots(equipment_t* const equipment){
@@ -15,7 +15,7 @@ void deleteEquipmentSlots(equipment_t* const equipment){
 }
 
 item_t* getEquipment(const equipment_t* const equipment, slot_e slot){
-	return equipment->equipped[slot];
+	return( equipment->equipped[slot] );
 }
 
 void Equip(const equipment_t* const equipment, slot_e slot, item_t* const item){

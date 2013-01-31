@@ -6,7 +6,7 @@
 #include "rng.h"
 #include "combat.h"
 
-void standardAttack(monster_t* attacker, monster_t* defender){
+void standardAttack(monster_t* const attacker, monster_t* const defender){
 	int damage;
 	int basepower = attacker->combat->power;
 	int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_HAND) ? getEquipment(attacker->equipment, E_HAND)->power : 0 ) : 0);
@@ -24,9 +24,9 @@ void standardAttack(monster_t* attacker, monster_t* defender){
 	takeDamage(globalMessage, defender, damage);
 }
 
-void fairyAttack(monster_t* attacker, monster_t* defender){
+void fairyAttack(monster_t* const attacker, monster_t* const defender){
 	int damage;
 	addMessage(globalMessage,"The fairy fires a fireball");
-	damage = roll(2,5);
+	damage = roll(attacker->combat->power,6);
 	takeDamage(globalMessage, defender, damage);
 }

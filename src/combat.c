@@ -12,6 +12,6 @@ combat_t* createCombat(int maxhp, int power, int defense){
 	return combat;
 }
 
-void deleteCombat(combat_t* combat){
+void deleteCombat(combat_t* const combat){
 	free(combat);
 }

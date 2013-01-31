@@ -9,15 +9,15 @@ equipment_t* createEquipmentSlots(){
 	return equipment;
 }
 
-void deleteEquipmentSlots(equipment_t* equipment){
+void deleteEquipmentSlots(equipment_t* const equipment){
 	free(equipment->equipped);
 	free(equipment);
 }
 
-item_t* getEquipment(equipment_t* equipment, slot_e slot){
+item_t* getEquipment(const equipment_t* const equipment, slot_e slot){
 	return equipment->equipped[slot];
 }
 
-void Equip(equipment_t* equipment, slot_e slot, item_t* item){
+void Equip(const equipment_t* const equipment, slot_e slot, item_t* const item){
 	equipment->equipped[slot]=item;
 }

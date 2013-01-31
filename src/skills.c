@@ -10,14 +10,14 @@ skills_t* createSkillSlots(){
 	return skills;
 }
 
-void deleteSkillSlots(skills_t* skills){
+void deleteSkillSlots(skills_t* const skills){
 	free(skills->skillLevel);
 	free(skills->skillXP);
 	free(skills->skillActive);
 	free(skills);
 }
 
-int increaseSkill(skills_t* skills, skills_e skill, int xp){
+int increaseSkill(skills_t* const skills, skills_e skill, int xp){
 	skills->skillXP[skill]+=xp;
 	if(skills->skillXP[skill]>skills->skillLevel[skill]*10+5){
 		return levelUpSkill(skills, skill);
@@ -25,7 +25,7 @@ int increaseSkill(skills_t* skills, skills_e skill, int xp){
 	return 0;
 }
 
-int levelUpSkill(skills_t* skills, skills_e skill){
+int levelUpSkill(skills_t* const skills, skills_e skill){
 	skills->skillXP[skill]-=10;
 	skills->skillLevel[skill]++;
 	addMessage(globalMessage, "%s skill is now level %d.", getSkillName(skill), skills->skillLevel[skill]);
@@ -47,14 +47,14 @@ char* getSkillName(skills_e skills){
 	return "";
 }
 
-int isSkillActive(skills_t* skills, skills_e skill){
+int isSkillActive(const skills_t* const skills, skills_e skill){
 	if( skills->skillLevel[skill] < 1 ){
 		return 1;
 	}
 	return skills->skillActive[skill];
 }
 
-int skillsCurrentlyActive(skills_t* skills){
+int skillsCurrentlyActive(const skills_t* const skills){
 	int x=1;
 	int amount=0;
 	for(;x<num_skills;x++){

@@ -7,7 +7,7 @@ typedef struct combat_t{
 	int power;
 }combat_t;
 
-combat_t* createCombat(int, int, int);
-void deleteCombat(combat_t*);
+combat_t*  createCombat ( int, int, int );
+void       deleteCombat ( combat_t* );
 
 #endif

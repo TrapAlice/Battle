@@ -16,7 +16,7 @@ static inventory_t* Inventory_add(item_t* item){
 	return inventory;
 }
 
-void deleteInventory(inventory_t* inventory){
+void deleteInventory(inventory_t* const inventory){
 	inventory_t* temp = inventory;
 	inventory_t* head = inventory;
 	while(temp!=NULL){
@@ -27,7 +27,7 @@ void deleteInventory(inventory_t* inventory){
 	}
 }
 
-void addItemInventory(inventory_t* inventory, item_t* item){
+void addItemInventory(inventory_t* const inventory, item_t* const item){
 	inventory_t* temp = inventory; 
 	inventory_t* temp2 = inventory; 
 	inventory_t* tail;
@@ -46,7 +46,7 @@ void addItemInventory(inventory_t* inventory, item_t* item){
 	temp2->next = tail;
 }
 
-void removeItemInventory(inventory_t* inventory, item_t* item){
+void removeItemInventory(inventory_t* const inventory, item_t* const item){
 	inventory_t* temp = inventory;
 	inventory_t* temp2 = inventory;
 	while(temp != NULL){

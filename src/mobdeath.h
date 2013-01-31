@@ -3,8 +3,8 @@
 
 struct monster_t;
 
-void standardDeath(struct monster_t*);
-void pigDeath(struct monster_t*);
-void fairyDeath(struct monster_t*);
+void  standardDeath ( const struct monster_t* );
+void  pigDeath      ( const struct monster_t* );
+void  fairyDeath    ( const struct monster_t* );
 
 #endif

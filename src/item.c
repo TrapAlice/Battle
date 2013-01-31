@@ -4,7 +4,7 @@
 
 item_t** ItemList;
 
-item_t* createItem(char* name, char* desc, int type, int type2, int relatedSkill, int power, int stackable){
+item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable){
 	item_t* item = malloc(sizeof(item_t));
 	item->name = name;
 	item->desc = desc;
@@ -17,7 +17,7 @@ item_t* createItem(char* name, char* desc, int type, int type2, int relatedSkill
 	return item;
 }
 
-item_t* cloneItem(const item_t* item){
+item_t* cloneItem(const item_t* const item){
 	item_t* clone = malloc(sizeof(item_t));
 	clone->name = item->name;
 	clone->desc = item->desc;
@@ -30,24 +30,24 @@ item_t* cloneItem(const item_t* item){
 	return clone;
 }
 
-void deleteItem(item_t* item){
+void deleteItem(item_t* const item){
 	free(item);
 }
 
-void getItemDescription(item_t* item, TCOD_console_t panel){
+void getItemDescription(const item_t* const item, TCOD_console_t panel){
 	TCOD_console_print(panel,0,0,"%s",item->name);
 	TCOD_console_print(panel,0,2,"%s",item->desc);
 	switch(item->type){
 		case I_HEALING:
-			TCOD_console_print(panel,0,3,"It heals for about 1d%d.",item->power);
+			TCOD_console_print(panel,0,3,"It has a healing factor of %d.",item->power);
 			break;
 		case I_EQUIPMENT:
 			switch(item->type2){
 				case IS_WEAPON:
-					TCOD_console_print(panel,0,3,"It deals about 1d%d.",item->power);
+					TCOD_console_print(panel,0,3,"Power: %d.",item->power);
 					break;
 				case IS_CHESTARMOR:
-					TCOD_console_print(panel,0,3,"It blocks about 1d%d damage.",item->power);
+					TCOD_console_print(panel,0,3,"Defense: %d.",item->power);
 					break;
 				case IS_NONE:
 					break;
@@ -58,10 +58,10 @@ void getItemDescription(item_t* item, TCOD_console_t panel){
 	}
 }
 
-int itemIsType(item_t* item, enum itemType_e type){
+int itemIsType(const item_t* const item, enum itemType_e type){
 	return item->type == type;
 }
 
-int itemIsSubType(item_t* item, enum itemSubType_e subType){
+int itemIsSubType(const item_t* const item, enum itemSubType_e subType){
 	return item->type2 == subType;
 }

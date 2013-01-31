@@ -6,7 +6,7 @@ typedef struct tile_t{
 	char self;
 }tile_t;
 
-tile_t* createTile(char, char, char);
-void deleteTile(tile_t*);
+tile_t*  createTile ( char, char, char );
+void     deleteTile ( tile_t* );
 
 #endif

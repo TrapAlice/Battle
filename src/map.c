@@ -23,7 +23,7 @@ map_t* createMap(int width, int height){
 	return map;
 }
 
-void deleteMap(map_t* map){
+void deleteMap(map_t* const map){
 	int x, y;
 	for(x=0; x<map->width; x++){
 		for(y=0; y<map->height; y++){
@@ -41,7 +41,7 @@ void deleteMap(map_t* map){
 	free(map);
 }
 
-static void _fillTile(map_t *map, int x, int y){
+static void _fillTile(map_t* const  map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
 	tile->ops = tile->ops | 1<<0;
@@ -50,7 +50,7 @@ static void _fillTile(map_t *map, int x, int y){
 	TCOD_map_set_properties(map->mapFov, x,y, 0,0);
 }
 
-static void _digTile(map_t* map, int x, int y){
+static void _digTile(map_t* const map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
 	tile->ops = tile->ops & 1<<0;
@@ -59,7 +59,7 @@ static void _digTile(map_t* map, int x, int y){
 	TCOD_map_set_properties(map->mapFov, x,y, 1,1);
 }
 
-void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkIntersect){
+void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int checkIntersect){
 	int x, y;
 	int w, h;
 	int x2 =0, y2 =0;
@@ -98,7 +98,7 @@ void makeMap(map_t* map, int maxrooms, int minsize, int maxsize, int checkInters
 
 
 
-void createRoom(map_t* map, int x, int y, int w, int h){
+void createRoom(map_t* const map, int x, int y, int w, int h){
 	int i, j;
 	for(j=y;j<y+h;j++){
 		for(i=x;i<x+w;i++){
@@ -107,7 +107,7 @@ void createRoom(map_t* map, int x, int y, int w, int h){
 	}
 }
 
-void createVTunnel(map_t* map, int y1, int y2, int x){
+void createVTunnel(map_t* const map, int y1, int y2, int x){
 	int ymin = y1 < y2 ? y1 : y2;
 	int ymax = y1 < y2 ? y2+1 : y1+1;
 	for(;ymin<ymax;ymin++){
@@ -115,7 +115,7 @@ void createVTunnel(map_t* map, int y1, int y2, int x){
 	}
 }
 
-void createHTunnel(map_t* map, int x1, int x2, int y){
+void createHTunnel(map_t* const map, int x1, int x2, int y){
 	int xmin = x1 < x2 ? x1 : x2;
 	int xmax = x1 < x2 ? x2+1 : x1+1;
 	for(;xmin<xmax;xmin++){
@@ -123,7 +123,7 @@ void createHTunnel(map_t* map, int x1, int x2, int y){
 	}
 }
 
-void renderMap(map_t* map, int centerx, int centery){
+void renderMap(const map_t* const map, int centerx, int centery){
 	tile_t *tile;
 	int x, y;
 	int i;

@@ -25,7 +25,7 @@ monster_t* createPlayer(int x, int y){
 	return monster;
 }
 
-monster_t* createMonster(char* name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(monster_t*)){
+monster_t* createMonster(const char* const name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
@@ -37,7 +37,7 @@ monster_t* createMonster(char* name, int hp, int power, int defense, int xp, voi
 	return monster;
 }
 
-monster_t* cloneMonster(monster_t* monster){
+monster_t* cloneMonster(const monster_t* const monster){
 	monster_t* clone = malloc(sizeof(monster_t));
 	clone->name = monster->name;
 	clone->xp = monster->xp;
@@ -50,7 +50,7 @@ monster_t* cloneMonster(monster_t* monster){
 	return clone;
 }
 
-int checkDead(monster_t* monster){
+int checkDead(const monster_t* const monster){
 	int dead = ( monster->combat->hp < 0  ? 1 : 0 );
 	if(monster->deathFunction != NULL && dead){
 		(monster->deathFunction)(monster);
@@ -58,7 +58,7 @@ int checkDead(monster_t* monster){
 	return dead;
 }
 
-void deleteMonster(monster_t* monster){
+void deleteMonster(monster_t* const monster){
 	if( monster->object ) deleteObject(monster->object);
 	if( monster->inventory ) deleteInventory(monster->inventory);
 	if( monster->combat ) deleteCombat(monster->combat);
@@ -75,7 +75,7 @@ static void _improvePlayerSkills(){
 	}
 }
 
-void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* defender){
+void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, monster_t* const defender){
 	if(attacker->attackFunction){
 		(attacker->attackFunction)(attacker, defender);
 	} else {
@@ -99,7 +99,7 @@ void attackMonster(messagelist_t* messageLog, monster_t* attacker, monster_t* de
 	}
 }
 
-void takeDamage(messagelist_t* messageLog, monster_t* defender, int damage){
+void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int damage){
 	if(damage>0){
 		addMessage(messageLog, "%s takes %d damage", defender->name, damage);
 	} else if (damage < 0){

@@ -11,12 +11,12 @@ typedef enum slot_e{
 }slot_e;
 
 typedef struct equipment_t{
-	struct item_t** equipped;
+	struct item_t **equipped;
 }equipment_t;
 
-equipment_t* createEquipmentSlots();
-void deleteEquipmentSlots(equipment_t*);
-struct item_t* getEquipment(equipment_t*, slot_e);
-void Equip(equipment_t*, slot_e, struct item_t*);
+equipment_t*    createEquipmentSlots ( );
+void            deleteEquipmentSlots ( equipment_t* );
+struct item_t*  getEquipment         ( const equipment_t*, slot_e );
+void            Equip                ( const equipment_t*, slot_e, struct item_t* );
 
 #endif

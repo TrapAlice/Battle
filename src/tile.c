@@ -10,6 +10,6 @@ tile_t* createTile(char self, char blocked, char blockSight){
 	return tile;
 }
 
-void deleteTile(tile_t* tile){
+void deleteTile(tile_t* const tile){
 	free(tile);
 }

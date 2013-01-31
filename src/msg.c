@@ -25,7 +25,7 @@ messagelist_t* createMessageList(int limit){
 
 
 
-void addMessage(messagelist_t* messageList, const char* msg, ...){
+void addMessage(messagelist_t* const messageList, const char* msg, ...){
 	char* buff;
 	int size;
 	message_t* head;
@@ -70,7 +70,7 @@ void addMessage(messagelist_t* messageList, const char* msg, ...){
 	messageList->size = size;
 }
 
-char* getMessage(messagelist_t* messageList, int pos){
+char* getMessage(const messagelist_t* const messageList, int pos){
 	message_t* temp = messageList->head;
 	while(pos>0){
 		if(temp == NULL) break;
@@ -80,11 +80,11 @@ char* getMessage(messagelist_t* messageList, int pos){
 	return (temp == NULL ? "" : temp->msg);
 }
 
-int getMessageListSize(messagelist_t* messageList){
+int getMessageListSize(const messagelist_t* const messageList){
 	return messageList->size;
 }
 
-void clearMessageList(messagelist_t* messageList){
+void clearMessageList(messagelist_t* const messageList){
 	message_t* temp = messageList->head;
 	message_t* head = messageList->head;
 	int x=0;
@@ -99,7 +99,7 @@ void clearMessageList(messagelist_t* messageList){
 
 }
 
-void deleteMessageList(messagelist_t* messageList){
+void deleteMessageList(messagelist_t* const messageList){
 	clearMessageList(messageList);
 	free(messageList);
 }

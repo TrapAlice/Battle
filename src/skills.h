@@ -10,18 +10,18 @@ typedef enum skills_e{
 }skills_e;
 
 typedef struct skills_t{
-	int* skillLevel;
-	int* skillXP;
-	char* skillActive;
+	int  *skillLevel;
+	int  *skillXP;
+	char *skillActive;
 } skills_t;
 
-skills_t* createSkillSlots();
-void deleteSkillSlots(skills_t*);
-int increaseSkill(skills_t*, skills_e, int);
-int levelUpSkill(skills_t*, skills_e);
-char* getSkillName( skills_e);
-int isSkillActive(skills_t*, skills_e);
-int skillsCurrentlyActive(skills_t*);
+skills_t*  createSkillSlots      ( );
+void       deleteSkillSlots      ( skills_t* );
+int        increaseSkill         ( skills_t*, skills_e, int );
+int        levelUpSkill          ( skills_t*, skills_e );
+char*      getSkillName          ( skills_e );
+int        isSkillActive         ( const skills_t*, skills_e );
+int        skillsCurrentlyActive ( const skills_t* );
 
 
 #endif

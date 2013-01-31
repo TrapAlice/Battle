@@ -4,14 +4,14 @@
 struct map_t;
 
 typedef struct object_t{
-	int x, y;
+	int  x, y;
 	char self;
 }object_t;
 
-object_t* createObject(char, int, int);
-void drawObject(object_t*);
-void moveObject(object_t*, struct map_t*, int, int);
-void deleteObject(object_t*);
-int isCollided(object_t*, object_t*);
+object_t*  createObject ( char, int, int );
+void       drawObject   ( const object_t* );
+void       moveObject   ( object_t*, const struct map_t*, int, int );
+void       deleteObject ( object_t* );
+int        isCollided   ( const object_t*, const object_t* );
 
 #endif

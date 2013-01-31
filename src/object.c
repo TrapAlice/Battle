@@ -13,11 +13,11 @@ object_t* createObject(char self, int x, int y){
 	return obj;
 }
 
-void drawObject(object_t* obj){
+void drawObject(const object_t* const obj){
 	TCOD_console_put_char( NULL, obj->x, obj->y, obj->self, TCOD_BKGND_NONE);
 }
 
-void moveObject(object_t* obj, map_t* map, int dx, int dy){
+void moveObject(object_t* const obj, const map_t* const map, int dx, int dy){
 	tile_t* tile = map->mapTiles[obj->x+dx+((obj->y+dy)*map->width)];
 	if(!(tile->ops & 2)){
 		obj->x+=dx;
@@ -25,11 +25,11 @@ void moveObject(object_t* obj, map_t* map, int dx, int dy){
 	}
 }
 
-void deleteObject(object_t* object){
+void deleteObject(object_t* const object){
 	free(object);
 }
 
-int isCollided(object_t* a ,object_t* b){
+int isCollided(const object_t* const a, const object_t* const b){
 	if(a->x == b->x){
 		if(a->y == b->y){
 			return 1;

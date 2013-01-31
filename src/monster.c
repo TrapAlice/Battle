@@ -127,9 +127,17 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 
 void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int damage){
 	if( damage>0 ){
-		addMessage(messageLog, "%s takes %d damage", defender->name, damage);
+		if( defender == player ){
+			addMessage(messageLog, "You take %d damage", damage);
+		} else {
+			addMessage(messageLog, "THe %s takes %d damage", defender->name, damage);
+		}
 	} else if (damage < 0){
-		addMessage(messageLog, "%s is healed for %d", defender->name, -damage);
+		if( defender == player ){
+			addMessage(messageLog, "You are healed for %d", -damage);
+		} else {
+			addMessage(messageLog, "The %s is healed for %d", defender->name, -damage);
+		}
 	} else {
 		if( defender == player ){
 			addMessage(messageLog, "You avoid the attack", defender->name);

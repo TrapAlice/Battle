@@ -359,7 +359,7 @@ void printUI(){
 			}
 			TCOD_console_print(inventoryPanel, 50, 0,"R Hand:  %s", (getEquipment(player->equipment, E_RHAND) ? getEquipment(player->equipment, E_RHAND)->name : ""));
 			TCOD_console_print(inventoryPanel, 50, 1,"L Hand:  %s", (getEquipment(player->equipment, E_LHAND) ? getEquipment(player->equipment, E_LHAND)->name : ""));
-			TCOD_console_print(inventoryPanel, 50, 2,"Chest:   %s", (getEquipment(player->equipment, E_CHEST) ? getEquipment(player->equipment, E_CHEST)->name : ""));
+			TCOD_console_print(inventoryPanel, 50, 2,"Chest :  %s", (getEquipment(player->equipment, E_CHEST) ? getEquipment(player->equipment, E_CHEST)->name : ""));
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
 		case STATE_SKILLS:

@@ -9,7 +9,7 @@ combat_t* createCombat(int maxhp, int power, int defense){
 	combat->maxhp = maxhp;
 	combat->power = power;
 	combat->defense = defense;
-	return (combat);
+	return( combat );
 }
 
 void deleteCombat(combat_t* const combat){

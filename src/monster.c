@@ -70,7 +70,7 @@ void deleteMonster(monster_t* const monster){
 static void _improvePlayerSkills(){
 	if( player->equipment->equipped[E_RHAND] ){
 		if( isSkillActive(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill) ){
-			increaseSkill(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill, 10);
+			increaseSkill(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill, 3);
 		}
 	}
 }
@@ -102,8 +102,11 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 					}
 					
 					increaseSkillifActive(defender->skills, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
-					return;
 				}
+			}
+			if( itemDamage(getEquipment(attacker->equipment, E_RHAND)) ){
+				addMessage(globalMessage, "Your weapon breaks");
+				attacker->equipment->equipped[E_RHAND]=0;
 			}
 		}
 

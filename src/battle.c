@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 							monster = cloneMonster(MonsterList[mob_fairy]);
 						} else if( oneIn(4) ){
 							monster = cloneMonster(MonsterList[mob_pig]);
-						} else if( oneIn(5) ){
+						} else if( oneIn(8) ){
 							monster = cloneMonster(MonsterList[mob_kobold]);
 						} else {
 							monster = cloneMonster(MonsterList[mob_slime]);
@@ -201,7 +201,10 @@ int main(int argc, char *argv[]) {
 
 			case STATE_INVENTORYDETAIL:
 				GameState=STATE_MAP;
-				waitForPress();
+				handleInput(&key);
+				if( key.c == 'u' ){
+					useItem(items[keyPressed]);
+				}
 				break;
 
 			case STATE_EQUIP:
@@ -327,7 +330,7 @@ void printUI(){
 				if( head->item->stackable ){
 					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s x%d",'A'+itemchar, head->item->name, head->quantity);
 				} else {
-					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s",'A'+itemchar, head->item->name);
+					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s%s",'A'+itemchar, getItemCondition(head->item), head->item->name);
 				}
 				items[itemchar]=head->item;
 				head=head->next;
@@ -349,7 +352,7 @@ void printUI(){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
 					if( !isEquipped(player->equipment, item) ){
-						TCOD_console_print(inventoryPanel, 0, x, "%c] %s", 'A'+itemchar, item->name);
+						TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s", 'A'+itemchar, getItemCondition(item), item->name);
 						x++;
 					}
 				}

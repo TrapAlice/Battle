@@ -24,6 +24,7 @@ typedef struct item_t{
 	int            relatedSkill;
 	int            power;
 	int            stackable;
+	int            maxDurability;
 	int            durability;
 }item_t;
 
@@ -35,5 +36,8 @@ void     deleteItem         ( item_t* );
 void     getItemDescription ( const item_t*, TCOD_console_t );
 int      itemIsType         ( const item_t*, itemType_e );
 int      itemIsSubType      ( const item_t*, itemSubType_e );
+void     useItem            ( item_t* );
+int      itemDamage         ( item_t* );
+char*    getItemCondition   ( const item_t* );
 
 #endif

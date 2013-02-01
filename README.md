@@ -7,7 +7,6 @@ Todo:
 - Have abilities to use
 - Player having more stats
 	- Able to level up
-- More skills
 - Treasure chests
 	- Items with bonus stats
 

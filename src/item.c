@@ -102,30 +102,32 @@ void useItem(item_t* const item){
 			removeItemInventory(player->inventory, item);
 			break;
 		case I_EQUIPMENT:
-			switch( item->type2 ){
-				case IS_WEAPON:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_RHAND, item);
-					} else {
-						player->equipment->equipped[E_RHAND] = 0;
-					}
-					break;
-				case IS_CHESTARMOR:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_CHEST, item);
-					} else {
-						player->equipment->equipped[E_CHEST] = 0;
-					}
-					break;
-				case IS_SHIELD:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_LHAND, item);
-					} else {
-						player->equipment->equipped[E_LHAND] = 0;
-					}
-					break;
-				case IS_NONE:
-					break;
+			if( item->durability ){
+				switch( item->type2 ){
+					case IS_WEAPON:
+						if( !isEquipped(player->equipment, item) ){
+							Equip(player->equipment, E_RHAND, item);
+						} else {
+							player->equipment->equipped[E_RHAND] = 0;
+						}
+						break;
+					case IS_CHESTARMOR:
+						if( !isEquipped(player->equipment, item) ){
+							Equip(player->equipment, E_CHEST, item);
+						} else {
+							player->equipment->equipped[E_CHEST] = 0;
+						}
+						break;
+					case IS_SHIELD:
+						if( !isEquipped(player->equipment, item) ){
+							Equip(player->equipment, E_LHAND, item);
+						} else {
+							player->equipment->equipped[E_LHAND] = 0;
+						}
+						break;
+					case IS_NONE:
+						break;
+				}
 			}
 			break;
 		case I_NONE:

@@ -213,13 +213,7 @@ int main(int argc, char *argv[]) {
 				keyPressed = key.c-'a';
 				if( items[keyPressed] ){
 					if( itemIsType(items[keyPressed], I_EQUIPMENT) ){
-						if( itemIsSubType(items[keyPressed], IS_WEAPON) ){
-							Equip(player->equipment, E_RHAND, items[keyPressed]);
-						} else if( itemIsSubType(items[keyPressed], IS_CHESTARMOR) ){
-							Equip(player->equipment, E_CHEST, items[keyPressed]);
-						} else if( itemIsSubType(items[keyPressed], IS_SHIELD) ){
-							Equip(player->equipment, E_LHAND, items[keyPressed]);
-						}
+						useItem(items[keyPressed]);
 						GameState = STATE_EQUIP;
 					}
 				}

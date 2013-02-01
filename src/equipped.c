@@ -15,6 +15,7 @@ void deleteEquipmentSlots(equipment_t* const equipment){
 }
 
 item_t* getEquipment(const equipment_t* const equipment, slot_e slot){
+	checknotnull(equipment);
 	return( equipment->equipped[slot] );
 }
 
@@ -35,7 +36,7 @@ int isEquipped(const equipment_t* const equipment, const item_t* const item){
 int getEquipmentDefense(const equipment_t* const equipment){
 	int x;
 	int defense=0;
-	if ( !equipment ) return( 0 );
+	checknotnull(equipment);
 	for( x=1; x<num_slots; ++x){
 		defense += (getEquipment(equipment, x) ? getEquipment(equipment, x)->power : 0);
 	}

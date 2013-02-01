@@ -81,20 +81,24 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 	} else {
 		int damage;
 		int basepower = attacker->combat->power;
-		int weaponpower = (attacker->equipment ? (getEquipment(attacker->equipment, E_RHAND) ? getEquipment(attacker->equipment, E_RHAND)->power : 0 ) : 0);
+		item_t* weapon = getEquipment(attacker->equipment, E_RHAND);
+		int weaponpower = (weapon ? weapon->power : 0);
+		
 		int damagemod = 0;
 		int power;
 		int basedefense = defender->combat->defense;
 		int armordefense = getEquipmentDefense(defender->equipment);
 		int defense = basedefense + armordefense;
-		int shield;
+		int shieldblock;
+		item_t* shield;
 
 		if( weaponpower ){
-			weaponpower += getSkillLevelifActive(attacker->skills, getEquipment(attacker->equipment, E_RHAND)->relatedSkill)/3;
-			damagemod += getSkillLevelifActive(attacker->skills, getEquipment(attacker->equipment, E_RHAND)->relatedSkill);
-			shield = (defender->equipment ? (getEquipment(defender->equipment, E_LHAND) ? getEquipment(defender->equipment, E_LHAND)->power : 0) : 0);
-			if( shield ){
-				if( roll(basepower, 6) + weaponpower < roll(shield + defender->combat->power, 6) + getSkillLevelifActive(defender->skills, SKILL_SHIELD)*2 ){
+			weaponpower += getSkillLevelifActive(attacker->skills, weapon->relatedSkill)/3;
+			damagemod += getSkillLevelifActive(attacker->skills, weapon->relatedSkill);
+			shield = getEquipment(defender->equipment, E_LHAND);
+			shieldblock = (shield ? shield->power : 0);
+			if( shieldblock ){
+				if( roll(basepower, 6) + weaponpower < roll(shieldblock + defender->combat->power, 6) + getSkillLevelifActive(defender->skills, SKILL_SHIELD)*2 ){
 					if( defender == player ){
 						addMessage(globalMessage, "You blocked the attack with your shield!");
 					} else {
@@ -102,9 +106,10 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 					}
 					
 					increaseSkillifActive(defender->skills, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
+					return;
 				}
 			}
-			if( itemDamage(getEquipment(attacker->equipment, E_RHAND)) ){
+			if( itemDamage(weapon) ){
 				addMessage(globalMessage, "Your weapon breaks");
 				attacker->equipment->equipped[E_RHAND]=0;
 			}
@@ -133,7 +138,7 @@ void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int 
 		if( defender == player ){
 			addMessage(messageLog, "You take %d damage", damage);
 		} else {
-			addMessage(messageLog, "THe %s takes %d damage", defender->name, damage);
+			addMessage(messageLog, "The %s takes %d damage", defender->name, damage);
 		}
 	} else if (damage < 0){
 		if( defender == player ){

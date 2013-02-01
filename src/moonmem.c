@@ -6,16 +6,16 @@
 #include <stdio.h>
 
 typedef struct memnode{
-	size_t size;
-	byte* memory;
-	int pos;
+	size_t  size;
+	byte   *memory;
+	int     pos;
 }memnode;
 
 typedef struct{
-	unsigned int size;
-	memnode* nodes;
-	byte* memoryslots;
-	byte* memory;
+	unsigned int  size;
+	memnode      *nodes;
+	byte         *memoryslots;
+	byte         *memory;
 }moonmem;
 
 moonmem* MOONMEM;

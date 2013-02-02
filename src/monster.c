@@ -94,7 +94,7 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 
 		if( weaponpower ){
 			weaponpower += getSkillLevelifActive(attacker->skills, weapon->relatedSkill)/3;
-			damagemod += getSkillLevelifActive(attacker->skills, weapon->relatedSkill);
+			damagemod += getSkillLevelifActive(attacker->skills, weapon->relatedSkill) + weapon->damageBonus;
 			shield = getEquipment(defender->equipment, E_LHAND);
 			shieldblock = (shield ? shield->power : 0);
 			if( shieldblock ){

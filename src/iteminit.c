@@ -22,7 +22,7 @@ void initItems(){
 
 	/*Equipment*/
 	item(item_sword,        "Sword",         "A standard sword", 
-	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  2,      0,          1);
+	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  2,      0,          10);
 	item(item_knife,         "Little Knife", "A small worn knife", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  1,      0,          2);
 	item(item_pomfhammer,   "Pomf Hammer",   "In the name of Rorans, be pomf'd", 

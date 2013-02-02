@@ -9,11 +9,11 @@
 extern monster_t* player;
 
 void standardDeath(const monster_t* const monster){
-	addMessage(globalMessage, "The %s dies",monster->name);
+	addMessage(globalMessage, "The %s dies", monster->name);
 }
 
 void pigDeath(const monster_t* const monster){
-	int carving = player->skills->skillLevel[SKILL_CARVING];
+	int carving = getSkillLevelifActive(player->skills, SKILL_CARVING);
 	if( oneIn(5-carving) ){
 		addMessage(globalMessage, "Successfully carved some meat");
 		addItemInventory(player->inventory, cloneItem(ItemList[item_meat]));

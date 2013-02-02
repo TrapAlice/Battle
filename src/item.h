@@ -26,6 +26,7 @@ typedef struct item_t{
 	int            stackable;
 	int            maxDurability;
 	int            durability;
+	int            damageBonus;
 }item_t;
 
 extern item_t** ItemList;

@@ -191,7 +191,8 @@ int main(int argc, char *argv[]) {
 
 			case STATE_INVENTORY:
 				handleInput(&key);
-				keyPressed = key.c-'a';
+				keyPressed = key.c-'a' >= 0 ? key.c-'a' : -1; 
+				printf("%d\n",keyPressed);
 				if( items[keyPressed] ){
 					GameState = STATE_INVENTORYDETAIL;
 				} else {

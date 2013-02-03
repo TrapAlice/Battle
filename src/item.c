@@ -98,7 +98,7 @@ void useItem(item_t* const item){
 	switch( item->type ){
 		case I_HEALING:
 			addMessage(globalMessage, "You use the %s", item->name);
-			takeDamage(globalMessage, player, -(roll(item->power,6)));
+			takeDamage(player, -(roll(item->power,6)));
 			removeItemInventory(player->inventory, item);
 			break;
 		case I_EQUIPMENT:

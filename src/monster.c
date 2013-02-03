@@ -25,8 +25,9 @@ monster_t* createPlayer(int x, int y){
 	return( monster );
 }
 
-monster_t* createMonster(const char* const name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
+monster_t* createMonster(int id, const char* const name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
 	monster_t* monster = malloc(sizeof(monster_t));
+	monster->id = id;
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
 	monster->xp = xp;
@@ -39,6 +40,7 @@ monster_t* createMonster(const char* const name, int hp, int power, int defense,
 
 monster_t* cloneMonster(const monster_t* const monster){
 	monster_t* clone = malloc(sizeof(monster_t));
+	clone->id = monster->id;
 	clone->name = monster->name;
 	clone->xp = monster->xp;
 	clone->combat = createCombat(monster->combat->maxhp, monster->combat->power, monster->combat->defense);
@@ -75,7 +77,7 @@ static void _improvePlayerSkills(){
 	}
 }
 
-void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, monster_t* const defender){
+void attackMonster(monster_t* const attacker, monster_t* const defender){
 	if( attacker->attackFunction ){
 		(attacker->attackFunction)(attacker, defender);
 	} else {
@@ -117,9 +119,9 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 
 		power = basepower + weaponpower;
 		if( attacker == player ){
-			addMessage(messageLog, "You attack the %s", defender->name);
+			addMessage(globalMessage, "You attack the %s", defender->name);
 		} else {
-			addMessage(messageLog, "The %s attacks you", attacker->name);
+			addMessage(globalMessage, "The %s attacks you", attacker->name);
 		}
 		
 		damage = roll(power, 6)+damagemod;
@@ -129,28 +131,28 @@ void attackMonster(messagelist_t* const messageLog, monster_t* const attacker, m
 
 		_improvePlayerSkills();
 
-		takeDamage(messageLog, defender, damage);
+		takeDamage(defender, damage);
 	}
 }
 
-void takeDamage(messagelist_t* const messageLog, monster_t* const defender, int damage){
+void takeDamage(monster_t* const defender, int damage){
 	if( damage>0 ){
 		if( defender == player ){
-			addMessage(messageLog, "You take %d damage", damage);
+			addMessage(globalMessage, "You take %d damage", damage);
 		} else {
-			addMessage(messageLog, "The %s takes %d damage", defender->name, damage);
+			addMessage(globalMessage, "The %s takes %d damage", defender->name, damage);
 		}
 	} else if (damage < 0){
 		if( defender == player ){
-			addMessage(messageLog, "You are healed for %d", -damage);
+			addMessage(globalMessage, "You are healed for %d", -damage);
 		} else {
-			addMessage(messageLog, "The %s is healed for %d", defender->name, -damage);
+			addMessage(globalMessage, "The %s is healed for %d", defender->name, -damage);
 		}
 	} else {
 		if( defender == player ){
-			addMessage(messageLog, "You avoid the attack", defender->name);
+			addMessage(globalMessage, "You avoid the attack", defender->name);
 		} else {
-			addMessage(messageLog, "The %s avoids the attack", defender->name);
+			addMessage(globalMessage, "The %s avoids the attack", defender->name);
 		}
 		
 	}

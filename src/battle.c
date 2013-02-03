@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 
 				if( key.c == 'a' || key.c == 'A' ){
 					addMessage(consoleLog, "You attack!");
-					attackMonster(consoleLog, player, monster);
+					attackMonster(player, monster);
 					battleActionTaken=1;
 				} else if( key.c == 'h' || key.c == 'H' ){
 					itemchar=0;
@@ -128,8 +128,7 @@ int main(int argc, char *argv[]) {
 					keyPressed = key.c-'a';
 					if( items[keyPressed]!=NULL ){
 						if( itemIsType(items[keyPressed], I_HEALING) ){
-							takeDamage(consoleLog, player, -(roll(items[keyPressed]->power,6)));
-							removeItemInventory(player->inventory, items[keyPressed]);
+							useItem(items[keyPressed]);
 							battleActionTaken=1;
 						}
 					}
@@ -157,7 +156,7 @@ int main(int argc, char *argv[]) {
 						
 						
 					} else {
-						attackMonster(consoleLog, monster, player);
+						attackMonster(monster, player);
 						if( checkDead(player) ){
 							addMessage(consoleLog, "You lose");
 							printUI();
@@ -191,8 +190,7 @@ int main(int argc, char *argv[]) {
 
 			case STATE_INVENTORY:
 				handleInput(&key);
-				keyPressed = key.c-'a' >= 0 ? key.c-'a' : -1; 
-				printf("%d\n",keyPressed);
+				keyPressed = key.c-'a' >= 0 ? key.c-'a' : -1;
 				if( items[keyPressed] ){
 					GameState = STATE_INVENTORYDETAIL;
 				} else {
@@ -346,18 +344,17 @@ void printUI(){
 			while( head ){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
-					if( !isEquipped(player->equipment, item) ){
-						TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s", 'A'+itemchar, getItemCondition(item), item->name);
-						x++;
+					TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s", 'A'+itemchar, getItemCondition(item), item->name);
+					if( isEquipped(player->equipment, item) ){
+						TCOD_console_print(inventoryPanel, 20, x, " [Equipped]");
+						
 					}
+					x++;
+					items[itemchar]=item;
 				}
-				items[itemchar]=item;
-				head=head->next;
 				itemchar++;
+				head=head->next;	
 			}
-			TCOD_console_print(inventoryPanel, 50, 0,"R Hand:  %s", (getEquipment(player->equipment, E_RHAND) ? getEquipment(player->equipment, E_RHAND)->name : ""));
-			TCOD_console_print(inventoryPanel, 50, 1,"L Hand:  %s", (getEquipment(player->equipment, E_LHAND) ? getEquipment(player->equipment, E_LHAND)->name : ""));
-			TCOD_console_print(inventoryPanel, 50, 2,"Chest :  %s", (getEquipment(player->equipment, E_CHEST) ? getEquipment(player->equipment, E_CHEST)->name : ""));
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
 		case STATE_SKILLS:
@@ -391,11 +388,15 @@ int handleInput(TCOD_key_t* key){
 	switch( key->vk ) {
 		case TCODK_KP7 : moveObject(player->object, map, -1, -1); action=1; break;
 		case TCODK_KP9 : moveObject(player->object, map, 1, -1); action=1; break;
+		case TCODK_UP  :
 		case TCODK_KP8 : moveObject(player->object, map, 0, -1); action=1; break;
 		case TCODK_KP1 : moveObject(player->object, map, -1, 1); action=1; break;
+		case TCODK_DOWN:
 		case TCODK_KP2 : moveObject(player->object, map, 0, 1); action=1; break;
 		case TCODK_KP3 : moveObject(player->object, map, 1, 1); action=1; break;
+		case TCODK_LEFT:
 		case TCODK_KP4 : moveObject(player->object, map, -1, 0); action=1; break;
+		case TCODK_RIGHT:
 		case TCODK_KP6 : moveObject(player->object, map, 1, 0); action=1; break;
 		default:break;
 	}

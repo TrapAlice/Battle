@@ -347,7 +347,6 @@ void printUI(){
 					TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s", 'A'+itemchar, getItemCondition(item), item->name);
 					if( isEquipped(player->equipment, item) ){
 						TCOD_console_print(inventoryPanel, 20, x, " [Equipped]");
-						
 					}
 					x++;
 					items[itemchar]=item;
@@ -364,13 +363,14 @@ void printUI(){
 			TCOD_console_print(inventoryPanel, 0, 0, "[Active]");
 			TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
 			TCOD_console_print(inventoryPanel, 10, 0, "[Inactive]");
+			TCOD_console_print(inventoryPanel, 0, 1, "Max active skills: 2");
 
 			for( x=0; x<num_skills; ++x ){
 				if( player->skills->skillLevel[x]>0 ){
 					if( isSkillActive(player->skills, x) ){ TCOD_console_set_default_foreground(inventoryPanel, TCOD_yellow);}
 					else{TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);}
-					TCOD_console_print(inventoryPanel, 0, itemchar+2, "%c] %s", itemchar+'A', getSkillName(x));
-					TCOD_console_print(inventoryPanel, 13, itemchar+2, "- %d", player->skills->skillLevel[x]);
+					TCOD_console_print(inventoryPanel, 0, itemchar+3, "%c] %s", itemchar+'A', getSkillName(x));
+					TCOD_console_print(inventoryPanel, 13, itemchar+3, "- %d", player->skills->skillLevel[x]);
 					itemchar++;
 				}
 			}

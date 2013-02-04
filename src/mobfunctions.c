@@ -34,7 +34,7 @@ void standardDeath(const monster_t* const monster){
 }
 
 void carveOnDeath(const monster_t* const monster){
-	addMessage(globalMessage, "The %s dies", monster->name);
+	standardDeath(monster);
 	switch( monster->id ){
 		case mob_pig:
 			if( skillCheck(player->skills, SKILL_CARVING, 5) ){

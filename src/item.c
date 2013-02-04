@@ -11,7 +11,7 @@
 
 item_t** ItemList;
 
-item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable, int durability){
+item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable, float durability){
 	item_t* item = malloc(sizeof(item_t));
 	item->name = name;
 	item->desc = desc;
@@ -52,7 +52,7 @@ void getItemDescription(const item_t* const item, TCOD_console_t panel){
 #ifndef NDEBUG
 	TCOD_console_print(panel, 0, 10, "Durability: %f/%f", item->durability, item->maxDurability);
 #endif
-	
+
 	switch( item->type ){
 		case I_HEALING:
 			TCOD_console_print(panel, 0, 3, "It has a healing factor of %d.", item->power);
@@ -113,32 +113,30 @@ void useItem(item_t* const item){
 			removeItemInventory(player->inventory, item);
 			break;
 		case I_EQUIPMENT:
-			if( item->durability ){
-				switch( item->type2 ){
-					case IS_WEAPON:
-						if( !isEquipped(player->equipment, item) ){
-							Equip(player->equipment, E_RHAND, item);
-						} else {
-							player->equipment->equipped[E_RHAND] = 0;
-						}
-						break;
-					case IS_CHESTARMOR:
-						if( !isEquipped(player->equipment, item) ){
-							Equip(player->equipment, E_CHEST, item);
-						} else {
-							player->equipment->equipped[E_CHEST] = 0;
-						}
-						break;
-					case IS_SHIELD:
-						if( !isEquipped(player->equipment, item) ){
-							Equip(player->equipment, E_LHAND, item);
-						} else {
-							player->equipment->equipped[E_LHAND] = 0;
-						}
-						break;
-					case IS_NONE:
-						break;
-				}
+			switch( item->type2 ){
+				case IS_WEAPON:
+					if( !isEquipped(player->equipment, item) ){
+						Equip(player->equipment, E_RHAND, item);
+					} else {
+						player->equipment->equipped[E_RHAND] = 0;
+					}
+					break;
+				case IS_CHESTARMOR:
+					if( !isEquipped(player->equipment, item) ){
+						Equip(player->equipment, E_CHEST, item);
+					} else {
+						player->equipment->equipped[E_CHEST] = 0;
+					}
+					break;
+				case IS_SHIELD:
+					if( !isEquipped(player->equipment, item) ){
+						Equip(player->equipment, E_LHAND, item);
+					} else {
+						player->equipment->equipped[E_LHAND] = 0;
+					}
+					break;
+				case IS_NONE:
+					break;
 			}
 			break;
 		case I_NONE:
@@ -158,14 +156,13 @@ int itemDamage(item_t* const item){
 
 char* getItemCondition(const item_t* const item){
 	float conditionPercent = (item->durability/item->maxDurability)*100;
-	printf("%f\n",conditionPercent);
 	if( conditionPercent > 90 ){
 		return( "" );
 	} else if( conditionPercent > 75){
 		return( "Slightly worn " );
 	} else if( conditionPercent > 40){
 		return( "Worn " );
-	} else if( conditionPercent > 1){
+	} else if( conditionPercent > 0){
 		return( "Damaged " );
 	} else {
 		return( "Broken " );

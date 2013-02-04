@@ -20,7 +20,7 @@ void initItems(){
 	item(item_meat,         "Chunk of meat", "A chunk of meat carved from a piggie", 
 	     I_HEALING,   IS_NONE,       SKILL_NONE,   1,      1,          1);
 	item(item_crabmeat,     "Crab meat",     "A chunk of fresh crab meat",
-		 I_HEALING,   IS_NONE,       SKILL_NONE,   3,      1,          1);
+		   I_HEALING,   IS_NONE,       SKILL_NONE,   3,      1,          1);
 	
 	/*Equipment*/
 	item(item_sword,        "Sword",         "A standard sword", 
@@ -32,7 +32,7 @@ void initItems(){
 	item(item_leatherarmor, "Leather Armor", "A piece of leather armor", 
 	     I_EQUIPMENT, IS_CHESTARMOR, SKILL_NONE,   1,      0,          10);
 	item(item_shield,       "Wooden Shield", "A shield made from wood",
-		 I_EQUIPMENT, IS_SHIELD,     SKILL_SHIELD, 1,      0,          20);
+		   I_EQUIPMENT, IS_SHIELD,     SKILL_SHIELD, 1,      0,          20);
 }
 
 void uninitItems(){

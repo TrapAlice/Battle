@@ -7,6 +7,7 @@ enum MON_ID{
 	mob_pig,
 	mob_fairy,
 	mob_kobold,
+	mob_crab,
 	num_monsters,
 };
 

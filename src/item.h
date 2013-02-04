@@ -40,5 +40,7 @@ int      itemIsSubType      ( const item_t*, itemSubType_e );
 void     useItem            ( item_t* );
 int      itemDamage         ( item_t* );
 char*    getItemCondition   ( const item_t* );
+void     randomItemEnchant  ( item_t*, int );
+char*    getItemBonus       ( const item_t* );
 
 #endif

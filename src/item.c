@@ -7,6 +7,8 @@
 #include "rng.h"
 #include "equipped.h"
 
+#include <stdio.h>
+
 item_t** ItemList;
 
 item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable, int durability){
@@ -33,7 +35,7 @@ item_t* cloneItem(const item_t* const item){
 	clone->relatedSkill = item->relatedSkill;
 	clone->power = item->power;
 	clone->stackable = item->stackable;
-	clone->maxDurability = item->durability;
+	clone->maxDurability = item->maxDurability;
 	clone->durability = item->durability;
 
 	return( clone );
@@ -158,4 +160,23 @@ char* getItemCondition(const item_t* const item){
 	} else {
 		return( "Broken " );
 	}
+}
+
+void randomItemEnchant(item_t* const item, int chance){
+	int damageBonus;
+	int durabilityBonus;
+	damageBonus = between(-5,10);
+	damageBonus = damageBonus < 0 ? 0 : damageBonus;
+	durabilityBonus = between(-5, 4);
+	durabilityBonus = durabilityBonus < 0 ? 0 : durabilityBonus;
+	item->damageBonus+=damageBonus;
+	item->durability+=durabilityBonus;
+	item->maxDurability+=durabilityBonus;
+}
+
+char* getItemBonus(const item_t* const item){
+	char output[4];
+	if( item->damageBonus <=0 ) return "";
+	sprintf(output, " +%d", item->damageBonus);
+	return output;
 }

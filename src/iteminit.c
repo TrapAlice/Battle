@@ -19,11 +19,13 @@ void initItems(){
 	     I_HEALING,   IS_NONE,       SKILL_NONE,   3,      1,          1);
 	item(item_meat,         "Chunk of meat", "A chunk of meat carved from a piggie", 
 	     I_HEALING,   IS_NONE,       SKILL_NONE,   1,      1,          1);
-
+	item(item_crabmeat,     "Crab meat",     "A chunk of fresh crab meat",
+		 I_HEALING,   IS_NONE,       SKILL_NONE,   3,      1,          1);
+	
 	/*Equipment*/
 	item(item_sword,        "Sword",         "A standard sword", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  2,      0,          10);
-	item(item_knife,         "Little Knife", "A small worn knife", 
+	item(item_knife,         "Little Knife", "A small knife with a candle handle", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_SWORD,  1,      0,          2);
 	item(item_pomfhammer,   "Pomf Hammer",   "In the name of Rorans, be pomf'd", 
 	     I_EQUIPMENT, IS_WEAPON,     SKILL_HAMMER, 10,     0,          20);

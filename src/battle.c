@@ -22,7 +22,7 @@ extern monster_t* player;
 extern messagelist_t* globalMessage;
 monster_t* monster;
 TCOD_console_t msgConsole;
-enum State_e GameState;
+state_e GameState;
 TCOD_console_t combatConsole;
 messagelist_t* consoleLog;
 messagelist_t* combatLog;
@@ -76,6 +76,9 @@ int main(int argc, char *argv[]) {
 						positionPlayer();
 					}
 				}
+				if( key.c=='u' ){
+					/*Use something on the ground*/
+				}
 				if( battleCooldown<=0 ){
 					if( oneIn(steps) ){
 						steps = 50;
@@ -84,7 +87,7 @@ int main(int argc, char *argv[]) {
 							monster = cloneMonster(MonsterList[mob_fairy]);
 						} else if( oneIn(4) ){
 							monster = cloneMonster(MonsterList[mob_pig]);
-						} else if( oneIn(8) ){
+						} else if( oneIn(3) ){
 							monster = cloneMonster(MonsterList[mob_kobold]);
 						} else {
 							monster = cloneMonster(MonsterList[mob_slime]);
@@ -256,11 +259,13 @@ int main(int argc, char *argv[]) {
 void test(){
 	item_t* armor = cloneItem(ItemList[item_leatherarmor]);
 	item_t* shield = cloneItem(ItemList[item_shield]);
-	
+	item_t* sword = cloneItem(ItemList[item_sword]);
+	randomItemEnchant(sword, 0);
+
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
-	addItemInventory(player->inventory, cloneItem(ItemList[item_sword]));
+	addItemInventory(player->inventory, sword);
 	
 	addItemInventory(player->inventory, shield);
 	
@@ -344,7 +349,7 @@ void printUI(){
 			while( head ){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
-					TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s", 'A'+itemchar, getItemCondition(item), item->name);
+					TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s%s", 'A'+itemchar, getItemCondition(item), item->name, getItemBonus(item));
 					if( isEquipped(player->equipment, item) ){
 						TCOD_console_print(inventoryPanel, 20, x, " [Equipped]");
 					}

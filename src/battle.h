@@ -12,7 +12,7 @@ void waitForPress();
 void generateNewMap();
 void positionPlayer();
 
-enum State_e{
+typedef enum state_e{
 	STATE_MAP,
 	STATE_BATTLE,
 	STATE_BATTLEAFTERMATH,
@@ -20,6 +20,6 @@ enum State_e{
 	STATE_INVENTORYDETAIL,
 	STATE_EQUIP,
 	STATE_SKILLS,
-};
+}state_e;
 
 #endif

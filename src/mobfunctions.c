@@ -45,10 +45,38 @@ void carveOnDeath(const monster_t* const monster){
 			}
 			increaseSkill(player->skills, SKILL_CARVING, 2);
 			break;
+		case mob_crab:
+			if ( oneIn(10-carving) ){
+				addMessage(globalMessage, "Successfully carved some meat");
+				addItemInventory(player->inventory, cloneItem(ItemList[item_crabmeat]));
+				increaseSkill(player->skills, SKILL_CARVING, 5);
+			}
+			increaseSkill(player->skills, SKILL_CARVING, 3);
+			break;
 	}
 }
 
 void fairyDeath(const monster_t* const monster){
 	addMessage(globalMessage, "The fairy explodes, you get covered in dust");
 	takeDamage(player, -10);
+}
+
+void dropsEquipment(const monster_t* const monster){
+	int x;
+	item_t* item;
+	item_t* clone;
+	int duraDmg;
+	standardDeath(monster);
+	for( x=0; x<num_slots; ++x ){
+		if( (item = getEquipment(monster->equipment, x)) ){
+			clone = cloneItem(item);
+			duraDmg = between(0, clone->maxDurability+2)-2,
+			duraDmg = duraDmg < 0 ? 0 : duraDmg;
+			printf("Item damage: %d\n",duraDmg);
+			clone->durability -= duraDmg;
+			randomItemEnchant(clone, 0);
+			addMessage(globalMessage, "You found a %s%s",getItemCondition(clone),clone->name);
+			addItemInventory(player->inventory, clone);
+		}
+	}
 }

@@ -83,6 +83,15 @@ int main(int argc, char *argv[]) {
 					if( oneIn(steps) ){
 						steps = 50;
 						battleCooldown=10;
+						if( isSkillActive(player->skills, SKILL_STEALTH) ){
+							increaseSkill(player->skills, SKILL_STEALTH, 1);
+							if( skillCheck(player->skills, SKILL_STEALTH, 4) ){
+								increaseSkill(player->skills, SKILL_STEALTH, 3);
+								addMessage(consoleLog, "You avoid a monster!");
+								break;
+							}
+						}
+						
 						if( oneIn(5) ){
 							monster = cloneMonster(MonsterList[mob_fairy]);
 						} else if( oneIn(4) ){

@@ -35,10 +35,9 @@ void standardDeath(const monster_t* const monster){
 
 void carveOnDeath(const monster_t* const monster){
 	addMessage(globalMessage, "The %s dies", monster->name);
-	int carving = getSkillLevelifActive(player->skills, SKILL_CARVING);
 	switch( monster->id ){
 		case mob_pig:
-			if( oneIn(5-carving) ){
+			if( skillCheck(player->skills, SKILL_CARVING, 5) ){
 				addMessage(globalMessage, "Successfully carved some meat");
 				addItemInventory(player->inventory, cloneItem(ItemList[item_meat]));
 				increaseSkill(player->skills, SKILL_CARVING, 3);
@@ -46,7 +45,7 @@ void carveOnDeath(const monster_t* const monster){
 			increaseSkill(player->skills, SKILL_CARVING, 2);
 			break;
 		case mob_crab:
-			if ( oneIn(10-carving) ){
+			if ( skillCheck(player->skills, SKILL_CARVING, 12) ){
 				addMessage(globalMessage, "Successfully carved some meat");
 				addItemInventory(player->inventory, cloneItem(ItemList[item_crabmeat]));
 				increaseSkill(player->skills, SKILL_CARVING, 5);
@@ -72,7 +71,6 @@ void dropsEquipment(const monster_t* const monster){
 			clone = cloneItem(item);
 			duraDmg = between(0, clone->maxDurability+2)-2,
 			duraDmg = duraDmg < 0 ? 0 : duraDmg;
-			printf("Item damage: %d\n",duraDmg);
 			clone->durability -= duraDmg;
 			randomItemEnchant(clone, 0);
 			addMessage(globalMessage, "You found a %s%s",getItemCondition(clone),clone->name);

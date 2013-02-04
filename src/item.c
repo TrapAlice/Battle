@@ -48,6 +48,11 @@ void deleteItem(item_t* const item){
 void getItemDescription(const item_t* const item, TCOD_console_t panel){
 	TCOD_console_print(panel, 0, 0, "%s%s", getItemCondition(item), item->name);
 	TCOD_console_print(panel, 0, 2, "%s", item->desc);
+
+#ifndef NDEBUG
+	TCOD_console_print(panel, 0, 10, "Durability: %f/%f", item->durability, item->maxDurability);
+#endif
+	
 	switch( item->type ){
 		case I_HEALING:
 			TCOD_console_print(panel, 0, 3, "It has a healing factor of %d.", item->power);
@@ -97,6 +102,10 @@ int itemIsSubType(const item_t* const item, enum itemSubType_e subType){
 }
 
 void useItem(item_t* const item){
+	if( !item->durability ){
+		addMessage(globalMessage, "Can't use that, it's broken");
+		return;
+	}
 	switch( item->type ){
 		case I_HEALING:
 			addMessage(globalMessage, "You use the %s", item->name);
@@ -149,13 +158,14 @@ int itemDamage(item_t* const item){
 
 char* getItemCondition(const item_t* const item){
 	float conditionPercent = (item->durability/item->maxDurability)*100;
+	printf("%f\n",conditionPercent);
 	if( conditionPercent > 90 ){
 		return( "" );
 	} else if( conditionPercent > 75){
 		return( "Slightly worn " );
 	} else if( conditionPercent > 40){
 		return( "Worn " );
-	} else if( conditionPercent > 0){
+	} else if( conditionPercent > 1){
 		return( "Damaged " );
 	} else {
 		return( "Broken " );

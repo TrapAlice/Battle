@@ -24,8 +24,8 @@ typedef struct item_t{
 	int            relatedSkill;
 	int            power;
 	int            stackable;
-	int            maxDurability;
-	int            durability;
+	float          maxDurability;
+	float          durability;
 	int            damageBonus;
 }item_t;
 

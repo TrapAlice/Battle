@@ -455,7 +455,7 @@ void generateNewMap(){
 void changeFloor(int dfloor){
 	currentFloor+=dfloor;
 	if( dfloor > 0 ){
-		map = newDungeonFloor(dungeon);
+		map = getDungeonFloor(dungeon, currentFloor);
 		player->object->x = map->objects[1]->x;
 		player->object->y = map->objects[1]->y;
 	} else {

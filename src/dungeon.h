@@ -11,6 +11,6 @@ typedef struct dungeon_t{
 dungeon_t*     createDungeon   ( int );
 void           deleteDungeon   ( dungeon_t* );
 struct map_t*  newDungeonFloor ( dungeon_t* );
-struct map_t*  getDungeonFloor ( const dungeon_t*, int );
+struct map_t*  getDungeonFloor ( dungeon_t*, int );
 
 #endif

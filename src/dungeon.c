@@ -30,6 +30,10 @@ map_t* newDungeonFloor(dungeon_t* const dungeon){
 	return 0;
 }
 
-map_t* getDungeonFloor(const dungeon_t* const dungeon, int floorNumber){
+map_t* getDungeonFloor(dungeon_t* const dungeon, int floorNumber){
+	map_t* map = dungeon->floors[floorNumber];
+	if( !map ){
+		newDungeonFloor(dungeon);
+	}
 	return dungeon->floors[floorNumber];
 }

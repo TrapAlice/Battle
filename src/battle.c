@@ -91,6 +91,15 @@ int main(int argc, char *argv[]) {
 					if( oneIn(steps) ){
 						steps = 50;
 						battleCooldown=10;
+						if( isSkillActive(player->skills, SKILL_STEALTH) ){
+							increaseSkill(player->skills, SKILL_STEALTH, 1);
+							if( skillCheck(player->skills, SKILL_STEALTH, 6) ){
+								increaseSkill(player->skills, SKILL_STEALTH, 2);
+								addMessage(consoleLog, "You avoid a monster!");
+								break;
+							}
+						}
+						
 						if( oneIn(5) ){
 							monster = cloneMonster(MonsterList[mob_fairy]);
 						} else if( oneIn(4) ){
@@ -124,10 +133,9 @@ int main(int argc, char *argv[]) {
 					itemchar=0;
 					inventory_t* head = player->inventory->next;
 					addMessage(combatLog, "Use which item?");
-					while(head){
-						if(itemIsType(head->item, I_HEALING)){
-							addMessage(combatLog, "[%c] %s x%d",
-							  'A'+itemchar, head->item->name, head->quantity);
+					while( head ){
+						if( itemIsType(head->item, I_HEALING) ){
+							addMessage(combatLog, "[%c] %s x%d",'A'+itemchar,head->item->name, head->quantity);
 							items[itemchar] = head->item;
 						}
 						itemchar++;
@@ -138,10 +146,12 @@ int main(int argc, char *argv[]) {
 					clearMessageList(combatLog);
 					handleInput(&key);
 					keyPressed = key.c-'a';
-					if( items[keyPressed]!=NULL ){
-						if( itemIsType(items[keyPressed], I_HEALING) ){
-							useItem(items[keyPressed]);
-							battleActionTaken=1;
+					if( !(keyPressed < 0 || keyPressed > 25) ){
+						if( items[keyPressed]!=NULL ){
+							if( itemIsType(items[keyPressed], I_HEALING) ){
+								useItem(items[keyPressed]);
+								battleActionTaken=1;
+							}
 						}
 					}
 				   
@@ -201,12 +211,12 @@ int main(int argc, char *argv[]) {
 				break;
 
 			case STATE_INVENTORY:
+				GameState = STATE_MAP;
 				handleInput(&key);
-				keyPressed = key.c-'a' >= 0 ? key.c-'a' : -1;
+				keyPressed = key.c-'a';
+				if( keyPressed < 0 || keyPressed > 25 ) break;
 				if( items[keyPressed] ){
 					GameState = STATE_INVENTORYDETAIL;
-				} else {
-					GameState = STATE_MAP;
 				}
 				break;
 
@@ -222,6 +232,7 @@ int main(int argc, char *argv[]) {
 				GameState = STATE_MAP;
 				handleInput(&key);
 				keyPressed = key.c-'a';
+				if( keyPressed < 0 || keyPressed > 25 ) break;
 				if( items[keyPressed] ){
 					if( itemIsType(items[keyPressed], I_EQUIPMENT) ){
 						useItem(items[keyPressed]);
@@ -235,6 +246,7 @@ int main(int argc, char *argv[]) {
 				GameState = STATE_MAP;
 				handleInput(&key);
 				keyPressed = key.c-'a';
+				if( keyPressed < 0 || keyPressed > 25 ) break;
 				itemchar = -1;
 				for( x=1; x<num_skills;++x ){
 					if( player->skills->skillLevel[x]>0 ){

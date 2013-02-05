@@ -7,6 +7,7 @@ typedef enum skills_e{
 	SKILL_HAMMER,
 	SKILL_CARVING,
 	SKILL_SHIELD,
+	SKILL_STEALTH,
 	num_skills,
 }skills_e;
 
@@ -25,6 +26,7 @@ int          isSkillActive         ( const skills_t*, skills_e );
 int          skillsCurrentlyActive ( const skills_t* );
 void         increaseSkillifActive ( skills_t*, skills_e, int );
 int          getSkillLevelifActive ( const skills_t*, skills_e );
+int          skillCheck            ( const skills_t*, skills_e, int );
 
 
 #endif

@@ -24,14 +24,14 @@ typedef struct item_t{
 	int            relatedSkill;
 	int            power;
 	int            stackable;
-	int            maxDurability;
-	int            durability;
+	float          maxDurability;
+	float          durability;
 	int            damageBonus;
 }item_t;
 
 extern item_t** ItemList;
 
-item_t*  createItem         ( const char*, const char*, int, int, int, int, int, int );
+item_t*  createItem         ( const char*, const char*, int, int, int, int, int, float );
 item_t*  cloneItem          ( const item_t* );
 void     deleteItem         ( item_t* );
 void     getItemDescription ( const item_t*, TCOD_console_t );

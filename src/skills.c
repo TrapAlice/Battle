@@ -1,6 +1,7 @@
 #include "skills.h"
 #include "moonmem.h"
 #include "msg.h"
+#include "rng.h"
 
 skills_t* createSkillSlots(){
 	skills_t* skills = malloc(sizeof(skills_t));
@@ -44,6 +45,8 @@ const char* getSkillName(skills_e skills){
 			return( "Carving" );
 		case SKILL_SHIELD:
 			return( "Shield" );
+		case SKILL_STEALTH:
+			return( "Stealth" );
 		case SKILL_NONE:
 		case num_skills:
 			return( "" );
@@ -79,4 +82,10 @@ int getSkillLevelifActive(const skills_t* const skills, skills_e skill){
 		return skills->skillLevel[skill];
 	}
 	return( 0 );
+}
+
+int skillCheck(const skills_t* const skills, skills_e skill, int dc){
+	int skillLevel = getSkillLevelifActive(skills, skill);
+	int result = roll(skillLevel < 1 ? 1 : skillLevel, 6);
+	return( result > dc );
 }

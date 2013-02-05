@@ -35,11 +35,10 @@ void standardDeath(const monster_t* const monster){
 }
 
 void carveOnDeath(const monster_t* const monster){
-	addMessage(globalMessage, "The %s dies", monster->name);
-	int carving = getSkillLevelifActive(player->skills, SKILL_CARVING);
+	standardDeath(monster);
 	switch( monster->id ){
 		case mob_pig:
-			if( oneIn(5-carving) ){
+			if( skillCheck(player->skills, SKILL_CARVING, 5) ){
 				addMessage(globalMessage, "Successfully carved some meat");
 				addItemInventory(player->inventory, cloneItem(ItemList[item_meat]));
 				increaseSkill(player->skills, SKILL_CARVING, 3);
@@ -47,7 +46,7 @@ void carveOnDeath(const monster_t* const monster){
 			increaseSkill(player->skills, SKILL_CARVING, 2);
 			break;
 		case mob_crab:
-			if ( oneIn(10-carving) ){
+			if ( skillCheck(player->skills, SKILL_CARVING, 12) ){
 				addMessage(globalMessage, "Successfully carved some meat");
 				addItemInventory(player->inventory, cloneItem(ItemList[item_crabmeat]));
 				increaseSkill(player->skills, SKILL_CARVING, 5);

@@ -8,6 +8,7 @@ typedef struct combat_t{
 }combat_t;
 
 combat_t*  createCombat ( int, int, int );
+combat_t*  cloneCombat  ( const combat_t* );
 void       deleteCombat ( combat_t* );
 
 #endif

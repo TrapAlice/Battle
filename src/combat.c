@@ -12,6 +12,15 @@ combat_t* createCombat(int maxhp, int power, int defense){
 	return( combat );
 }
 
+combat_t* cloneCombat(const combat_t* const combat){
+	combat_t* clone = malloc(sizeof(combat_t));
+	clone->hp = combat->maxhp;
+	clone->maxhp = combat->maxhp;
+	clone->power = combat->power;
+	clone->defense = combat->defense;
+	return clone;
+}
+
 void deleteCombat(combat_t* const combat){
 	free(combat);
 }

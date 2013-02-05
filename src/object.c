@@ -30,6 +30,8 @@ void deleteObject(object_t* const object){
 }
 
 int isCollided(const object_t* const a, const object_t* const b){
+	checknotnull(a);
+	checknotnull(b);
 	if( a->x == b->x ){
 		if( a->y == b->y ){
 			return( 1 );

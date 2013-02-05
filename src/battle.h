@@ -10,6 +10,7 @@ void test();
 void printUI();
 void waitForPress();
 void generateNewMap();
+void changeFloor(int);
 void positionPlayer();
 
 typedef enum state_e{

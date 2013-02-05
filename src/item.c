@@ -11,7 +11,9 @@
 
 item_t** ItemList;
 
-item_t* createItem(const char* const name, const char* const desc, int type, int type2, int relatedSkill, int power, int stackable, float durability){
+item_t* createItem(const char* const name, const char* const desc, 
+  int type, int type2, int relatedSkill, int power, int stackable, 
+  float durability){
 	item_t* item = malloc(sizeof(item_t));
 	item->name = name;
 	item->desc = desc;
@@ -55,21 +57,26 @@ void getItemDescription(const item_t* const item, TCOD_console_t panel){
 
 	switch( item->type ){
 		case I_HEALING:
-			TCOD_console_print(panel, 0, 3, "It has a healing factor of %d.", item->power);
+			TCOD_console_print(panel, 0, 3, "It has a healing factor of %d.",
+			  item->power);
 			TCOD_console_print(panel, 0, 5, "u) Use the %s", item->name);
 			break;
 		case I_EQUIPMENT:
 			switch( item->type2 ){
 				case IS_WEAPON:
-					TCOD_console_print(panel, 0, 3, "Gives a bonus %d power", item->power);
+					TCOD_console_print(panel, 0, 3, "Gives a bonus %d power",
+					  item->power);
 					if( !isEquipped(player->equipment, item) ){
-						TCOD_console_print(panel, 0, 5, "u) Equip the %s", item->name);
+						TCOD_console_print(panel, 0, 5, "u) Equip the %s", 
+					  item->name);
 					} else {
-						TCOD_console_print(panel, 0, 5, "u) Unequip the %s", item->name);
+						TCOD_console_print(panel, 0, 5, "u) Unequip the %s", 
+					  item->name);
 					}
 					break;
 				case IS_CHESTARMOR:
-					TCOD_console_print(panel, 0, 3, "Gives a bonus %d defense", item->power);
+					TCOD_console_print(panel, 0, 3, "Gives a bonus %d defense",
+					  item->power);
 					if( !isEquipped(player->equipment, item) ){
 						TCOD_console_print(panel, 0, 5, "u) Equip the %s", item->name);
 					} else {
@@ -77,7 +84,8 @@ void getItemDescription(const item_t* const item, TCOD_console_t panel){
 					}
 					break;
 				case IS_SHIELD:
-					TCOD_console_print(panel, 0, 3, "Gives a bonus %d defense with a chance to block weapons", item->power);
+					TCOD_console_print(panel, 0, 3, "Gives a bonus %d defense with a chance to block weapons",
+					  item->power);
 					if( !isEquipped(player->equipment, item) ){
 						TCOD_console_print(panel, 0, 5, "u) Equip the %s", item->name);
 					} else {
@@ -170,20 +178,31 @@ char* getItemCondition(const item_t* const item){
 }
 
 void randomItemEnchant(item_t* const item, int chance){
-	int damageBonus;
-	int durabilityBonus;
-	damageBonus = between(-5,10);
-	damageBonus = damageBonus < 0 ? 0 : damageBonus;
-	durabilityBonus = between(-5, 4);
-	durabilityBonus = durabilityBonus < 0 ? 0 : durabilityBonus;
-	item->damageBonus+=damageBonus;
+	int powerBonus=0;
+	int durabilityBonus=0;
+	int x;
+	while(chance--){
+		if( oneIn(10-chance) ){
+			x = between(0, 2);
+			powerBonus += x;
+			x = between(0, 3);
+			durabilityBonus += x;
+		}
+	}
+	item->powerBonus+=powerBonus;
 	item->durability+=durabilityBonus;
 	item->maxDurability+=durabilityBonus;
 }
 
-char* getItemBonus(const item_t* const item){
-	char output[4];
-	if( item->damageBonus <=0 ) return "";
-	sprintf(output, " +%d", item->damageBonus);
-	return output;
+char* getItemBonus(const item_t* const item, char* const str){
+	if( item->powerBonus <=0 ) return "";
+	sprintf(str, " +%d", item->powerBonus);
+	return( str );
+}
+
+char* getFullItemName(const item_t* const item, char* const str){
+	char bonus[4];
+	sprintf(str, "%s%s%s",
+		getItemCondition(item), item->name, getItemBonus(item, bonus));
+	return( str );
 }

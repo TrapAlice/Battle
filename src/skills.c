@@ -77,7 +77,7 @@ void increaseSkillifActive(skills_t* const skills, skills_e skill, int xp ){
 }
 
 int getSkillLevelifActive(const skills_t* const skills, skills_e skill){
-	if( !skills ) return( 0 );
+	checknotnull(skills);
 	if( isSkillActive(skills, skill) ){
 		return skills->skillLevel[skill];
 	}

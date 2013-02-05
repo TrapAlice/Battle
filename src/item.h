@@ -26,7 +26,7 @@ typedef struct item_t{
 	int            stackable;
 	float          maxDurability;
 	float          durability;
-	int            damageBonus;
+	int            powerBonus;
 }item_t;
 
 extern item_t** ItemList;
@@ -41,6 +41,7 @@ void     useItem            ( item_t* );
 int      itemDamage         ( item_t* );
 char*    getItemCondition   ( const item_t* );
 void     randomItemEnchant  ( item_t*, int );
-char*    getItemBonus       ( const item_t* );
+char*    getItemBonus       ( const item_t*, char* );
+char*    getFullItemName    ( const item_t*, char* );
 
 #endif

@@ -14,6 +14,9 @@
 #include "map.h"
 #include "tile.h"
 #include "skills.h"
+#include "dungeon.h"
+
+#include "dbg.h"
 
 #include <stdio.h>
 
@@ -32,6 +35,7 @@ TCOD_key_t key;
 item_t* items[26];
 int keyPressed;
 map_t* map;
+dungeon_t* dungeon;
 int currentFloor;
 
 int main(int argc, char *argv[]) {    
@@ -43,10 +47,11 @@ int main(int argc, char *argv[]) {
 	int itemchar;
 	int x;
 
+	currentFloor=0;
 
 	init();
 	test(); 
-	TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
+	calculateFov(map, player->object);
 	while( !done ){
 		if( TCOD_console_is_window_closed() ){
 			break;
@@ -58,7 +63,7 @@ int main(int argc, char *argv[]) {
 				if( handleInput(&key) ){
 					steps--;
 					battleCooldown--;
-					TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
+					calculateFov(map, player->object);
 				}
 				if( key.c=='i' ){
 					GameState = STATE_INVENTORY;
@@ -70,10 +75,13 @@ int main(int argc, char *argv[]) {
 					GameState = STATE_SKILLS;
 				}
 				if( key.c=='>' ){
-					if( isCollided(player->object, map->objects[0]) ){
-						generateNewMap();
-						currentFloor++;
-						positionPlayer();
+					if( isCollided(player->object, map->stairsdown) ){
+						changeFloor(1);
+					}
+				}
+				if( key.c=='<' ){
+					if( isCollided(player->object, map->stairsup) ){
+						changeFloor(-1);
 					}
 				}
 				if( key.c=='u' ){
@@ -273,7 +281,8 @@ void test(){
 	item_t* armor = cloneItem(ItemList[item_leatherarmor]);
 	item_t* shield = cloneItem(ItemList[item_shield]);
 	item_t* sword = cloneItem(ItemList[item_sword]);
-	randomItemEnchant(sword, 0);
+	randomItemEnchant(sword, 10);
+	randomItemEnchant(armor, 10);
 
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
@@ -295,7 +304,8 @@ void printUI(){
 	TCOD_console_clear(msgConsole);
 	TCOD_console_clear(combatConsole);
 	TCOD_console_clear(statusPanel);
-	TCOD_console_clear(inventoryPanel); TCOD_console_set_default_foreground(inventoryPanel, TCOD_white);
+	TCOD_console_clear(inventoryPanel); 
+	TCOD_console_set_default_foreground(inventoryPanel, TCOD_white);
 	switch(GameState){
 		case STATE_MAP:
 			
@@ -306,7 +316,8 @@ void printUI(){
 
 			renderMap(map, player->object->x, player->object->y);
 			TCOD_console_print(NULL, 40, 15, "@");
-			TCOD_console_print(statusPanel, 0, 0, "HP: %d/%d  XP: %d  Floor: %d", player->combat->hp, player->combat->maxhp, player->xp, currentFloor);
+			TCOD_console_print(statusPanel, 0, 0, "HP: %d/%d  XP: %d  Floor: %d",
+			  player->combat->hp, player->combat->maxhp, player->xp, currentFloor);
 			TCOD_console_blit(msgConsole, 0, 0, 80, 20, NULL, 0, 33, 128, 128);
 			TCOD_console_blit(statusPanel, 0, 0, 80, 1, NULL, 0, 48, 128, 0);
 			break;
@@ -319,7 +330,8 @@ void printUI(){
 			while( x++<getMessageListSize(combatLog) ){
 				TCOD_console_print(combatConsole, 21, 22+x, getMessage(combatLog, x));
 			}
-			TCOD_console_print(combatConsole, 0, 20, "HP: %d/%d", player->combat->hp, player->combat->maxhp);
+			TCOD_console_print(combatConsole, 0, 20, "HP: %d/%d", 
+			  player->combat->hp, player->combat->maxhp);
 			TCOD_console_print(combatConsole, 0, 22, "[A] Attack");
 			TCOD_console_print(combatConsole, 0, 23, "[H] Use Item");
 			TCOD_console_print(combatConsole, 0, 24, "[R] Run");
@@ -339,9 +351,11 @@ void printUI(){
 			itemchar = 0;
 			while( head ){
 				if( head->item->stackable ){
-					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s x%d",'A'+itemchar, head->item->name, head->quantity);
+					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s x%d",
+					  'A'+itemchar, head->item->name, head->quantity);
 				} else {
-					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s%s",'A'+itemchar, getItemCondition(head->item), head->item->name);
+					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s%s",
+					  'A'+itemchar, getItemCondition(head->item), head->item->name);
 				}
 				items[itemchar]=head->item;
 				head=head->next;
@@ -362,9 +376,11 @@ void printUI(){
 			while( head ){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
-					TCOD_console_print(inventoryPanel, 0, x, "%c] %s%s%s", 'A'+itemchar, getItemCondition(item), item->name, getItemBonus(item));
+					char str[40];
+					TCOD_console_print(inventoryPanel, 0, x, "%c] %s", 
+					  'A'+itemchar, getFullItemName(item, str));
 					if( isEquipped(player->equipment, item) ){
-						TCOD_console_print(inventoryPanel, 20, x, " [Equipped]");
+						TCOD_console_print(inventoryPanel, 20, x, "[Equipped]");
 					}
 					x++;
 					items[itemchar]=item;
@@ -385,10 +401,16 @@ void printUI(){
 
 			for( x=0; x<num_skills; ++x ){
 				if( player->skills->skillLevel[x]>0 ){
-					if( isSkillActive(player->skills, x) ){ TCOD_console_set_default_foreground(inventoryPanel, TCOD_yellow);}
-					else{TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);}
-					TCOD_console_print(inventoryPanel, 0, itemchar+3, "%c] %s", itemchar+'A', getSkillName(x));
-					TCOD_console_print(inventoryPanel, 13, itemchar+3, "- %d", player->skills->skillLevel[x]);
+					if( isSkillActive(player->skills, x) ){
+						TCOD_console_set_default_foreground(inventoryPanel, TCOD_yellow);
+					}
+					else{
+						TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
+					}
+					TCOD_console_print(inventoryPanel, 0, itemchar+3, "%c] %s", 
+					  itemchar+'A', getSkillName(x));
+					TCOD_console_print(inventoryPanel, 13, itemchar+3, "- %d", 
+					  player->skills->skillLevel[x]);
 					itemchar++;
 				}
 			}
@@ -427,24 +449,29 @@ void waitForPress(){
 }
 
 void generateNewMap(){
-	if( map ) deleteMap(map);
-	map = createMap(between(30,50), between(30,50));
-	makeMap(map, between(5,15), between(2,5), between(6,10), 0);
+	
+	map = newDungeonFloor(dungeon);
+}
+
+void changeFloor(int dfloor){
+	currentFloor+=dfloor;
+	if( dfloor > 0 ){
+		map = getDungeonFloor(dungeon, currentFloor);
+		player->object->x = map->stairsup->x;
+		player->object->y = map->stairsup->y;
+	} else {
+		map = getDungeonFloor(dungeon, currentFloor);
+		player->object->x = map->stairsdown->x;
+		player->object->y = map->stairsdown->y;
+	}
+	calculateFov(map, player->object);
 }
 
 void positionPlayer(){
-	tile_t *tile;
-	int x=0;
-	int y=0;
-	tile = map->mapTiles[0];
-	while( (tile->ops & 1 << 1) ){
-		x= between(0, map->width);
-		y= between(0, map->height);
-		tile = map->mapTiles[x+(y*map->width)];
-	}
-	player->object->x = x;
-	player->object->y = y;
-	TCOD_map_compute_fov(map->mapFov, player->object->x, player->object->y, 0, 1, FOV_BASIC);
+
+	player->object->x = map->stairsup->x;
+	player->object->y = map->stairsup->y;
+	
 }
 
 void init(){
@@ -464,6 +491,7 @@ void init(){
 	player = createPlayer(20,20);
 	currentFloor = 0;
 	TCOD_console_init_root(80,50,TITLE,false,false);
+	dungeon = createDungeon(10);
 	generateNewMap();
 	positionPlayer();
 }
@@ -471,6 +499,7 @@ void init(){
 void uninit(){
 	deleteMap(map);
 	deleteMonster(player);
+	deleteDungeon(dungeon);
 	TCOD_console_delete(statusPanel);
 	TCOD_console_delete(msgConsole);
 	deleteMessageList(consoleLog);

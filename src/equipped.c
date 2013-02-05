@@ -36,10 +36,11 @@ int isEquipped(const equipment_t* const equipment, const item_t* const item){
 int getEquipmentDefense(const equipment_t* const equipment){
 	int x;
 	int defense=0;
+	item_t* item;
 	checknotnull(equipment);
 	for( x=1; x<num_slots; ++x){
-		defense += (getEquipment(equipment, x) ? 
-		  getEquipment(equipment, x)->power : 0);
+		item = getEquipment(equipment, x);
+		defense += item ? item->power + item->powerBonus  : 0;
 	}
 	return( defense );
 }

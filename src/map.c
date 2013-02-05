@@ -5,6 +5,24 @@
 #include "object.h"
 #include "tile.h"
 
+typedef struct rect_t{
+	int x,y,w,h;
+}rect_t;
+
+rect_t rect(int x, int y, int w, int h){
+	rect_t r;
+	r.x = x;
+	r.y = y;
+	r.w = w;
+	r.h = h;
+	return( r );
+}
+
+int rectIntersect(rect_t a, rect_t b){
+	return( a.x <= b.x+b.w && a.x+a.w >= b.x &&
+	        a.y <= b.y+b.h && b.y+b.h >= b.y );
+}
+
 map_t* createMap(int width, int height){
 	int x,y;
 	map_t* map = malloc(sizeof(map_t));
@@ -63,43 +81,71 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 	int x, y;
 	int w, h;
 	int x2 =0, y2 =0;
+	int i;
 	int numrooms;
-	int downstairs =0;
-	int upstairs=0;
+	int newroom=1;
+	int totalrooms=0;
+	int attempt;
+	rect_t rooms[maxrooms];
 	
 	for( y=0; y<map->height; ++y ){
 		for( x=0; x<map->width; ++x ){
 			_fillTile(map, x, y);	
 		}
 	}
-
 	for( numrooms=0; numrooms < maxrooms; numrooms++ ){
+		newroom=1;
+		attempt = 0;
 		w = between(minsize, maxsize);
 		h = between(minsize, maxsize);
 		x = between(1, map->width-w-1);
 		y = between(1, map->height-h-1);
-
-
-		createRoom(map, x,y,w,h);
-
-		if( !downstairs ){
-			downstairs=1;
-			map->objects[0] = createObject('>', between(x,x+w), between(y,y+h));
+		rect_t room = rect(x,y,w,h);
+		if( checkIntersect ){
+			while( attempt < 5 ){
+				for( i=0; i<numrooms; ++i ){
+					if( rectIntersect(rooms[i], room) ){
+						newroom=0;
+					}
+				}
+				if( !newroom ){
+					w = between(minsize, maxsize);
+					h = between(minsize, maxsize);
+					x = between(1, map->width-w-1);
+					y = between(1, map->height-h-1);
+					room = rect(x,y,w,h);
+					attempt++;
+				} else {
+					break;
+				}
+			}
 		}
+		
+		if( newroom ){
+			
+			rooms[totalrooms] = room;
+			
+			totalrooms++;
+			createRoom(map, x,y,w,h);
 
-		if( !upstairs && numrooms == maxrooms-1 ){
-			upstairs = 1;
-			map->objects[1] = createObject('<', between(x,x+w), between(y,y+h));
+			
+
+			if( numrooms ){
+				createVTunnel(map, y2, y, x2);
+				createHTunnel(map, x2, x, y);
+			}
+
+			x2 = between(x, x+w);
+			y2 = between(y, y+h);
 		}
-
-		if( numrooms ){
-			createVTunnel(map, y2, y, x2);
-			createHTunnel(map, x2, x, y);
-		}
-
-		x2 = x;
-		y2 = y;
 	}
+
+	rect_t room0 = rooms[0];
+	map->stairsup = createObject('<', between(room0.x,room0.x+room0.w), between(room0.y,room0.y+room0.h));
+	
+
+	rect_t room1 = rooms[totalrooms-1];
+	map->stairsdown = createObject('>', between(room1.x,room1.x+room1.w), between(room1.y,room1.y+room1.h));
 }
 
 
@@ -148,7 +194,18 @@ void renderMap(const map_t* const map, int centerx, int centery){
 						}
 					}
 				}
+				
 			}
+		}
+		if( map->stairsup ){
+			if( TCOD_map_is_in_fov(map->mapFov, map->stairsup->x, map->stairsup->y) ){
+					TCOD_console_put_char( NULL, map->stairsup->x-centerx+40, map->stairsup->y-centery+15, map->stairsup->self, TCOD_BKGND_NONE);
+				}
+		}
+		if( map->stairsdown ){
+			if( TCOD_map_is_in_fov(map->mapFov, map->stairsdown->x, map->stairsdown->y) ){
+					TCOD_console_put_char( NULL, map->stairsdown->x-centerx+40, map->stairsdown->y-centery+15, map->stairsdown->self, TCOD_BKGND_NONE);
+				}
 		}
 	}
 }

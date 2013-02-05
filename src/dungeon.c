@@ -7,7 +7,7 @@ dungeon_t* createDungeon(int maxFloors){
 	dungeon_t* dungeon = malloc(sizeof(dungeon_t));
 	dungeon->maxFloors = maxFloors;
 	dungeon->floors = malloc(sizeof(map_t)*maxFloors);
-	return dungeon;
+	return( dungeon );
 }
 
 void deleteDungeon(dungeon_t* dungeon){
@@ -27,13 +27,13 @@ map_t* newDungeonFloor(dungeon_t* const dungeon){
 			return dungeon->floors[x];
 		}
 	}
-	return 0;
+	return( 0 );
 }
 
 map_t* getDungeonFloor(dungeon_t* const dungeon, int floorNumber){
 	map_t* map = dungeon->floors[floorNumber];
 	if( !map ){
-		newDungeonFloor(dungeon);
+		map = newDungeonFloor(dungeon);
 	}
-	return dungeon->floors[floorNumber];
+	return( map );
 }

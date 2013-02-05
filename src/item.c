@@ -178,31 +178,31 @@ char* getItemCondition(const item_t* const item){
 }
 
 void randomItemEnchant(item_t* const item, int chance){
-	int damageBonus;
+	int powerBonus;
 	int durabilityBonus;
 	int x;
 	while(chance--){
 		if( oneIn(10-chance) ){
 			x = between(0, 2);
-			damageBonus += x;
+			powerBonus += x;
 			x = between(0, 3);
 			durabilityBonus += x;
 		}
 	}
-	item->damageBonus+=damageBonus;
+	item->powerBonus+=powerBonus;
 	item->durability+=durabilityBonus;
 	item->maxDurability+=durabilityBonus;
 }
 
 char* getItemBonus(const item_t* const item, char* const str){
-	if( item->damageBonus <=0 ) return "";
-	sprintf(str, " +%d", item->damageBonus);
-	return str;
+	if( item->powerBonus <=0 ) return "";
+	sprintf(str, " +%d", item->powerBonus);
+	return( str );
 }
 
 char* getFullItemName(const item_t* const item, char* const str){
 	char bonus[4];
 	sprintf(str, "%s%s%s",
 		getItemCondition(item), item->name, getItemBonus(item, bonus));
-	return str;
+	return( str );
 }

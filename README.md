@@ -8,6 +8,5 @@ Todo:
 - Player having more stats
 	- Able to level up
 - Treasure chests
-- Fix those segfaults
 
 Diagram: http://yuml.me/edit/91094f0d

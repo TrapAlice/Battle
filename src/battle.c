@@ -75,12 +75,12 @@ int main(int argc, char *argv[]) {
 					GameState = STATE_SKILLS;
 				}
 				if( key.c=='>' ){
-					if( isCollided(player->object, map->objects[0]) ){
+					if( isCollided(player->object, map->stairsdown) ){
 						changeFloor(1);
 					}
 				}
 				if( key.c=='<' ){
-					if( isCollided(player->object, map->objects[1]) ){
+					if( isCollided(player->object, map->stairsup) ){
 						changeFloor(-1);
 					}
 				}
@@ -282,6 +282,7 @@ void test(){
 	item_t* shield = cloneItem(ItemList[item_shield]);
 	item_t* sword = cloneItem(ItemList[item_sword]);
 	randomItemEnchant(sword, 10);
+	randomItemEnchant(armor, 10);
 
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
 	addItemInventory(player->inventory, cloneItem(ItemList[item_potion]));
@@ -456,20 +457,20 @@ void changeFloor(int dfloor){
 	currentFloor+=dfloor;
 	if( dfloor > 0 ){
 		map = getDungeonFloor(dungeon, currentFloor);
-		player->object->x = map->objects[1]->x;
-		player->object->y = map->objects[1]->y;
+		player->object->x = map->stairsup->x;
+		player->object->y = map->stairsup->y;
 	} else {
 		map = getDungeonFloor(dungeon, currentFloor);
-		player->object->x = map->objects[0]->x;
-		player->object->y = map->objects[0]->y;
+		player->object->x = map->stairsdown->x;
+		player->object->y = map->stairsdown->y;
 	}
 	calculateFov(map, player->object);
 }
 
 void positionPlayer(){
 
-	player->object->x = map->objects[1]->x;
-	player->object->y = map->objects[1]->y;
+	player->object->x = map->stairsup->x;
+	player->object->y = map->stairsup->y;
 	
 }
 

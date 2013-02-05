@@ -4,6 +4,7 @@
 #undef free
 #include <stdlib.h>
 #include <stdio.h>
+#include "dbg.h"
 
 typedef struct memnode{
 	size_t  size;

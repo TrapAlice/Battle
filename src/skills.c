@@ -55,6 +55,7 @@ const char* getSkillName(skills_e skills){
 }
 
 int isSkillActive(const skills_t* const skills, skills_e skill){
+	checknotnull(skills);
 	if( skills->skillLevel[skill] < 1 ){
 		return (1);
 	}
@@ -88,4 +89,30 @@ int skillCheck(const skills_t* const skills, skills_e skill, int dc){
 	int skillLevel = getSkillLevelifActive(skills, skill);
 	int result = roll(skillLevel < 1 ? 1 : skillLevel, 6);
 	return( result > dc );
+}
+
+void showSkills(const skills_t* const skills, TCOD_console_t panel){
+	int itemchar=0;
+	int x;
+	TCOD_console_set_default_foreground(panel,TCOD_yellow);
+	TCOD_console_print(panel, 0, 0, "[Active]");
+	TCOD_console_set_default_foreground(panel,TCOD_dark_grey);
+	TCOD_console_print(panel, 10, 0, "[Inactive]");
+	TCOD_console_print(panel, 0, 1, "Max active skills: 2");
+
+	for( x=0; x<num_skills; ++x ){
+		if( skills->skillLevel[x]>0 ){
+			if( isSkillActive(skills, x) ){
+				TCOD_console_set_default_foreground(panel, TCOD_yellow);
+			}
+			else{
+				TCOD_console_set_default_foreground(panel,TCOD_dark_grey);
+			}
+			TCOD_console_print(panel, 0, itemchar+3, "%c] %s", 
+			  itemchar+'A', getSkillName(x));
+			TCOD_console_print(panel, 13, itemchar+3, "- %d", 
+			  skills->skillLevel[x]);
+			itemchar++;
+		}
+			}
 }

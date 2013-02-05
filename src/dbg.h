@@ -12,16 +12,16 @@
 #ifdef NDEBUG
 #define debug(M, ...)
 #else
-#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define debug(M, ...) fprintf(stderr, "\x1B[36m" "DEBUG %s:%d: " M "\n" "\x1B[37m", __FILE__, __LINE__, ##__VA_ARGS__)
 #endif
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
 
-#define log_err(M, ...) fprintf(stderr, "[ERROR] (%s:%d: errno: %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define log_err(M, ...) fprintf(stderr, "\x1B[31m" "[ERROR] (%s:%d: errno: %s) " M "\n" "\x1B[37m", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 
-#define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d: errno: %s) " M "\n", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define log_warn(M, ...) fprintf(stderr, "\x1B[33m" "[WARN] (%s:%d: errno: %s) " M "\n" "\x1B[37m", __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 
-#define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d) " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define log_info(M, ...) fprintf(stderr, "\x1B[32m" "[INFO] (%s:%d) " M "\n" "\x1B[37m", __FILE__, __LINE__, ##__VA_ARGS__)
 
 #define check(A, M, ...) if(!(A)) { log_err(M, ##__VA_ARGS__); errno=0; }
 

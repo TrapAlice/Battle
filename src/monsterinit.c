@@ -21,10 +21,12 @@ void initMonsters(){
 		NULL,           NULL,            &carveOnDeath);
 	mon(mob_fairy,   "Fairy",   5,   1,     1,       10,
 		NULL,           &fairyAttack,    &fairyDeath);
-	mon(mob_kobold,  "Kobold",  20,  3,     2,       30,
+	mon(mob_kobold,  "Kobold",  20,  1,     2,       30,
 		&equipMonster,  NULL,            &dropsEquipment);
 	mon(mob_crab,    "Crab",    10,  1,     4,       20,
 		NULL,           NULL,            &carveOnDeath);
+	mon(mob_knight,  "Knight",  30,  2,     1,       40,
+	  &equipMonster,  &knightAttack,   &dropsEquipment);
 }
 
 void uninitMonsters(){

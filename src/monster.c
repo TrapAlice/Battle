@@ -9,6 +9,8 @@
 #include "msg.h"
 #include "skills.h"
 #include "item.h"
+#include "buff.h"
+#include "mobfunctions.h"
 
 monster_t* player;
 
@@ -67,6 +69,7 @@ void deleteMonster(monster_t* const monster){
 	if( monster->combat ) deleteCombat(monster->combat);
 	if( monster->equipment ) deleteEquipmentSlots(monster->equipment);
 	if( monster->skills ) deleteSkillSlots(monster->skills);
+	if( monster->buff ) deleteBuff(monster->buff);
 	free(monster);
 }
 
@@ -80,58 +83,15 @@ void attackMonster(monster_t* const attacker, monster_t* const defender){
 	if( attacker->attackFunction ){
 		(attacker->attackFunction)(attacker, defender);
 	} else {
-		int damage;
-		int basepower = attacker->combat->power;
-		item_t* weapon = getEquipment(attacker->equipment, E_RHAND);
-		int weaponpower = (weapon ? weapon->power : 0);
-		
-		int damagemod = 0;
-		int power;
-		int basedefense = defender->combat->defense;
-		int armordefense = getEquipmentDefense(defender->equipment);
-		int defense = basedefense + armordefense;
-		int shieldblock;
-		item_t* shield;
-
-		if( weaponpower ){
-			weaponpower += getSkillLevelifActive(attacker->skills, weapon->relatedSkill)/3;
-			damagemod += getSkillLevelifActive(attacker->skills, weapon->relatedSkill) + weapon->powerBonus;
-			shield = getEquipment(defender->equipment, E_LHAND);
-			shieldblock = (shield ? shield->power : 0);
-			if( shieldblock ){
-				if( roll(basepower, 6) + weaponpower < roll(shieldblock + defender->combat->power, 6) + getSkillLevelifActive(defender->skills, SKILL_SHIELD)*2 ){
-					if( defender == player ){
-						addMessage(globalMessage, "You blocked the attack with your shield!");
-					} else {
-						addMessage(globalMessage, "The %s blocked your attack with their shield!", defender->name);
-					}
-					
-					increaseSkillifActive(defender->skills, getEquipment(defender->equipment, E_LHAND)->relatedSkill, 2);
-					return;
-				}
-			}
-			if( itemDamage(weapon) ){
-				addMessage(globalMessage, "Your weapon breaks");
-				attacker->equipment->equipped[E_RHAND]=0;
-			}
-		}
-
-		power = basepower + weaponpower;
+		standardAttack(attacker, defender);
 		if( attacker == player ){
-			addMessage(globalMessage, "You attack the %s", defender->name);
-		} else {
-			addMessage(globalMessage, "The %s attacks you", attacker->name);
+			_improvePlayerSkills();
 		}
-		
-		damage = roll(power, 6)+damagemod;
-		damage -= roll(defense, 6);
-		
-		damage = damage < 0 ? 0 : damage;
-
-		_improvePlayerSkills();
-
-		takeDamage(defender, damage);
 	}
+}
+
+void defenseChance(monster_t* const attacker, monster_t* const defender){
+
 }
 
 void takeDamage(monster_t* const defender, int damage){

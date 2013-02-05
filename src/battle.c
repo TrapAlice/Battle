@@ -100,15 +100,16 @@ int main(int argc, char *argv[]) {
 							}
 						}
 						
-						if( oneIn(5) ){
+						/*if( oneIn(5) ){
 							monster = cloneMonster(MonsterList[mob_fairy]);
 						} else if( oneIn(4) ){
 							monster = cloneMonster(MonsterList[mob_pig]);
 						} else if( oneIn(3) ){
 							monster = cloneMonster(MonsterList[mob_kobold]);
 						} else {
-							monster = cloneMonster(MonsterList[mob_slime]);
-						}
+							monster = cloneMonster(MonsterList[mob_slime]);*/
+							monster = cloneMonster(MonsterList[mob_knight]);
+						/*}*/
 
 						addMessage(consoleLog, "A wild %s appears!", monster->name);
 						printUI();
@@ -354,8 +355,9 @@ void printUI(){
 					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s x%d",
 					  'A'+itemchar, head->item->name, head->quantity);
 				} else {
-					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s%s",
-					  'A'+itemchar, getItemCondition(head->item), head->item->name);
+					char str[40];
+					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s",
+					  'A'+itemchar, getFullItemName(head->item, str));
 				}
 				items[itemchar]=head->item;
 				head=head->next;
@@ -391,29 +393,7 @@ void printUI(){
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
 		case STATE_SKILLS:
-			itemchar=0;
-
-			TCOD_console_set_default_foreground(inventoryPanel,TCOD_yellow);
-			TCOD_console_print(inventoryPanel, 0, 0, "[Active]");
-			TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
-			TCOD_console_print(inventoryPanel, 10, 0, "[Inactive]");
-			TCOD_console_print(inventoryPanel, 0, 1, "Max active skills: 2");
-
-			for( x=0; x<num_skills; ++x ){
-				if( player->skills->skillLevel[x]>0 ){
-					if( isSkillActive(player->skills, x) ){
-						TCOD_console_set_default_foreground(inventoryPanel, TCOD_yellow);
-					}
-					else{
-						TCOD_console_set_default_foreground(inventoryPanel,TCOD_dark_grey);
-					}
-					TCOD_console_print(inventoryPanel, 0, itemchar+3, "%c] %s", 
-					  itemchar+'A', getSkillName(x));
-					TCOD_console_print(inventoryPanel, 13, itemchar+3, "- %d", 
-					  player->skills->skillLevel[x]);
-					itemchar++;
-				}
-			}
+			showSkills(player->skills, inventoryPanel);
 			TCOD_console_blit(inventoryPanel, 0, 0, 80, 50, NULL, 5, 5, 128, 255);
 			break;
 	}
@@ -475,7 +455,7 @@ void positionPlayer(){
 }
 
 void init(){
-	initMoonMem(64000);
+	initMoonMem(128000);
 	initSeed(0);
 	initMonsters();
 	initItems();

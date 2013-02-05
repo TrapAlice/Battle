@@ -1,6 +1,8 @@
 #ifndef _SKILLS_H
 #define _SKILLS_H
 
+#include "libtcod.h"
+
 typedef enum skills_e{
 	SKILL_NONE,
 	SKILL_SWORD,
@@ -27,6 +29,7 @@ int          skillsCurrentlyActive ( const skills_t* );
 void         increaseSkillifActive ( skills_t*, skills_e, int );
 int          getSkillLevelifActive ( const skills_t*, skills_e );
 int          skillCheck            ( const skills_t*, skills_e, int );
+void         showSkills            ( const skills_t*, TCOD_console_t );
 
 
 #endif

@@ -32,7 +32,7 @@ static int findEmptySlot(size_t pSize){
 			return x;
 		}
 	}
-	printf("Out of memory\n");
+	log_err("Out of memory\n");
 	memdump();
 	uninitMoonMem();
 	exit(0);
@@ -43,7 +43,7 @@ static memnode* findEmptyNode(){
 	while((MOONMEM->nodes+x)->memory != NULL){
 		x++;
 		if (x > MOONMEM->size/2){
-			printf("Out of empty nodes\n");
+			log_err("Out of empty nodes\n");
 			uninitMoonMem();
 			exit(0);
 		}

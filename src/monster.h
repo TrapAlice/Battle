@@ -9,21 +9,23 @@ struct inventory_t;
 struct equipment_t;
 struct messagelist_t;
 struct skills_t;
+struct buff_t;
 
 typedef struct monster_t monster_t;
 
 struct monster_t{
-	int                 id;
-	const char         *name;
-	struct combat_t    *combat;
-	int                 xp;
-	struct inventory_t *inventory;
-	struct object_t    *object;
-	struct equipment_t *equipment;
-	struct skills_t    *skills;
+	int                  id;
+	const char          *name;
+	struct combat_t     *combat;
+	int                  xp;
+	struct inventory_t  *inventory;
+	struct object_t     *object;
+	struct equipment_t  *equipment;
+	struct skills_t     *skills;
 	void               (*birthFunction)(monster_t*);
 	void               (*attackFunction)(monster_t*,monster_t*);
 	void               (*deathFunction)(const monster_t*);
+	struct buff_t       *buff;
 };
 
 extern monster_t* player;
@@ -35,6 +37,7 @@ monster_t*  cloneMonster  ( const monster_t* );
 int         checkDead     ( const monster_t* );
 void        deleteMonster ( monster_t* );
 void        attackMonster ( monster_t*, monster_t* );
+void        defenseChance ( monster_t*, monster_t* );
 void        takeDamage    ( monster_t*, int );
 
 #endif

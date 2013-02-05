@@ -74,7 +74,7 @@ void* moonAlloc(size_t pSize){
 void moonDealloc(void* ptr){
 	int x = 0;
 	memnode* obj;
-	if(ptr==NULL)return;
+	if( !ptr ) return;
 	while( (MOONMEM->nodes+x)->memory != ptr ){
 		x++;
 		if( x > MOONMEM->size/2){

@@ -18,8 +18,10 @@ typedef struct equipment_t{
 equipment_t*    createEquipmentSlots ( );
 void            deleteEquipmentSlots ( equipment_t* );
 struct item_t*  getEquipment         ( const equipment_t*, slot_e );
-void            Equip                ( const equipment_t*, slot_e, struct item_t* );
-int             isEquipped           ( const equipment_t*, const struct item_t* );
+void            Equip                ( const equipment_t*, slot_e, 
+                                       struct item_t* );
+int             isEquipped           ( const equipment_t*, 
+                                       const struct item_t* );
 int             getEquipmentDefense  ( const equipment_t* );
 
 #endif

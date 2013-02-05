@@ -12,6 +12,8 @@ typedef struct map_t{
 	struct tile_t   **mapTiles;
 	TCOD_map_t       *mapFov;
 	struct object_t **objects;
+	struct object_t  *stairsup;
+	struct object_t  *stairsdown;
 }map_t;
 
 map_t*  createMap     ( int, int );
@@ -21,5 +23,6 @@ void    createRoom    ( map_t*, int, int, int, int );
 void    createVTunnel ( map_t*, int, int, int );
 void    createHTunnel ( map_t*, int, int, int );
 void    renderMap     ( const map_t*, int, int );
+void    calculateFov  ( map_t*, const struct object_t* );
 
 #endif

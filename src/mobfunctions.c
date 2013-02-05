@@ -15,6 +15,7 @@ void equipMonster(monster_t* const monster){
 	switch(monster->id){
 		case mob_kobold:
 			weapon = ItemList[item_knife];
+			randomItemEnchant(weapon, 2);
 			Equip(monster->equipment, E_RHAND, weapon);
 			break;
 	}
@@ -66,16 +67,16 @@ void dropsEquipment(const monster_t* const monster){
 	item_t* item;
 	item_t* clone;
 	int duraDmg;
+	char str[40];
 	standardDeath(monster);
 	for( x=0; x<num_slots; ++x ){
 		if( (item = getEquipment(monster->equipment, x)) ){
 			clone = cloneItem(item);
 			duraDmg = between(0, clone->maxDurability+2)-2,
 			duraDmg = duraDmg < 0 ? 0 : duraDmg;
-			printf("Item damage: %d\n",duraDmg);
 			clone->durability -= duraDmg;
-			randomItemEnchant(clone, 0);
-			addMessage(globalMessage, "You found a %s%s",getItemCondition(clone),clone->name);
+			addMessage(globalMessage, "You found a %s", 
+				getFullItemName(item, str));
 			addItemInventory(player->inventory, clone);
 		}
 	}

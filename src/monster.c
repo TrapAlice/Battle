@@ -25,7 +25,8 @@ monster_t* createPlayer(int x, int y){
 	return( monster );
 }
 
-monster_t* createMonster(int id, const char* const name, int hp, int power, int defense, int xp, void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
+monster_t* createMonster(int id, const char* const name, int hp, int power, int defense, int xp, 
+  void(*mobbirth)(monster_t*), void(*mobattack)(monster_t*,monster_t*), void(*mobdeath)(const monster_t*)){
 	monster_t* monster = malloc(sizeof(monster_t));
 	monster->id = id;
 	monster->name = name;
@@ -43,7 +44,7 @@ monster_t* cloneMonster(const monster_t* const monster){
 	clone->id = monster->id;
 	clone->name = monster->name;
 	clone->xp = monster->xp;
-	clone->combat = createCombat(monster->combat->maxhp, monster->combat->power, monster->combat->defense);
+	clone->combat = cloneCombat(monster->combat);
 	if( monster->birthFunction ){
 		(monster->birthFunction)(clone);
 	}
@@ -71,9 +72,7 @@ void deleteMonster(monster_t* const monster){
 
 static void _improvePlayerSkills(){
 	if( player->equipment->equipped[E_RHAND] ){
-		if( isSkillActive(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill) ){
-			increaseSkill(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill, 3);
-		}
+		increaseSkillifActive(player->skills, getEquipment(player->equipment, E_RHAND)->relatedSkill, 3);
 	}
 }
 

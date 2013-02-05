@@ -44,8 +44,8 @@ void deleteMap(map_t* const map){
 static void _fillTile(map_t* const  map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
-	tile->ops = tile->ops | 1<<0;
-	tile->ops = tile->ops | 1<<1;
+	tile->ops |= 1<<0;
+	tile->ops |= 1<<1;
 	tile->self='#';
 	TCOD_map_set_properties(map->mapFov, x,y, 0,0);
 }
@@ -53,8 +53,8 @@ static void _fillTile(map_t* const  map, int x, int y){
 static void _digTile(map_t* const map, int x, int y){
 	tile_t* tile;
 	tile = map->mapTiles[x+(y*map->width)];
-	tile->ops = tile->ops & 0<<0;
-	tile->ops = tile->ops & 0<<1;
+	tile->ops &= 0<<0;
+	tile->ops &= 0<<1;
 	tile->self='.';
 	TCOD_map_set_properties(map->mapFov, x,y, 1,1);
 }
@@ -64,7 +64,8 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 	int w, h;
 	int x2 =0, y2 =0;
 	int numrooms;
-	int stairs =0;
+	int downstairs =0;
+	int upstairs=0;
 	
 	for( y=0; y<map->height; ++y ){
 		for( x=0; x<map->width; ++x ){
@@ -81,9 +82,14 @@ void makeMap(map_t* const map, int maxrooms, int minsize, int maxsize, int check
 
 		createRoom(map, x,y,w,h);
 
-		if(! stairs ){
-			stairs=1;
+		if( !downstairs ){
+			downstairs=1;
 			map->objects[0] = createObject('>', between(x,x+w), between(y,y+h));
+		}
+
+		if( !upstairs && numrooms == maxrooms-1 ){
+			upstairs = 1;
+			map->objects[1] = createObject('<', between(x,x+w), between(y,y+h));
 		}
 
 		if( numrooms ){
@@ -129,8 +135,8 @@ void renderMap(const map_t* const map, int centerx, int centery){
 	int i;
 	object_t *object;
 	for( y=0; y<map->height; ++y ){
+		if( y-centery+15>32 ) break;
 		for( x=0; x<map->width; ++x ){
-			if( y-centery+15>32 ) break;
 			if( TCOD_map_is_in_fov(map->mapFov,x,y) ){
 				tile = map->mapTiles[x+(y*map->width)];
 				TCOD_console_put_char( NULL, x-centerx+40, y-centery+15, tile->self, TCOD_BKGND_NONE);
@@ -145,4 +151,9 @@ void renderMap(const map_t* const map, int centerx, int centery){
 			}
 		}
 	}
+}
+
+void calculateFov(map_t* const map, const object_t* const player){
+	TCOD_map_compute_fov(map->mapFov, player->x, player->y, 
+	                     0, 1, FOV_BASIC);
 }

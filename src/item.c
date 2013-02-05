@@ -178,8 +178,8 @@ char* getItemCondition(const item_t* const item){
 }
 
 void randomItemEnchant(item_t* const item, int chance){
-	int powerBonus;
-	int durabilityBonus;
+	int powerBonus=0;
+	int durabilityBonus=0;
 	int x;
 	while(chance--){
 		if( oneIn(10-chance) ){

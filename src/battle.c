@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
 					if( !(keyPressed < 0 || keyPressed > 25) ){
 						if( items[keyPressed]!=NULL ){
 							if( itemIsType(items[keyPressed], I_HEALING) ){
-								useItem(items[keyPressed]);
+								useItem(items[keyPressed],player);
 								battleActionTaken=1;
 							}
 						}
@@ -225,7 +225,7 @@ int main(int argc, char *argv[]) {
 				GameState=STATE_MAP;
 				handleInput(&key);
 				if( key.c == 'u' ){
-					useItem(items[keyPressed]);
+					useItem(items[keyPressed],player);
 				}
 				break;
 
@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
 				if( keyPressed < 0 || keyPressed > 25 ) break;
 				if( items[keyPressed] ){
 					if( itemIsType(items[keyPressed], I_EQUIPMENT) ){
-						useItem(items[keyPressed]);
+						useItem(items[keyPressed],player);
 						GameState = STATE_EQUIP;
 					}
 				}

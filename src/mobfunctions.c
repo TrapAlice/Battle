@@ -19,14 +19,14 @@ void equipMonster(monster_t* const monster){
 		case mob_kobold:
 			weapon = ItemList[item_knife];
 			randomItemEnchant(weapon, 2);
-			Equip(monster->equipment, E_RHAND, weapon);
+			useItem(weapon, monster);
 			break;
 		case mob_knight:
 			weapon = ItemList[item_sword];
 			shield = ItemList[item_shield];
 			randomItemEnchant(shield, 2);
-			Equip(monster->equipment, E_RHAND, weapon);
-			Equip(monster->equipment, E_LHAND, shield);
+			useItem(weapon, monster);
+			useItem(shield, monster);
 			break;
 	}
 }

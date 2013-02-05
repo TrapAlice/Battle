@@ -109,7 +109,7 @@ int itemIsSubType(const item_t* const item, enum itemSubType_e subType){
 	return ( item->type2 == subType );
 }
 
-void useItem(item_t* const item){
+void useItem(item_t* const item, monster_t* const monster){
 	if( !item->durability ){
 		addMessage(globalMessage, "Can't use that, it's broken");
 		return;
@@ -117,30 +117,30 @@ void useItem(item_t* const item){
 	switch( item->type ){
 		case I_HEALING:
 			addMessage(globalMessage, "You use the %s", item->name);
-			takeDamage(player, -(roll(item->power,6)));
-			removeItemInventory(player->inventory, item);
+			takeDamage(monster, -(roll(item->power,6)));
+			removeItemInventory(monster->inventory, item);
 			break;
 		case I_EQUIPMENT:
 			switch( item->type2 ){
 				case IS_WEAPON:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_RHAND, item);
+					if( !isEquipped(monster->equipment, item) ){
+						Equip(monster->equipment, E_RHAND, item);
 					} else {
-						player->equipment->equipped[E_RHAND] = 0;
+						monster->equipment->equipped[E_RHAND] = 0;
 					}
 					break;
 				case IS_CHESTARMOR:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_CHEST, item);
+					if( !isEquipped(monster->equipment, item) ){
+						Equip(monster->equipment, E_CHEST, item);
 					} else {
-						player->equipment->equipped[E_CHEST] = 0;
+						monster->equipment->equipped[E_CHEST] = 0;
 					}
 					break;
 				case IS_SHIELD:
-					if( !isEquipped(player->equipment, item) ){
-						Equip(player->equipment, E_LHAND, item);
+					if( !isEquipped(monster->equipment, item) ){
+						Equip(monster->equipment, E_LHAND, item);
 					} else {
-						player->equipment->equipped[E_LHAND] = 0;
+						monster->equipment->equipped[E_LHAND] = 0;
 					}
 					break;
 				case IS_NONE:

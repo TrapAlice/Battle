@@ -3,6 +3,8 @@
 #include "libtcod.h"
 #include "itemid.h"
 
+struct monster_t;
+
 typedef enum itemType_e{
 	I_NONE,
 	I_HEALING,
@@ -37,7 +39,7 @@ void     deleteItem         ( item_t* );
 void     getItemDescription ( const item_t*, TCOD_console_t );
 int      itemIsType         ( const item_t*, itemType_e );
 int      itemIsSubType      ( const item_t*, itemSubType_e );
-void     useItem            ( item_t* );
+void     useItem            ( item_t*, struct monster_t* );
 int      itemDamage         ( item_t* );
 char*    getItemCondition   ( const item_t* );
 void     randomItemEnchant  ( item_t*, int );

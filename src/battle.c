@@ -15,6 +15,7 @@
 #include "tile.h"
 #include "skills.h"
 #include "dungeon.h"
+#include "buffinit.h"
 
 #include "dbg.h"
 
@@ -262,15 +263,12 @@ int main(int argc, char *argv[]) {
 						} else {
 							player->skills->skillActive[x] = 0;
 						}
-
 						GameState = STATE_SKILLS;
 						break;
 					}
-					
 				}
 				break;
 		}
-		
 	}
 	
 
@@ -309,7 +307,6 @@ void printUI(){
 	TCOD_console_set_default_foreground(inventoryPanel, TCOD_white);
 	switch(GameState){
 		case STATE_MAP:
-			
 			x=-1;
 			while( x++<getMessageListSize(consoleLog) ){
 				TCOD_console_print(msgConsole, 0, x, getMessage(consoleLog, x));
@@ -350,7 +347,7 @@ void printUI(){
 			head = player->inventory->next;
 			
 			itemchar = 0;
-			while( head ){
+			while( head && itemchar<26 ){
 				if( head->item->stackable ){
 					TCOD_console_print(inventoryPanel, 0, itemchar, "[%c] %s x%d",
 					  'A'+itemchar, head->item->name, head->quantity);
@@ -375,14 +372,14 @@ void printUI(){
 			head = player->inventory->next;
 			itemchar = 0;
 			x = 0;
-			while( head ){
+			while( head && itemchar<26 ){
 				item = head->item;
 				if( itemIsType(item, I_EQUIPMENT) ){
 					char str[40];
 					TCOD_console_print(inventoryPanel, 0, x, "%c] %s", 
 					  'A'+itemchar, getFullItemName(item, str));
 					if( isEquipped(player->equipment, item) ){
-						TCOD_console_print(inventoryPanel, 20, x, "[Equipped]");
+						TCOD_console_print(inventoryPanel, 40, x, "[Equipped]");
 					}
 					x++;
 					items[itemchar]=item;
@@ -429,7 +426,6 @@ void waitForPress(){
 }
 
 void generateNewMap(){
-	
 	map = newDungeonFloor(dungeon);
 }
 
@@ -459,6 +455,7 @@ void init(){
 	initSeed(0);
 	initMonsters();
 	initItems();
+	initBuffs();
 	consoleLog = createMessageList(15);
 	globalMessage = consoleLog;
 	msgConsole = TCOD_console_new(80,20);
@@ -486,6 +483,7 @@ void uninit(){
 	TCOD_console_delete(combatConsole);
 	deleteMessageList(combatLog);
 	TCOD_console_delete(inventoryPanel);
+	uninitBuffs();
 	uninitItems();
 	uninitMonsters();
 	uninitMoonMem();

@@ -3,11 +3,22 @@
 #include "moonmem.h"
 #include "dbg.h"
 
-buff_t* createBuff(int turns, void(*tick)(monster_t*)){
+buff_t** BuffList;
+
+buff_t* createBuff(int id, int turns, void(*tick)(monster_t*)){
 	buff_t* buff = malloc(sizeof(buff_t));
+	buff->id = id;
 	buff->remaining = turns;
 	buff->tick = tick;
 	return( buff );
+}
+
+buff_t* cloneBuff(const buff_t* buff){
+	buff_t* clone = malloc(sizeof(buff_t));
+	clone->id = buff->id;
+	clone->remaining = buff->remaining;
+	clone->tick = buff->tick;
+	return( clone );
 }
 
 void deleteBuff(buff_t* buff){

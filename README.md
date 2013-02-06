@@ -8,6 +8,7 @@ Todo:
 - Player having more stats
 	- Able to level up
 - Treasure chests
-- Add buffs (Completely)
+- Improve random battle monster selecter
+- Be able to destroy items into resources
 
 Diagram: http://yuml.me/edit/91094f0d

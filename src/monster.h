@@ -37,7 +37,6 @@ monster_t*  cloneMonster  ( const monster_t* );
 int         checkDead     ( const monster_t* );
 void        deleteMonster ( monster_t* );
 void        attackMonster ( monster_t*, monster_t* );
-void        defenseChance ( monster_t*, monster_t* );
 void        takeDamage    ( monster_t*, int );
 
 #endif

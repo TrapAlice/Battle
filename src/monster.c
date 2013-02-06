@@ -90,10 +90,6 @@ void attackMonster(monster_t* const attacker, monster_t* const defender){
 	}
 }
 
-void defenseChance(monster_t* const attacker, monster_t* const defender){
-
-}
-
 void takeDamage(monster_t* const defender, int damage){
 	if( damage>0 ){
 		if( defender == player ){

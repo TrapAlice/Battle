@@ -97,10 +97,12 @@ void fairyAttack(monster_t* const attacker, monster_t* const defender){
 }
 
 void knightAttack(monster_t* const attacker, monster_t* const defender){
-	standardAttack(attacker, defender);
-	if( attacker->combat->hp<10 && !attacker->buff ){
-		addMessage(globalMessage, "The Knight lifts his shield and starts chanting");
-		attacker->buff = createBuff(5, &healingTick);
+	if( !attacker->buff ){
+		standardAttack(attacker, defender);
+		if( attacker->combat->hp<10 ){
+			addMessage(globalMessage, "The Knight lifts his shield and starts chanting");
+			attacker->buff = cloneBuff(BuffList[buff_healing]);
+		}
 	}
 }
 

@@ -79,6 +79,7 @@ void moonDealloc(void* ptr){
 	while( (MOONMEM->nodes+x)->memory != ptr ){
 		x++;
 		if( x > MOONMEM->size/2){
+			log_warn("Attempted to delete %p, not found",ptr);
 			return;
 		}
 	}
@@ -86,6 +87,7 @@ void moonDealloc(void* ptr){
 	memset(obj->memory, 0, obj->size);
 	obj->memory = NULL;
 	memset(MOONMEM->memoryslots+obj->pos, 0, obj->size/4);
+
 
 }
 
@@ -111,7 +113,7 @@ void objectMemout(void* ptr){
 	}
 	obj = MOONMEM->nodes+x;
 
-	printf("ptr   -> %08X\n",*((byte*)ptr));
+	printf("ptr   -> %p\n",ptr);
 	printf("size  -> %d\n",obj->size);
 	printf("memory-> ");
 	x=0;
@@ -129,6 +131,20 @@ void memdump(){
 }
 
 void uninitMoonMem(){
+	int x;
+	int leek=0;
+	memnode* node;
+	for( x=0; x<MOONMEM->size/2; ++x ){
+		node = MOONMEM->nodes+x;
+		if( node->memory ){
+			log_err("Leek: %p",node->memory);
+			leek+=node->size;
+			objectMemout(node->memory);
+		}
+	}
+	if( leek ){
+		log_err("Total memory leek: %d",leek);
+	}
 	free(MOONMEM->nodes);
 	free(MOONMEM);
 }

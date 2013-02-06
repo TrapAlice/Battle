@@ -53,6 +53,8 @@ void deleteMap(map_t* const map){
 			deleteObject(map->objects[x]);
 		}
 	}
+	deleteObject(map->stairsdown);
+	deleteObject(map->stairsup);
 	free(map->objects);
 	free(map->mapTiles);
 	TCOD_map_delete(map->mapFov);
@@ -213,4 +215,13 @@ void renderMap(const map_t* const map, int centerx, int centery){
 void calculateFov(map_t* const map, const object_t* const player){
 	TCOD_map_compute_fov(map->mapFov, player->x, player->y, 
 	                     0, 1, FOV_BASIC);
+}
+
+void generateTreasure(map_t* const map){
+	map->objects[0] = createTreasure(map->stairsdown->x, map->stairsdown->y);
+}
+
+void removeStairsDown(map_t* const map){
+	deleteObject(map->stairsdown);
+	map->stairsdown=0;
 }

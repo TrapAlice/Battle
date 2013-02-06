@@ -7,7 +7,6 @@ Todo:
 - Have abilities to use
 - Player having more stats
 	- Able to level up
-- Treasure chests
 - Improve random battle monster selecter
 - Be able to destroy items into resources
 

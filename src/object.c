@@ -4,6 +4,7 @@
 #include "combat.h"
 #include "map.h"
 #include "tile.h"
+#include "triggerfunctions.h"
 
 object_t* createObject(char self, int x, int y){
 	object_t* obj = malloc(sizeof(object_t));
@@ -38,4 +39,15 @@ int isCollided(const object_t* const a, const object_t* const b){
 		}
 	}
 	return( 0 );
+}
+
+void triggerObject(object_t* const object){
+	if( !object->trigger ) return;
+	(object->trigger)(object);
+}
+
+object_t* createTreasure(int x, int y){
+	object_t* chest = createObject('T',x,y);
+	chest->trigger = &openChest;
+	return chest;
 }

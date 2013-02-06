@@ -86,7 +86,9 @@ int main(int argc, char *argv[]) {
 					}
 				}
 				if( key.c=='u' ){
-					/*Use something on the ground*/
+					if( isCollided(player->object, map->objects[0]) ){
+						triggerObject(map->objects[0]);
+					}
 				}
 				if( battleCooldown<=0 ){
 					if( oneIn(steps) ){
@@ -468,7 +470,7 @@ void init(){
 	player = createPlayer(20,20);
 	currentFloor = 0;
 	TCOD_console_init_root(80,50,TITLE,false,false);
-	dungeon = createDungeon(10);
+	dungeon = createDungeon(5);
 	generateNewMap();
 	positionPlayer();
 }

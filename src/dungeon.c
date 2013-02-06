@@ -23,7 +23,13 @@ map_t* newDungeonFloor(dungeon_t* const dungeon){
 	for( x=0; x<dungeon->maxFloors; ++x ){
 		if( !dungeon->floors[x] ){
 			dungeon->floors[x] = createMap(between(30,50), between(30,50));
-			makeMap(dungeon->floors[x], between(5,15), between(2,5), between(6,10), 0);
+			if( x == dungeon->maxFloors-1){
+				makeMap(dungeon->floors[x], between(5,15), between(2,5), between(6,10), 0);
+				generateTreasure(dungeon->floors[x]);
+				removeStairsDown(dungeon->floors[x]);
+			} else {
+				makeMap(dungeon->floors[x], between(5,15), between(2,5), between(6,10), 0);
+			}
 			return dungeon->floors[x];
 		}
 	}

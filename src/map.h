@@ -16,13 +16,15 @@ typedef struct map_t{
 	struct object_t  *stairsdown;
 }map_t;
 
-map_t*  createMap     ( int, int );
-void    deleteMap     ( map_t* );
-void    makeMap       ( map_t*, int, int, int, int );
-void    createRoom    ( map_t*, int, int, int, int );
-void    createVTunnel ( map_t*, int, int, int );
-void    createHTunnel ( map_t*, int, int, int );
-void    renderMap     ( const map_t*, int, int );
-void    calculateFov  ( map_t*, const struct object_t* );
+map_t*  createMap        ( int, int );
+void    deleteMap        ( map_t* );
+void    makeMap          ( map_t*, int, int, int, int );
+void    createRoom       ( map_t*, int, int, int, int );
+void    createVTunnel    ( map_t*, int, int, int );
+void    createHTunnel    ( map_t*, int, int, int );
+void    renderMap        ( const map_t*, int, int );
+void    calculateFov     ( map_t*, const struct object_t* );
+void    generateTreasure ( map_t* );
+void    removeStairsDown ( map_t* );
 
 #endif

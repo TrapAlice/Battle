@@ -53,8 +53,8 @@ void deleteMap(map_t* const map){
 			deleteObject(map->objects[x]);
 		}
 	}
-	deleteObject(map->stairsdown);
-	deleteObject(map->stairsup);
+	if( map->stairsdown ) deleteObject(map->stairsdown);
+	if( map->stairsup ) deleteObject(map->stairsup);
 	free(map->objects);
 	free(map->mapTiles);
 	TCOD_map_delete(map->mapFov);

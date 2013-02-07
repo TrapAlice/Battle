@@ -47,6 +47,8 @@ const char* getSkillName(skills_e skills){
 			return( "Shield" );
 		case SKILL_STEALTH:
 			return( "Stealth" );
+		case SKILL_LOCKPICKING:
+			return( "Lockpicking" );
 		case SKILL_NONE:
 		case num_skills:
 			return( "" );

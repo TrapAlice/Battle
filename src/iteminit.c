@@ -12,7 +12,7 @@ void initItems(){
 	ItemList=malloc(sizeof(item_t)*num_items);
 	/*   ID                 Name             Description
 	     Type         SubType        Skill         Power   Stackable   Durability*/
-	item(item_null,         "",              "", 
+	item(item_null,         "(NULL)",        "", 
 	     0,           0,             0,            0,      0,          0);
 	/*Healing Items*/
 	item(item_potion,       "Potion",        "A simple healing potion", 

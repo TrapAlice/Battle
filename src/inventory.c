@@ -5,7 +5,7 @@
 inventory_t* createInventory(){
 	inventory_t* inventory = malloc(sizeof(inventory_t));
 	inventory->quantity=0;
-	inventory->item=0;
+	inventory->item = cloneItem(ItemList[item_null]);
 	return( inventory );
 }
 

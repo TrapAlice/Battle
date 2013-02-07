@@ -18,7 +18,7 @@ combat_t* cloneCombat(const combat_t* const combat){
 	clone->maxhp = combat->maxhp;
 	clone->power = combat->power;
 	clone->defense = combat->defense;
-	return clone;
+	return( clone );
 }
 
 void deleteCombat(combat_t* const combat){

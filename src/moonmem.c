@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dbg.h"
+#include <assert.h>
 
 typedef struct memnode{
 	size_t  size;
@@ -75,11 +76,14 @@ void* moonAlloc(size_t pSize){
 void moonDealloc(void* ptr){
 	int x = 0;
 	memnode* obj;
-	if( !ptr ) return;
+	if( !ptr ) {
+		log_warn("Attempted to dealloc a null pointer");
+		return;
+	}
 	while( (MOONMEM->nodes+x)->memory != ptr ){
 		x++;
 		if( x > MOONMEM->size/2){
-			log_warn("Attempted to delete %p, not found",ptr);
+			log_warn("Attempted to dealloc %p, not found",ptr);
 			return;
 		}
 	}
@@ -94,9 +98,8 @@ void moonDealloc(void* ptr){
 void memout(){
 	int x = 16;
 	while( x < (sizeof(moonmem)+MOONMEM->size+MOONMEM->size/4) ){
-		printf("%02X",*((byte*)(MOONMEM)+x));
+		printf("%08X ",*((int*)(MOONMEM)+x));
 		x++;
-		if(x%4==0)printf(" ");
 	}
 	printf("\n\n");
 }
@@ -118,9 +121,8 @@ void objectMemout(void* ptr){
 	printf("memory-> ");
 	x=0;
 	while(x<obj->size){
-		printf("%02X",*((byte*)(obj->memory)+x));
+		printf("%08X ",*((int*)(obj->memory)+x));
 		x++;
-		if(x%4==0)printf(" ");
 	}
 	printf("\n");
 }

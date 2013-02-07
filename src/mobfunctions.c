@@ -17,13 +17,13 @@ void equipMonster(monster_t* const monster){
 	monster->equipment = createEquipmentSlots();
 	switch(monster->id){
 		case mob_kobold:
-			weapon = ItemList[item_knife];
+			weapon = cloneItem(ItemList[item_knife]);
 			randomItemEnchant(weapon, 2);
 			useItem(weapon, monster);
 			break;
 		case mob_knight:
-			weapon = ItemList[item_sword];
-			shield = ItemList[item_shield];
+			weapon = cloneItem(ItemList[item_sword]);
+			shield = cloneItem(ItemList[item_shield]);
 			randomItemEnchant(shield, 2);
 			useItem(weapon, monster);
 			useItem(shield, monster);
@@ -154,6 +154,7 @@ void dropsEquipment(const monster_t* const monster){
 			addMessage(globalMessage, "You found a %s", 
 				getFullItemName(item, str));
 			addItemInventory(player->inventory, clone);
+			deleteItem(item);
 		}
 	}
 }

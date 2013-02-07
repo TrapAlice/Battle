@@ -10,6 +10,7 @@ typedef enum skills_e{
 	SKILL_CARVING,
 	SKILL_SHIELD,
 	SKILL_STEALTH,
+	SKILL_LOCKPICKING,
 	num_skills,
 }skills_e;
 

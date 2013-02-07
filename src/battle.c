@@ -470,7 +470,7 @@ void init(){
 	player = createPlayer(20,20);
 	currentFloor = 0;
 	TCOD_console_init_root(80,50,TITLE,false,false);
-	dungeon = createDungeon(5);
+	dungeon = createDungeon(1);
 	generateNewMap();
 	positionPlayer();
 }

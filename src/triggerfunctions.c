@@ -5,13 +5,15 @@
 #include "item.h"
 #include "inventory.h"
 #include "rng.h"
+#include "lockpicking.h"
 
 
 void openChest(object_t* self){
 	int chance;
-	item_t* item=ItemList[item_sword];
+	item_t* item= cloneItem(ItemList[item_sword]);
 	char str[40];
 	addMessage(globalMessage, "You open the treasure chest");
+	startLockpicking();
 	chance =1;
 	switch( chance ){
 		case 1:

@@ -34,7 +34,6 @@ monster_t* createMonster(int id, const char* const name, int hp, int power, int 
 	monster->name = name;
 	monster->combat = createCombat(hp,power,defense);
 	monster->xp = xp;
-	monster->inventory = createInventory();
 	monster->birthFunction = mobbirth;
 	monster->attackFunction = mobattack;
 	monster->deathFunction = mobdeath;

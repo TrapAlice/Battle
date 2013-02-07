@@ -15,6 +15,7 @@ void deleteDungeon(dungeon_t* dungeon){
 	for( x=0; x<dungeon->maxFloors; ++x ){
 		free(dungeon->floors[x]);
 	}
+	free(dungeon->floors);
 	free(dungeon);
 }
 

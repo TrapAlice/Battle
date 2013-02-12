@@ -3,6 +3,7 @@
 
 struct object_t;
 
-void openChest( struct object_t* );
+void  openChest  ( struct object_t* );
+void  emptyChest ( struct object_t* );
 
 #endif

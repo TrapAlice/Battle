@@ -1,7 +1,7 @@
 #ifndef _LOCKPICKING_H
 #define _LOCKPICKING_H
 
-void  startLockpicking   ( );
+int   startLockpicking   ( );
 void  displayLockpicking ( );
 
 #endif

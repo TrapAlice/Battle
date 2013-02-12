@@ -4,7 +4,7 @@
 #include "rng.h"
 int x=5;
 char* locks;
-void startLockpicking(){
+int startLockpicking(){
 	TCOD_key_t key;
 	int picked=0;
 	int attempts=0;
@@ -39,6 +39,8 @@ void startLockpicking(){
 						locks[x] = '/';
 					}
 				}
+				attempts++;
+				if( attempts > 5 ) picked = 1;
 				break;
 			default:
 				break;
@@ -48,6 +50,12 @@ void startLockpicking(){
 	}
 
 	free(locks);
+
+	if( attempts > 5 ){
+		return( 0 );
+	} else {
+		return( 1 );
+	}
 	
 }
 
@@ -59,7 +67,7 @@ void displayLockpicking(){
 		if( locks[y]=='/' || locks[y]=='\\' ){
 			TCOD_console_put_char_ex(NULL, 41, 10+y, locks[y], TCOD_black, TCOD_red );
 		} else {
-			TCOD_console_put_char(NULL, 41, 10+y, locks[y], TCOD_BKGND_NONE );
+			TCOD_console_put_char_ex(NULL, 41, 10+y, locks[y], TCOD_red, TCOD_red );
 		}
 	}
 	
